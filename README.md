@@ -21,7 +21,7 @@ opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"
 
 - `opencode-setup-prompt.md` — self-updating setup prompt + verified "known traps" (npm git deps, fetch-MCP honeypot, OMO array-plugin crash, context7 collision)
 - `setup.sh` — bootstrap installer
-- `.agents/skills/` — 7 personal skills
+- `.agents/skills/` — 10 skills (7 personal + 3 guardrails: bash-scripting, python-ai, linux-sysadmin)
 - `templates/project-docs/` — SPEC/ROADMAP/TASKS/AGENTS
 - `templates/global-AGENTS.md` — global `~/.config/opencode/AGENTS.md`
 - `templates/omo-routing.jsonc` — OMO model routing, `<main>/<worker>/<planner>` placeholders

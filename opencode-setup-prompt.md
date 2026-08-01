@@ -131,21 +131,20 @@
    c. write the 7 SKILL.md yourself from the descriptions in this prompt
    Do not create skills that duplicate OMO built-ins (git-master, playwright,
    frontend-ui-ux, review-work, remove-ai-slops).
-9. titus-guardrails layer (ported from ChrisTitusTech/titus-ai):
-   - git clone --depth 1 https://github.com/ChrisTitusTech/titus-ai ~/titus-ai
-   - Copy 7 skills: ai-project-manager, pr-readiness, linux-sysadmin,
-     bash-scripting, python-ai, rust-cli, hugo -> ~/.agents/skills/
-     (skip: forgejo-maintainer, podman-operator, quickshell, mdbook,
-     homelab-admin; the agents/openai.yaml inside skills is Codex metadata,
-     opencode ignores it — harmless)
-   - Copy 4 templates (AGENTS, SPEC, ROADMAP, TASKS).md from the first
-     source that works: ~/omochi/templates/project-docs/ OR the
-     omochi clone (8b) OR titus-ai .agents/skills/ai-project-manager/
-     assets/project-docs/ -> ~/.config/opencode/templates/project-docs/
-   - Write ~/.config/opencode/AGENTS.md: copy
-     ~/omochi/templates/global-AGENTS.md (or from omochi
-     clone) — global rules: change-focused, skip filler, run checks, stop
-     before destructive actions.
+ 9. Guardrail skills (3, opencode-native, shipped in this repo):
+    bash-scripting, python-ai, linux-sysadmin -> ~/.agents/skills/
+    Provisioning order (first source that works):
+    a. cp -r ~/omochi/.agents/skills/{bash-scripting,python-ai,
+       linux-sysadmin} ~/.agents/skills/
+    b. copy from the omochi clone (8b)
+    c. write the 3 SKILL.md yourself from the descriptions in this prompt
+    - Copy 4 templates (AGENTS, SPEC, ROADMAP, TASKS).md from
+      ~/omochi/templates/project-docs/ (or the omochi clone 8b)
+      -> ~/.config/opencode/templates/project-docs/
+    - Write ~/.config/opencode/AGENTS.md: copy
+      ~/omochi/templates/global-AGENTS.md (or from omochi
+      clone) — global rules: change-focused, skip filler, run checks, stop
+      before destructive actions.
 10. Fish env var (if not set): set -gx OPENCODE_API_KEY "sk-..."
     then set -Ux OPENCODE_API_KEY "sk-..." (persistent; never store keys in
     config files)
