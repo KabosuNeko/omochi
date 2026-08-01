@@ -84,7 +84,7 @@
  6. OMO Agent Skill Routing — write the agent + category model routing in
     ~/.omo/omo.jsonc ("[opencode]" -> "agents" / "categories" blocks) with
     step 4 discovered IDs, using the template at
-    ~/Projects/ai-setup/templates/omo-routing.jsonc (or from the ai-setup
+    ~/omochi/templates/omo-routing.jsonc (or from omochi
     clone; fallback: write it from the routing lines below).
     Modern key format (verified):
     - Chain = one array "models": ["<primary>", "<fb1>", "<fb2>"] — the
@@ -125,7 +125,7 @@
    frontend-design (ui-ux-pro merged in), code-review, refactor-human-code,
    bug-hunt, docs-reader, test-writer, grill-me.
    Provisioning order (first source that works):
-   a. cp -r ~/Projects/ai-setup/.agents/skills/* ~/.config/opencode/skills/
+   a. cp -r ~/omochi/.agents/skills/* ~/.config/opencode/skills/
    b. git clone --depth 1 https://github.com/KabosuNeko/omochi <tmp>
       && copy .agents/skills/* from it (then delete <tmp>)
    c. write the 7 SKILL.md yourself from the descriptions in this prompt
@@ -139,11 +139,11 @@
      homelab-admin; the agents/openai.yaml inside skills is Codex metadata,
      opencode ignores it — harmless)
    - Copy 4 templates (AGENTS, SPEC, ROADMAP, TASKS).md from the first
-     source that works: ~/Projects/ai-setup/templates/project-docs/ OR the
-     ai-setup clone (8b) OR titus-ai .agents/skills/ai-project-manager/
+     source that works: ~/omochi/templates/project-docs/ OR the
+     omochi clone (8b) OR titus-ai .agents/skills/ai-project-manager/
      assets/project-docs/ -> ~/.config/opencode/templates/project-docs/
    - Write ~/.config/opencode/AGENTS.md: copy
-     ~/Projects/ai-setup/templates/global-AGENTS.md (or from the ai-setup
+     ~/omochi/templates/global-AGENTS.md (or from omochi
      clone) — global rules: change-focused, skip filler, run checks, stop
      before destructive actions.
 10. Fish env var (if not set): set -gx OPENCODE_API_KEY "sk-..."

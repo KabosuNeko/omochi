@@ -16,7 +16,7 @@ set -Ux OPENCODE_API_KEY "sk-..."          # fish; go token from your workspace
 
 # AI-driven setup: discovers models, writes configs, installs OMO,
 # provisions skills/templates, runs smoke tests. Safe to re-run = auto-update.
-opencode run "$(cat ~/Projects/ai-setup/opencode-setup-prompt.md)"
+opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"
 ```
 
 ## Layout
