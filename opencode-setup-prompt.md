@@ -107,22 +107,22 @@
       (fallback: glm-5.2 / qwen3.7-plus)
     - refactor-human-code -> hephaestus -> <main> (fallback: qwen3.7-max)
     - bug-hunt -> oracle -> qwen3.7-max (fallback: <main>)
-    - sisyphus -> <main> (fallback: <planner>, opencode/big-pickle)
-    - sisyphus-junior -> <planner> (fallback: <worker>, opencode/big-pickle)
+    - sisyphus -> <main> (fallback: <planner>, opencode/deepseek-v4-flash-free)
+    - sisyphus-junior -> <planner> (fallback: <worker>, opencode/deepseek-v4-flash-free)
     - prometheus -> <planner> reasoning high (fallback: glm-5.2)
     - metis, atlas -> <planner> reasoning low (fallback: qwen3.7-plus)
-    - explore -> <worker> (fallback: opencode/big-pickle)
+    - explore -> <worker> (fallback: opencode/deepseek-v4-flash-free)
     - multimodal-looker -> a vision-capable model (e.g. kimi-k3)
    Categories (default reasoning tiers): visual-engineering, artistry ->
    <planner> reasoning high; ultrabrain, deep -> <main> reasoning max;
    quick -> <worker>; writing -> <planner> reasoning low.
-   "opencode/big-pickle" is a FREE model on the opencode provider (Zen);
+   "opencode/deepseek-v4-flash-free" is a FREE model on the opencode provider (Zen);
    it works as last-resort fallback without a subscription.
    Note: OMO routes by agent/category, NOT by skill; the matching skills must
    state "delegate to agent X" inside their SKILL.md.
 7. Optional free-tier fallback: run `opencode auth login` and select
    "OpenCode Zen" (free models; no payment needed). Required only if you
-   want big-pickle / other opencode provider free models to work.
+   want deepseek-v4-flash-free / other opencode provider free models to work.
 8. Personal skills (7, at ~/.config/opencode/skills/<name>/SKILL.md):
    frontend-design (ui-ux-pro merged in), code-review, refactor-human-code,
    bug-hunt, docs-reader, test-writer, grill-me.
@@ -157,7 +157,7 @@
       lsp, filesystem, git, fetch, sequential-thinking, context7-remote
       connected; codegraph/memory/github disabled; NO plain "context7")
     - bunx oh-my-openagent doctor -> exit 0, agent models = discovered IDs
-    - opencode run -m opencode/big-pickle "Reply with exactly: OK"
+    - opencode run -m opencode/deepseek-v4-flash-free "Reply with exactly: OK"
       (verifies free fallback works end-to-end)
     - opencode run "List the files in this repo and read one file"
       (verifies repo reading)
@@ -178,7 +178,7 @@
   after an update: rm -rf ~/.cache/opencode/node_modules/<plugin> and restart
   opencode.
 - If opencode-go reports "Insufficient balance", top up at the workspace
-  billing page; free fallbacks (big-pickle) keep working meanwhile.
+  billing page; free fallbacks (deepseek-v4-flash-free) keep working meanwhile.
 ```
 
 ### Known traps (from a real setup, 2026-08-01)
