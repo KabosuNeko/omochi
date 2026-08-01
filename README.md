@@ -2,7 +2,7 @@
 
 an opencode setup that just works.
 
-## Setup a machine
+## Setup
 
 ```bash
 # bootstrap: installs opencode + bun, clones this repo (needs the repo pushed first)
