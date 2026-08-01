@@ -1,8 +1,6 @@
 # omochi
 
-an opencode setup so soft it's mochi.
-
-Portable OpenCode setup: one prompt, skills, templates.
+an opencode setup that just works.
 
 ## Setup a machine
 
