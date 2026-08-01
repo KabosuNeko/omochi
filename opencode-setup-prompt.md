@@ -81,30 +81,36 @@
    --opencode-go=yes --skip-auth
    (idempotent — safe to re-run when models change; OMO resolves per-agent
    fallback chains from the enabled providers)
-6. OMO Agent Skill Routing — override AGENT + CATEGORY models in
-   ~/.omo/omo.jsonc ("[opencode]" -> "agents" / "categories" blocks) with
-   step 4 discovered IDs. Modern keys: "reasoning" (enum off|minimal|low|
-   medium|high|xhigh|max|auto) replaces legacy "variant"; "fallback_models"
-   as array of strings. Add runtime fallback for quota exhaustion:
-   - "model_fallback": true, "runtime_fallback": {"enabled": true,
-     "retry_on_errors": [429, 500, 502, 503, 504], "max_fallback_attempts": 3,
-     "cooldown_seconds": 30, "timeout_seconds": 120, "notify_on_fallback":
-     true, "restore_primary_after_cooldown": true}
-   - "disabled_mcps": ["context7"]  (keep OUR context7-remote; drop OMO's
-     auto-injected one to avoid tool-name collision)
-   Agent routing (verified models):
-   - code-review, docs-reader -> momus, librarian -> <planner>
-     (fallback: glm-5.2 / qwen3.7-plus)
-   - refactor-human-code -> hephaestus -> <main> (fallback: qwen3.7-max)
-   - bug-hunt -> oracle -> qwen3.7-max (fallback: <main>)
-   - sisyphus -> <main> (fallback: <planner>, opencode/big-pickle)
-   - sisyphus-junior, metis, atlas -> <planner> (fallback: <worker>,
-     opencode/big-pickle)
-   - prometheus -> <planner> reasoning high (fallback: glm-5.2)
-   - explore -> <worker> (fallback: opencode/big-pickle)
-   - quick category -> <worker>
-   - sisyphus-junior fallback #2 -> <worker>
-   - multimodal-looker -> a vision-capable model (e.g. kimi-k3)
+ 6. OMO Agent Skill Routing — write the agent + category model routing in
+    ~/.omo/omo.jsonc ("[opencode]" -> "agents" / "categories" blocks) with
+    step 4 discovered IDs, using the template at
+    ~/Projects/ai-setup/templates/omo-routing.jsonc (or from the ai-setup
+    clone; fallback: write it from the routing lines below).
+    Modern key format (verified):
+    - Chain = one array "models": ["<primary>", "<fb1>", "<fb2>"] — the
+      first entry is the primary model, the rest are fallbacks in order.
+      (Legacy "model" + "fallback_models" still parse, but OMO auto-migrates
+      them to "models" — write the new form directly.)
+    - "reasoning" (enum off|minimal|low|medium|high|xhigh|max|auto) per
+      model: as a string on a plain "model" key, or as
+      {"model": ..., "reasoning": ...} objects inside "models".
+    - "model_fallback": true, "runtime_fallback": {"enabled": true,
+      "retry_on_errors": [429, 500, 502, 503, 504], "max_fallback_attempts": 3,
+      "cooldown_seconds": 30, "timeout_seconds": 120, "notify_on_fallback":
+      true, "restore_primary_after_cooldown": true}
+    - "disabled_mcps": ["context7"]  (keep OUR context7-remote; drop OMO's
+      auto-injected one to avoid tool-name collision)
+    Routing (verified models; see template for the full JSONC):
+    - code-review, docs-reader -> momus, librarian -> <planner>
+      (fallback: glm-5.2 / qwen3.7-plus)
+    - refactor-human-code -> hephaestus -> <main> (fallback: qwen3.7-max)
+    - bug-hunt -> oracle -> qwen3.7-max (fallback: <main>)
+    - sisyphus -> <main> (fallback: <planner>, opencode/big-pickle)
+    - sisyphus-junior -> <planner> (fallback: <worker>, opencode/big-pickle)
+    - prometheus -> <planner> reasoning high (fallback: glm-5.2)
+    - metis, atlas -> <planner> reasoning low (fallback: qwen3.7-plus)
+    - explore -> <worker> (fallback: opencode/big-pickle)
+    - multimodal-looker -> a vision-capable model (e.g. kimi-k3)
    Categories (default reasoning tiers): visual-engineering, artistry ->
    <planner> reasoning high; ultrabrain, deep -> <main> reasoning max;
    quick -> <worker>; writing -> <planner> reasoning low.

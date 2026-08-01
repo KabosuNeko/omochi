@@ -1,0 +1,95 @@
+// OMO routing template — merge into ~/.omo/omo.jsonc under "[opencode]"
+// Placeholders to resolve from setup step 4 discovery:
+//   <main>    = strongest stable reasoning model on Go
+//              (2026: opencode-go/deepseek-v4-pro)
+//   <worker>  = free/cheap fast model for light tasks
+//              (2026: opencode/deepseek-v4-flash-free)
+//   <planner> = cheap code-specialized "Claude-like" model for review/planning
+//              (2026: opencode-go/kimi-k2.7-code)
+// Verified key format: "models" is ONE chain array (primary first, then
+// fallbacks in order). Legacy "model" + "fallback_models" still parse but
+// OMO auto-migrates them to "models" — write the new form directly.
+// "reasoning" enum: off|minimal|low|medium|high|xhigh|max|auto
+{
+  "[opencode]": {
+    "model_fallback": true,
+    "runtime_fallback": {
+      "enabled": true,
+      "retry_on_errors": [429, 500, 502, 503, 504],
+      "max_fallback_attempts": 3,
+      "cooldown_seconds": 30,
+      "timeout_seconds": 120,
+      "notify_on_fallback": true,
+      "restore_primary_after_cooldown": true
+    },
+    "disabled_mcps": ["context7"],
+    "agents": {
+      "sisyphus": {
+        "models": ["<main>", "<planner>", "opencode/big-pickle"]
+      },
+      "sisyphus-junior": {
+        "models": ["<planner>", "<worker>", "opencode/big-pickle"]
+      },
+      "hephaestus": {
+        "models": ["<main>", "opencode-go/qwen3.7-max"]
+      },
+      "oracle": {
+        "models": ["opencode-go/qwen3.7-max", "<main>"]
+      },
+      "momus": {
+        "models": ["<planner>", "opencode-go/glm-5.2"]
+      },
+      "librarian": {
+        "models": ["<planner>", "opencode-go/qwen3.7-plus"]
+      },
+      "prometheus": {
+        "models": [
+          { "model": "<planner>", "reasoning": "high" },
+          "opencode-go/glm-5.2"
+        ]
+      },
+      "metis": {
+        "models": [
+          { "model": "<planner>", "reasoning": "low" },
+          "opencode-go/qwen3.7-plus"
+        ]
+      },
+      "explore": {
+        "models": ["<worker>", "opencode/big-pickle"]
+      },
+      "atlas": {
+        "models": ["<planner>", "opencode-go/qwen3.7-plus"]
+      },
+      "multimodal-looker": {
+        "model": "opencode-go/kimi-k3"
+      }
+    },
+    "categories": {
+      "visual-engineering": {
+        "models": [
+          { "model": "<planner>", "reasoning": "high" },
+          "opencode-go/glm-5.2"
+        ]
+      },
+      "ultrabrain": {
+        "model": "<main>",
+        "reasoning": "max"
+      },
+      "deep": {
+        "model": "<main>",
+        "reasoning": "max"
+      },
+      "artistry": {
+        "model": "<planner>",
+        "reasoning": "high"
+      },
+      "quick": {
+        "models": ["<worker>", "opencode/big-pickle"]
+      },
+      "writing": {
+        "model": "<planner>",
+        "reasoning": "low"
+      }
+    }
+  }
+}

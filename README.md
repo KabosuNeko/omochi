@@ -15,6 +15,9 @@ Portable OpenCode configuration, setup prompt, skills, and project-doc templates
   repos (ported from [ChrisTitusTech/titus-ai](https://github.com/ChrisTitusTech/titus-ai)).
 - `templates/global-AGENTS.md` — the global `~/.config/opencode/AGENTS.md`
   (working style, verification, skill routing) used by setup step 9.
+- `templates/omo-routing.jsonc` — OMO agent/category model routing for
+  `~/.omo/omo.jsonc` with `<main>/<worker>/<planner>` placeholders
+  (verified `models`-array format) used by setup step 6.
 
 ## Security rules
 
