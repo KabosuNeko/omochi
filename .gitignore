@@ -1,0 +1,23 @@
+# Secrets — never commit these, even inside subdirectories
+auth.json
+fish_variables
+.env
+.env.*
+*.key
+*.pem
+
+# Backups
+*.bak
+*.bak-*
+*.orig
+*.rej
+
+# Local tool state
+node_modules/
+opencode.db
+opencode.db-*
+snapshot/
+
+# OS / editor
+.DS_Store
+*.swp
