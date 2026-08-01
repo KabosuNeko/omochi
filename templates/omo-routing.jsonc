@@ -29,11 +29,11 @@
     "agents": {
       "sisyphus": {
         "model": "<main>",
-        "fallback_models": ["<planner>", "opencode/big-pickle"]
+        "fallback_models": ["<planner>", "opencode/deepseek-v4-flash-free"]
       },
       "sisyphus-junior": {
         "model": "<planner>",
-        "fallback_models": ["<worker>", "opencode/big-pickle"]
+        "fallback_models": ["<worker>", "opencode/deepseek-v4-flash-free"]
       },
       "hephaestus": {
         "model": "<main>",
@@ -63,7 +63,7 @@
       },
       "explore": {
         "model": "<worker>",
-        "fallback_models": ["opencode/big-pickle"]
+        "fallback_models": ["opencode/deepseek-v4-flash-free"]
       },
       "atlas": {
         "model": "<planner>",
@@ -93,7 +93,7 @@
       },
       "quick": {
         "model": "<worker>",
-        "fallback_models": ["opencode/big-pickle"]
+        "fallback_models": ["opencode/deepseek-v4-flash-free"]
       },
       "writing": {
         "model": "<planner>",
