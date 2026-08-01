@@ -70,6 +70,11 @@
 7. Personal skills (7, at ~/.config/opencode/skills/<name>/SKILL.md):
    frontend-design (ui-ux-pro merged in), code-review, refactor-human-code,
    bug-hunt, docs-reader, test-writer, grill-me.
+   Provisioning order (first source that works):
+   a. cp -r ~/Projects/ai-setup/.agents/skills/* ~/.config/opencode/skills/
+   b. git clone --depth 1 https://github.com/KabosuNeko/ai-setup <tmp>
+      && copy .agents/skills/* from it (then delete <tmp>)
+   c. write the 7 SKILL.md yourself from the descriptions in this prompt
    Do not create skills that duplicate OMO built-ins (git-master, playwright,
    frontend-ui-ux, review-work, remove-ai-slops).
 8. titus-guardrails layer (ported from ChrisTitusTech/titus-ai):
@@ -79,8 +84,10 @@
      (skip: forgejo-maintainer, podman-operator, quickshell, mdbook,
      homelab-admin; the agents/openai.yaml inside skills is Codex metadata,
      opencode ignores it — harmless)
-   - Copy 4 templates ai-project-manager/assets/project-docs/{AGENTS,SPEC,
-     ROADMAP,TASKS}.md -> ~/.config/opencode/templates/project-docs/
+   - Copy 4 templates (AGENTS, SPEC, ROADMAP, TASKS).md from the first
+     source that works: ~/Projects/ai-setup/templates/project-docs/ OR the
+     ai-setup clone (7b) OR titus-ai .agents/skills/ai-project-manager/
+     assets/project-docs/ -> ~/.config/opencode/templates/project-docs/
    - Write ~/.config/opencode/AGENTS.md (global rules modeled on codex-home/
      AGENTS.md: change-focused, skip filler, run checks, stop before
      destructive actions — strip Codex-specific parts)
