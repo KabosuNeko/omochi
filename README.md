@@ -1,4 +1,4 @@
-# ai-setup
+# omochi
 
 Portable OpenCode setup: one prompt, skills, templates.
 
@@ -6,7 +6,7 @@ Portable OpenCode setup: one prompt, skills, templates.
 
 ```bash
 # bootstrap: installs opencode + bun, clones this repo (needs the repo pushed first)
-curl -fsSL https://raw.githubusercontent.com/KabosuNeko/ai-setup/main/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/KabosuNeko/omochi/main/setup.sh | bash
 
 # then (manual, cannot be automated):
 opencode auth login                        # opencode-go + OpenCode Zen

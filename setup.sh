@@ -4,7 +4,7 @@ set -euo pipefail
 # Everything else (configs, OMO, skills, model discovery) is done by the
 # AI-driven setup prompt — run it AFTER the manual steps below.
 
-REPO_URL="${AI_SETUP_REPO_URL:-https://github.com/KabosuNeko/ai-setup}"
+REPO_URL="${AI_SETUP_REPO_URL:-https://github.com/KabosuNeko/omochi}"
 
 [ -x /usr/bin/opencode ] || {
   echo ">> Installing opencode (pacman)..." \

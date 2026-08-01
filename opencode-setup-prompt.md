@@ -126,7 +126,7 @@
    bug-hunt, docs-reader, test-writer, grill-me.
    Provisioning order (first source that works):
    a. cp -r ~/Projects/ai-setup/.agents/skills/* ~/.config/opencode/skills/
-   b. git clone --depth 1 https://github.com/KabosuNeko/ai-setup <tmp>
+   b. git clone --depth 1 https://github.com/KabosuNeko/omochi <tmp>
       && copy .agents/skills/* from it (then delete <tmp>)
    c. write the 7 SKILL.md yourself from the descriptions in this prompt
    Do not create skills that duplicate OMO built-ins (git-master, playwright,
