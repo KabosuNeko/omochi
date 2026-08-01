@@ -1,6 +1,6 @@
 ---
 name: refactor-human-code
-description: Refactor existing (possibly human-written, idiosyncratic) code while preserving behavior and style. Use for "clean this up", "restructure", "remove duplication", or legacy code modernization. Delegates execution to the hephaestus agent (DeepSeek V4 Pro).
+description: Refactor existing (possibly human-written, idiosyncratic) code while preserving behavior and style. Use for "clean this up", "restructure", "remove duplication", or legacy code modernization. Delegates execution to the hephaestus agent.
 compatibility: opencode
 ---
 
@@ -13,7 +13,7 @@ sake.
 
 1. Delegate the refactor to the `hephaestus` agent via `call_omo_agent`
    (subagent_type: hephaestus). Hephaestus runs on the main coding model.
-2. He works autonomously: explore first, then execute end-to-end. Give him a
+2. It works autonomously: explore first, then execute end-to-end. Give it a
    goal and constraints, not a recipe.
 
 ## Constraints (pass to hephaestus)

@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Independent code review of a diff, PR, or working tree. Checks correctness, edge cases, security, docs/changelog accuracy, and test coverage. Use for "review this", "check my PR", or pre-merge review. Always delegates to the momus agent (Kimi K2.7 Code) for the actual critique.
+description: Independent code review of a diff, PR, or working tree. Checks correctness, edge cases, security, docs/changelog accuracy, and test coverage. Use for "review this", "check my PR", or pre-merge review. Always delegates to the momus agent for the actual critique.
 compatibility: opencode
 ---
 

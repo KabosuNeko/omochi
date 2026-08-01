@@ -1,6 +1,6 @@
 ---
 name: test-writer
-description: Write high-value tests — unit, integration, and smoke — that match the repo's existing test framework and conventions. Use for "add tests", "increase coverage", "test this function", or TDD in a new feature. Runs on the worker model for boilerplate; delegates to the deep category for tricky suites.
+description: Write high-value tests — unit, integration, and smoke — that match the repo's existing test framework and conventions. Use for "add tests", "increase coverage", "test this function", or TDD in a new feature.
 compatibility: opencode
 ---
 
