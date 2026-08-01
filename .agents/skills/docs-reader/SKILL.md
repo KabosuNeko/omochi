@@ -1,6 +1,6 @@
 ---
 name: docs-reader
-description: Read and understand project documentation — SPEC, ROADMAP, TASKS, AGENTS.md, README, docs/, and dependency docs (via context7). Produces accurate, cited summaries and answers. Use for "what does this do", "read the docs", onboarding to a new repo, or library research. Delegates to the librarian agent (Kimi K2.7 Code).
+description: Read and understand project documentation — SPEC, ROADMAP, TASKS, AGENTS.md, README, docs/, and dependency docs (via context7). Produces accurate, cited summaries and answers. Use for "what does this do", "read the docs", onboarding to a new repo, or library research. Delegates to the librarian agent.
 compatibility: opencode
 ---
 

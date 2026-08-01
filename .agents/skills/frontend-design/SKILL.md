@@ -28,5 +28,4 @@ visual direction is explicit.
 ## Delegation
 
 For visual-heavy requests, delegate to the `visual-engineering` category or
-let the main agent run this skill directly. Do not route to GPT-native
-agents.
+let the main agent run this skill directly.

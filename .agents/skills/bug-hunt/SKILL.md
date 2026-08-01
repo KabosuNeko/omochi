@@ -1,6 +1,6 @@
 ---
 name: bug-hunt
-description: 'Systematic debugging of failing tests, crashes, or wrong behavior. Root-cause driven: reproduce, isolate, instrument, fix, verify. Use for "why is this broken", stack traces, flaky tests, or regression hunting. Delegates deep investigation to the oracle agent (Qwen3.7 Max).'
+description: 'Systematic debugging of failing tests, crashes, or wrong behavior. Root-cause driven: reproduce, isolate, instrument, fix, verify. Use for "why is this broken", stack traces, flaky tests, or regression hunting. Delegates deep investigation to the oracle agent.'
 compatibility: opencode
 ---
 
