@@ -31,3 +31,25 @@ Portable OpenCode configuration, setup prompt, skills, and project-doc templates
 Run the setup prompt (`opencode-setup-prompt.md`) from any machine. It is
 idempotent: it backs up, re-discovers current OpenCode Go models, and diffs
 every change before writing.
+
+## Auto setup on a new machine
+
+One-liner bootstrap (installs opencode + bun, clones this repo). Requires the
+repo to be pushed to GitHub first — the raw URL only exists after a push.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/KabosuNeko/ai-setup/main/setup.sh | bash
+```
+
+Then, three manual steps (interactive or secret — they cannot be automated):
+
+```bash
+opencode auth login                        # opencode-go + OpenCode Zen (free models)
+set -Ux OPENCODE_API_KEY "sk-..."          # fish; opencode-go token from your workspace
+opencode run "$(cat ~/Projects/ai-setup/opencode-setup-prompt.md)"   # AI-driven setup + smoke tests
+```
+
+The prompt provisions everything else: live model discovery, `opencode.jsonc`
++ `octto.json`, oh-my-openagent, `~/.omo/omo.jsonc` routing, 14 skills, project
+templates, global `AGENTS.md`, and runs the smoke tests. It is safe to re-run
+anytime as an "auto update".
