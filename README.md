@@ -5,11 +5,16 @@ Portable OpenCode configuration, setup prompt, skills, and project-doc templates
 ## Contents
 
 - `opencode-setup-prompt.md` — the self-updating setup prompt (discover models at
-  runtime, never hardcode IDs; re-run anytime to auto-update).
+  runtime, never hardcode IDs; re-run anytime to auto-update). Includes a
+  "Known traps" appendix verified against a real setup (npm v11 git deps,
+  fetch MCP honeypot package, OMO installer array-plugins crash, context7
+  collision).
 - `.agents/skills/` — personal skills (source of truth; copied to
   `~/.agents/skills/` or `~/.config/opencode/skills/` during setup).
 - `templates/project-docs/` — SPEC / ROADMAP / TASKS / AGENTS templates for new
   repos (ported from [ChrisTitusTech/titus-ai](https://github.com/ChrisTitusTech/titus-ai)).
+- `templates/global-AGENTS.md` — the global `~/.config/opencode/AGENTS.md`
+  (working style, verification, skill routing) used by setup step 9.
 
 ## Security rules
 
