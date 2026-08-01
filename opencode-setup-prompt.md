@@ -86,14 +86,16 @@
     step 4 discovered IDs, using the template at
     ~/omochi/templates/omo-routing.jsonc (or from omochi
     clone; fallback: write it from the routing lines below).
-    Modern key format (verified):
-    - Chain = one array "models": ["<primary>", "<fb1>", "<fb2>"] — the
-      first entry is the primary model, the rest are fallbacks in order.
-      (Legacy "model" + "fallback_models" still parse, but OMO auto-migrates
-      them to "models" — write the new form directly.)
-    - "reasoning" (enum off|minimal|low|medium|high|xhigh|max|auto) per
-      model: as a string on a plain "model" key, or as
-      {"model": ..., "reasoning": ...} objects inside "models".
+    Modern key format (verified on oh-my-openagent 4.19.4):
+    - Each agent/category: "model" = primary; "fallback_models" = array of
+      strings (fallbacks in order), entries may be {"model": ..., "reasoning":
+      ...} objects; "reasoning" (enum off|minimal|low|medium|high|xhigh|max|
+      auto) sets the reasoning level. Do NOT use a "models" array for agents —
+      some versions flag it as an unknown key (categories may accept it).
+      Some OMO versions auto-migrate keys; if doctor reports "Unknown config
+      key: agents.X.models", the migration rewrote the file. Keep the
+      root-level "_migrations" marker from the template so the migration
+      never re-runs and this format persists.
     - "model_fallback": true, "runtime_fallback": {"enabled": true,
       "retry_on_errors": [429, 500, 502, 503, 504], "max_fallback_attempts": 3,
       "cooldown_seconds": 30, "timeout_seconds": 120, "notify_on_fallback":

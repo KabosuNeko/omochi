@@ -6,10 +6,13 @@
 //              (2026: opencode/deepseek-v4-flash-free)
 //   <planner> = cheap code-specialized "Claude-like" model for review/planning
 //              (2026: opencode-go/kimi-k2.7-code)
-// Verified key format: "models" is ONE chain array (primary first, then
-// fallbacks in order). Legacy "model" + "fallback_models" still parse but
-// OMO auto-migrates them to "models" — write the new form directly.
-// "reasoning" enum: off|minimal|low|medium|high|xhigh|max|auto
+// Verified key format (oh-my-openagent 4.19.4): agents use "model" +
+// "fallback_models" (array of strings; entries may be {"model", "reasoning"}
+// objects) + optional "reasoning" (enum off|minimal|low|medium|high|xhigh|
+// max|auto). NOTE: some OMO versions auto-migrate these keys — if doctor
+// reports "Unknown config key: agents.X.models", the migration rewrote the
+// file. Keep the root-level "_migrations" marker below so the migration
+// never re-runs and the legacy format persists.
 {
   "[opencode]": {
     "model_fallback": true,
@@ -25,40 +28,46 @@
     "disabled_mcps": ["context7"],
     "agents": {
       "sisyphus": {
-        "models": ["<main>", "<planner>", "opencode/big-pickle"]
+        "model": "<main>",
+        "fallback_models": ["<planner>", "opencode/big-pickle"]
       },
       "sisyphus-junior": {
-        "models": ["<planner>", "<worker>", "opencode/big-pickle"]
+        "model": "<planner>",
+        "fallback_models": ["<worker>", "opencode/big-pickle"]
       },
       "hephaestus": {
-        "models": ["<main>", "opencode-go/qwen3.7-max"]
+        "model": "<main>",
+        "fallback_models": ["opencode-go/qwen3.7-max"]
       },
       "oracle": {
-        "models": ["opencode-go/qwen3.7-max", "<main>"]
+        "model": "opencode-go/qwen3.7-max",
+        "fallback_models": ["<main>"]
       },
       "momus": {
-        "models": ["<planner>", "opencode-go/glm-5.2"]
+        "model": "<planner>",
+        "fallback_models": ["opencode-go/glm-5.2"]
       },
       "librarian": {
-        "models": ["<planner>", "opencode-go/qwen3.7-plus"]
+        "model": "<planner>",
+        "fallback_models": ["opencode-go/qwen3.7-plus"]
       },
       "prometheus": {
-        "models": [
-          { "model": "<planner>", "reasoning": "high" },
-          "opencode-go/glm-5.2"
-        ]
+        "model": "<planner>",
+        "reasoning": "high",
+        "fallback_models": ["opencode-go/glm-5.2"]
       },
       "metis": {
-        "models": [
-          { "model": "<planner>", "reasoning": "low" },
-          "opencode-go/qwen3.7-plus"
-        ]
+        "model": "<planner>",
+        "reasoning": "low",
+        "fallback_models": ["opencode-go/qwen3.7-plus"]
       },
       "explore": {
-        "models": ["<worker>", "opencode/big-pickle"]
+        "model": "<worker>",
+        "fallback_models": ["opencode/big-pickle"]
       },
       "atlas": {
-        "models": ["<planner>", "opencode-go/qwen3.7-plus"]
+        "model": "<planner>",
+        "fallback_models": ["opencode-go/qwen3.7-plus"]
       },
       "multimodal-looker": {
         "model": "opencode-go/kimi-k3"
@@ -66,10 +75,9 @@
     },
     "categories": {
       "visual-engineering": {
-        "models": [
-          { "model": "<planner>", "reasoning": "high" },
-          "opencode-go/glm-5.2"
-        ]
+        "model": "<planner>",
+        "reasoning": "high",
+        "fallback_models": ["opencode-go/glm-5.2"]
       },
       "ultrabrain": {
         "model": "<main>",
@@ -84,12 +92,16 @@
         "reasoning": "high"
       },
       "quick": {
-        "models": ["<worker>", "opencode/big-pickle"]
+        "model": "<worker>",
+        "fallback_models": ["opencode/big-pickle"]
       },
       "writing": {
         "model": "<planner>",
         "reasoning": "low"
       }
     }
-  }
+  },
+  "_migrations": [
+    "2026-08-reasoning-unification"
+  ]
 }
