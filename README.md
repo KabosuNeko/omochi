@@ -22,7 +22,7 @@ opencode run "$(cat ~/Projects/ai-setup/opencode-setup-prompt.md)"
 - `opencode-setup-prompt.md` — self-updating setup prompt + verified "known traps" (npm git deps, fetch-MCP honeypot, OMO array-plugin crash, context7 collision)
 - `setup.sh` — bootstrap installer
 - `.agents/skills/` — 7 personal skills
-- `templates/project-docs/` — SPEC/ROADMAP/TASKS/AGENTS (from [titus-ai](https://github.com/ChrisTitusTech/titus-ai))
+- `templates/project-docs/` — SPEC/ROADMAP/TASKS/AGENTS
 - `templates/global-AGENTS.md` — global `~/.config/opencode/AGENTS.md`
 - `templates/omo-routing.jsonc` — OMO model routing, `<main>/<worker>/<planner>` placeholders
 
