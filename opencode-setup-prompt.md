@@ -65,7 +65,7 @@
    | Role | Selection criteria (priority order) | 2026 reference |
    |---|---|---|
    | Main coding (complex logic, architecture, heavy generation) | Strongest stable reasoning model on Go; prefer $60/month tier over $15 if equal strength | deepseek-v4-pro (fallback: qwen3.7-max) |
-   | Worker (small_model: autocomplete, boilerplate, light tasks) | Fastest + cheapest with highest quota (prefer $60 tier) | deepseek-v4-flash (fallback: qwen3.7-plus) |
+   | Worker (small_model: autocomplete, boilerplate, light tasks) | Fastest + cheapest with highest quota (prefer $60 tier). If the opencode provider (Zen) is authenticated, prefer its FREE worker: opencode/deepseek-v4-flash-free — it matches the Go flash in speed and costs nothing | deepseek-v4-flash-free (fallback: opencode-go/deepseek-v4-flash, qwen3.7-plus) |
    | Planner/Reviewer (deep reading, planning, code review) | Code-specialized, cheap, $60 tier, "Claude-like" behavior (fits OMO prompts) | kimi-k2.7-code (fallback: glm-5.2) |
    For EACH role: run `opencode models opencode-go` to verify the ID exists;
    if missing, pick the closest per criteria and log the substitution.
@@ -102,6 +102,8 @@
      opencode/big-pickle)
    - prometheus -> <planner> reasoning high (fallback: glm-5.2)
    - explore -> <worker> (fallback: opencode/big-pickle)
+   - quick category -> <worker>
+   - sisyphus-junior fallback #2 -> <worker>
    - multimodal-looker -> a vision-capable model (e.g. kimi-k3)
    Categories (default reasoning tiers): visual-engineering, artistry ->
    <planner> reasoning high; ultrabrain, deep -> <main> reasoning max;
