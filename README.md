@@ -5,7 +5,7 @@ an opencode setup that just works.
 ## Setup
 
 ```bash
-# bootstrap: installs opencode + bun + rtk, clones this repo (needs the repo pushed first)
+# bootstrap: installs opencode + bun + rtk, clones this repo
 curl -fsSL https://raw.githubusercontent.com/KabosuNeko/omochi/main/setup.sh | bash
 
 # then (manual, cannot be automated):
