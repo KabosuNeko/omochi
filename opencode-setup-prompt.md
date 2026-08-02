@@ -150,9 +150,30 @@
 10. Fish env var (if not set): set -gx OPENCODE_API_KEY "sk-..."
     then set -Ux OPENCODE_API_KEY "sk-..." (persistent; never store keys in
     config files)
-11. Review the diff of EVERY changed file against its backup, highlighting
+11. rtk (token saver): single Rust binary that compresses bash tool output
+    before the agent reads it.
+    - Binary: installed by setup.sh to ~/.local/bin/rtk (NO pacman package —
+      official installer; reinstall with: curl -fsSL
+      https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh)
+    - Plugin: rtk init -g --opencode (writes
+      ~/.config/opencode/plugins/rtk.ts; hook tool.execute.before). Only the
+      bash tool is rewritten — built-in Read/Grep/Glob/LSP bypass it, so
+      savings are smaller than on Claude Code.
+    - Config: write ~/.config/rtk/config.toml:
+        [hooks]
+        exclude_commands = ["opencode"]
+      (TRAP: never let rtk compress `opencode models --verbose` — model
+      discovery needs raw output; excluded commands make `rtk rewrite`
+      return "", and the plugin treats empty output as pass-through)
+    - "No hook installed" from `rtk gain` refers to the Claude Code hook —
+      ignore it, the opencode plugin is the integration here.
+    - Degrades safely: plugin disables itself if rtk is missing from PATH;
+      rewrite errors pass the command through unchanged. On command failure
+      rtk saves full output to ~/.local/share/rtk/tee/*.log (tee mode).
+    - Uninstall: rtk init -g --uninstall && rm ~/.local/bin/rtk
+12. Review the diff of EVERY changed file against its backup, highlighting
     the model configuration section.
-12. Smoke tests:
+13. Smoke tests:
     - opencode --version · opencode mcp list (expected: websearch, grep_app,
       lsp, filesystem, git, fetch, sequential-thinking, context7-remote
       connected; codegraph/memory/github disabled; NO plain "context7")
@@ -163,6 +184,11 @@
       (verifies repo reading)
     - confirm skills are discovered from ~/.agents/skills and
       ~/.config/opencode/skills
+    - rtk --version && rtk rewrite "git status" (expect: "rtk git status")
+    - test -f ~/.config/opencode/plugins/rtk.ts && grep -q
+      'exclude_commands' ~/.config/rtk/config.toml
+    - opencode run -m opencode/deepseek-v4-flash-free "Run: ls -la" && rtk
+      gain (expect: "rtk ls -la" counted — proves the plugin rewrote)
 
 ## Required Output
 1. The actual JSONC written (highlight the model section).
@@ -200,3 +226,10 @@
 5. **opencode-go account state** — deepseek-v4-flash may require a manual
    opt-in (China-hosted), and prepaid balance is separate from subscriptions.
    Check the workspace page if a model errors out.
+6. **rtk is pre-1.0 and rewrites every bash command** — covers only the
+   bash tool (Read/Grep/Glob/LSP bypass it), so opencode savings < Claude
+   Code. Always exclude `opencode` in ~/.config/rtk/config.toml so model
+   discovery keeps raw output. When a rewritten command fails, rtk saves
+   full output to ~/.local/share/rtk/tee/ — read it there instead of
+   re-running. Check `rtk gain` after a week; if savings are negligible:
+   rtk init -g --uninstall.
