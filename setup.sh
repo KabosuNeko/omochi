@@ -17,6 +17,13 @@ REPO_URL="${AI_SETUP_REPO_URL:-https://github.com/KabosuNeko/omochi}"
   sudo pacman -S --noconfirm bun
 }
 
+# rtk (token saver): no pacman package — official installer, idempotent.
+# Config + opencode plugin are provisioned by the AI-driven setup prompt.
+[ -x "$HOME/.local/bin/rtk" ] || {
+  echo ">> Installing rtk (official installer)..."
+  curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+}
+
 [ -d "$HOME/omochi" ] || {
   echo ">> Cloning omochi into ~/omochi"
   git clone --depth 1 "$REPO_URL" "$HOME/omochi"

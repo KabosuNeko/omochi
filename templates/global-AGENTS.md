@@ -16,6 +16,9 @@
   requested check before reporting done. If verification fails, fix the
   cause instead of weakening the check.
 - Read complete errors, logs, and stack traces before fixing.
+- When a command fails and its output looks truncated, the full output is
+  saved by rtk (token saver) at ~/.local/share/rtk/tee/ — read it there
+  instead of re-running the command.
 - For UI changes, verify visually (screenshot or rendered output).
 
 ## Scope & delegation
