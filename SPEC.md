@@ -52,6 +52,10 @@ that installs and re-runs itself.
 - `.agents/skills/` -> `~/.agents/skills/` and
   `~/.config/opencode/skills/`.
 - `opencode-plugins.txt` -> the `plugin` array in opencode.jsonc.
+- The setup prompt adds remote `instructions`
+  (opencode-shell-strategy, non-interactive shell rules) and resolves DCP
+  (`@tarquinen/opencode-dcp`) with a self-created `dcp.jsonc` for context
+  pruning.
 
 ## Security and privacy
 

@@ -39,9 +39,16 @@
    - model: <main> · small_model: <worker> · agent.plan.model: <planner>
    - plugin: ["oh-my-openagent@latest", "opencode-pty", "octto",
      "opencode-worktree", "@franlol/opencode-md-table-formatter@latest",
+     "@tarquinen/opencode-dcp@latest",
      ["@plannotator/opencode@latest", {"workflow": "plan-agent",
      "planningAgents": ["plan", "sisyphus"]}]]
-     (plannotator has NO model of its own: it runs on the agent.plan model)
+     (plannotator has NO model of its own: it runs on the agent.plan model;
+     DCP auto-creates ~/.config/opencode/dcp.jsonc with defaults on first
+     run — keep the defaults, disable anytime via "enabled": false)
+   - instructions (non-plugin shell rules, remote):
+     ["https://raw.githubusercontent.com/JRedeker/opencode-shell-strategy/trunk/shell_strategy.md"]
+     (teaches non-interactive command forms: -y/-n flags, sudo -n, ssh
+     accept-new; no TTY/PTY in opencode so interactive commands hang)
    - Write ~/.config/opencode/octto.json: {"port": 0, "agents":
      {"probe": {"model": "<worker>"}, "bootstrapper": {"model": "<worker>"},
      "octto": {"model": "<main>"}}}
@@ -177,6 +184,10 @@
     - opencode --version · opencode mcp list (expected: websearch, grep_app,
       lsp, filesystem, git, fetch, sequential-thinking, context7-remote
       connected; codegraph/memory/github disabled; NO plain "context7")
+    - grep -q '"@tarquinen/opencode-dcp"' ~/.config/opencode/opencode.jsonc
+      && test -f ~/.config/opencode/dcp.jsonc (auto-created on first run)
+    - grep -q 'opencode-shell-strategy' ~/.config/opencode/opencode.jsonc
+      (instructions URL present)
     - bunx oh-my-openagent doctor -> exit 0, agent models = discovered IDs
     - opencode run -m opencode/deepseek-v4-flash-free "Reply with exactly: OK"
       (verifies free fallback works end-to-end)
@@ -233,3 +244,14 @@
    full output to ~/.local/share/rtk/tee/ — read it there instead of
    re-running. Check `rtk gain` after a week; if savings are negligible:
    rtk init -g --uninstall.
+7. **DCP × OMO compaction overlap** — both manage context. DCP adds a
+   `compress` tool plus dedup/purge-error pruning and nudges; OMO has its
+   own auto-compact hook (`anthropic-context-window-limit-recovery`). Keep
+   everything on defaults first; if sessions compact redundantly (double
+   summaries), disable OMO's auto-compact hook in
+   ~/.config/opencode/oh-my-opencode.json ("disabled_hooks":
+   ["anthropic-context-window-limit-recovery"]) or set DCP "enabled": false
+   in ~/.config/opencode/dcp.jsonc. DCP trades ~5% cache-hit rate for
+   smaller contexts; it is AGPL-licensed and its upstream development has
+   slowed (new features move to Sleev) — it still works on current
+   opencode.
