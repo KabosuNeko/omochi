@@ -1,0 +1,10 @@
+# Maintained opencode npm plugin selection (one package per line, no versions:
+# plugins always resolve to @latest). The setup prompt writes these into the
+# `plugin` array of ~/.config/opencode/opencode.jsonc and configures their
+# options. Validate with ./scripts/validate.sh.
+oh-my-openagent
+opencode-pty
+octto
+opencode-worktree
+@franlol/opencode-md-table-formatter
+@plannotator/opencode
