@@ -34,6 +34,14 @@
   - Acceptance criteria: manifest entries all appear in the setup prompt;
     filters file is a committed example.
   - Automated validation: `validate.sh` manifest checks.
+- [x] Add DCP + non-interactive shell rules.
+  - Scope: `@tarquinen/opencode-dcp` npm plugin and the remote
+    `opencode-shell-strategy` instructions URL in the setup prompt.
+  - Acceptance criteria: manifest + prompt stay in sync; DCP uses its default
+    `dcp.jsonc`; shell-strategy loads from the URL at each session.
+  - Automated validation: `validate.sh` manifest and prompt-sync checks.
+  - Manual validation: on next real setup, `/dcp` panel appears and the
+    instructions load without errors.
 - [x] Add SPEC / ROADMAP / TASKS for this repository.
   - Acceptance criteria: they match current phase and validation status.
 

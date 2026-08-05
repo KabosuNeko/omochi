@@ -8,3 +8,4 @@ octto
 opencode-worktree
 @franlol/opencode-md-table-formatter
 @plannotator/opencode
+@tarquinen/opencode-dcp
