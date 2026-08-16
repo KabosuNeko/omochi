@@ -36,6 +36,7 @@
     "agents": {
       "sisyphus": {
         "model": "<main>",
+        "reasoning": "medium",
         "fallback_models": ["<planner>", "<free>"]
       },
       "sisyphus-junior": {
@@ -44,29 +45,31 @@
       },
       "hephaestus": {
         "model": "<main>",
+        "reasoning": "medium",
         "fallback_models": ["<planner>", "<free>"]
       },
       "oracle": {
-        "model": "opencode-go/qwen3.8-max",
-        "fallback_models": ["<main>", "<free>"]
+        "model": "<main>",
+        "reasoning": "high",
+        "fallback_models": ["<planner>", "<free>"]
       },
       "momus": {
         "model": "<planner>",
-        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
+        "fallback_models": ["<main>", "<free>"]
       },
       "librarian": {
         "model": "<planner>",
-        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
+        "fallback_models": ["<worker>", "<free>"]
       },
       "prometheus": {
         "model": "<planner>",
         "reasoning": "high",
-        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
+        "fallback_models": ["<main>", "<free>"]
       },
       "metis": {
         "model": "<planner>",
         "reasoning": "low",
-        "fallback_models": ["opencode-go/qwen3.6-plus", "<free>"]
+        "fallback_models": ["<worker>", "<free>"]
       },
       "explore": {
         "model": "<worker>",
@@ -74,33 +77,33 @@
       },
       "atlas": {
         "model": "<planner>",
-        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
+        "fallback_models": ["<main>", "<free>"]
       },
       "multimodal-looker": {
-        "model": "opencode-go/qwen3.8-max",
-        "fallback_models": ["opencode-go/qwen3.7-plus", "<free>"]
+        "model": "<planner>",
+        "fallback_models": ["<main>", "<free>"]
       }
     },
     "categories": {
       "visual-engineering": {
         "model": "<planner>",
         "reasoning": "high",
-        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
+        "fallback_models": ["<main>", "<free>"]
       },
       "ultrabrain": {
         "model": "<main>",
         "reasoning": "max",
-        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
+        "fallback_models": ["<planner>", "<free>"]
       },
       "deep": {
         "model": "<main>",
-        "reasoning": "max",
-        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
+        "reasoning": "high",
+        "fallback_models": ["<planner>", "<free>"]
       },
       "artistry": {
         "model": "<planner>",
         "reasoning": "high",
-        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
+        "fallback_models": ["<main>", "<free>"]
       },
       "quick": {
         "model": "<worker>",
@@ -109,7 +112,7 @@
       "writing": {
         "model": "<planner>",
         "reasoning": "low",
-        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
+        "fallback_models": ["<main>", "<free>"]
       }
     }
   },

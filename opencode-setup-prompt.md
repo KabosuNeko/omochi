@@ -37,7 +37,7 @@
 3. Write ~/.config/opencode/opencode.jsonc (fixed structure; models come from
    the step 4 discovery):
    - model: <main> · small_model: <worker> · agent.plan.model: <planner>
-   - plugin: ["oh-my-openagent@latest", "opencode-pty", "octto",
+   - plugin: ["oh-my-openagent@latest", "octto",
      "opencode-worktree", "@franlol/opencode-md-table-formatter@latest",
      "@tarquinen/opencode-dcp@latest",
      ["@plannotator/opencode@latest", {"workflow": "plan-agent",
@@ -115,19 +115,19 @@
     - "disabled_mcps": ["context7"]  (keep OUR context7-remote; drop OMO's
       auto-injected one to avoid tool-name collision)
 Routing (verified models; see template for the full JSONC):
-     - code-review, docs-reader -> momus, librarian -> <planner>
-       (fallback: qwen3.8-max / opencode/deepseek-v4-flash-free)
-     - refactor-human-code -> hephaestus -> <main> (fallback: <planner>)
-     - bug-hunt -> oracle -> qwen3.8-max (fallback: <main>)
-     - sisyphus -> <main> (fallback: <planner>, opencode/deepseek-v4-flash-free)
-     - sisyphus-junior -> <worker> (fallback: <planner>, opencode/deepseek-v4-flash-free)
-     - prometheus -> <planner> reasoning high (fallback: qwen3.8-max)
-     - metis, atlas -> <planner> reasoning low (fallback: qwen3.6-plus)
-     - explore -> <worker> (fallback: <planner>, opencode/deepseek-v4-flash-free)
-     - multimodal-looker -> a vision-capable model (e.g. qwen3.8-max)
-    Categories (default reasoning tiers): visual-engineering, artistry ->
-    <planner> reasoning high; ultrabrain, deep -> <main> reasoning max;
-    quick -> <worker>; writing -> <planner> reasoning low.
+      - code-review, docs-reader -> momus, librarian -> <planner>
+        (fallback: <main> / <free>)
+      - refactor-human-code -> hephaestus -> <main> reasoning medium (fallback: <planner>)
+      - bug-hunt -> oracle -> <main> reasoning high (fallback: <planner>)
+      - sisyphus -> <main> reasoning medium (fallback: <planner>, <free>)
+      - sisyphus-junior -> <worker> (fallback: <planner>, <free>)
+      - prometheus -> <planner> reasoning high (fallback: <main>)
+      - metis, atlas -> <planner> reasoning low (fallback: <worker> / <main>)
+      - explore -> <worker> (fallback: <planner>, <free>)
+      - multimodal-looker -> <planner> (fallback: <main>, <free>)
+     Categories (default reasoning tiers): visual-engineering, artistry ->
+     <planner> reasoning high; ultrabrain -> <main> reasoning max;
+     deep -> <main> reasoning high; quick -> <worker>; writing -> <planner> reasoning low.
    "opencode/deepseek-v4-flash-free" is a FREE model on the opencode provider (Zen);
    it works as last-resort fallback without a subscription.
    Note: OMO routes by agent/category, NOT by skill; the matching skills must
@@ -260,3 +260,9 @@ Routing (verified models; see template for the full JSONC):
    smaller contexts; it is AGPL-licensed and its upstream development has
    slowed (new features move to Sleev) — it still works on current
    opencode.
+8. **Sequential Thinking with Native Reasoning Models** — when using models
+   with built-in CoT reasoning (DeepSeek Pro/R1, Qwen Reasoning), having the
+   `@modelcontextprotocol/server-sequential-thinking` MCP active can trigger
+   double-reasoning loops (model reasons in thought tokens, then calls the
+   sequential thinking tool, doubling latency and token consumption).
+   Keep sequential-thinking disabled or enable only for non-thinking models.

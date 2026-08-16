@@ -1,6 +1,7 @@
 ---
 name: bash-scripting
 description: Design, implement, review, test, and debug Bash and POSIX shell scripts with safe quoting, error handling, portability, ShellCheck, shfmt, and predictable command behavior. Use for creating or modifying .sh files, automating command-line workflows, fixing shell bugs, improving script safety, removing bashisms, or validating Linux and CI shell scripts.
+compatibility: opencode
 ---
 
 # bash-scripting
