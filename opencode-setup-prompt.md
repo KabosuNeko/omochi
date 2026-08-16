@@ -68,12 +68,17 @@
        github (remote https://api.githubcopilot.com/mcp/, OAuth) -> disabled
    - NEVER hardcode API keys: use {env:VAR} or auth.json only
 4. Assign models by role (pick from the live list; names in brackets are
-   current-model references only):
-   | Role | Selection criteria (priority order) | 2026 reference |
-   |---|---|---|
-   | Main coding (complex logic, architecture, heavy generation) | Strongest stable reasoning model on Go; prefer $60/month tier over $15 if equal strength | deepseek-v4-pro (fallback: qwen3.7-max) |
-   | Worker (small_model: autocomplete, boilerplate, light tasks) | Fastest + cheapest with highest quota (prefer $60 tier). If the opencode provider (Zen) is authenticated, prefer its FREE worker: opencode/deepseek-v4-flash-free — it matches the Go flash in speed and costs nothing | deepseek-v4-flash-free (fallback: opencode-go/deepseek-v4-flash, qwen3.7-plus) |
-   | Planner/Reviewer (deep reading, planning, code review) | Code-specialized, cheap, $60 tier, "Claude-like" behavior (fits OMO prompts) | kimi-k2.7-code (fallback: glm-5.2) |
+    current-model references only). PRICING POLICY: prefer cheap opencode-go
+    models with long context/output limits (deepseek flash 1M/384K, deepseek
+    pro 1M/384K, qwen3.7-plus 1M). AVOID kimi, glm, and pricey tiers for
+    routine work — they only earn their cost at specialized niches. Every
+    agent/category fallback chain MUST end with a free model (opencode/
+    deepseek-v4-flash-free) so the setup keeps working on zero balance.
+    | Role | Selection criteria (priority order) | 2026 reference |
+    |---|---|---|
+    | Main coding (complex logic, architecture, heavy generation) | Strongest cheap reasoning on Go with long limits (prefer 1M ctx models; $60 tier over $15 if equal price) | deepseek-v4-pro (fallback: qwen3.8-max) |
+    | Worker (small_model: autocomplete, boilerplate, light tasks) | Cheapest with the longest limits (1M ctx / 384K out). If the opencode provider (Zen) is authenticated, the FREE worker opencode/deepseek-v4-flash-free is preferred — costs nothing | deepseek-v4-flash-free (fallback: opencode-go/deepseek-v4-flash, qwen3.7-plus) |
+    | Planner/Reviewer (deep reading, planning, code review) | Cheap code-capable on Go, long context (1M), vision is a plus | qwen3.7-plus (fallback: qwen3.8-max) |
    For EACH role: run `opencode models opencode-go` to verify the ID exists;
    if missing, pick the closest per criteria and log the substitution.
 5. Install oh-my-openagent (repo: code-yeongyu/oh-my-openagent, npm:
@@ -109,20 +114,20 @@
       true, "restore_primary_after_cooldown": true}
     - "disabled_mcps": ["context7"]  (keep OUR context7-remote; drop OMO's
       auto-injected one to avoid tool-name collision)
-    Routing (verified models; see template for the full JSONC):
-    - code-review, docs-reader -> momus, librarian -> <planner>
-      (fallback: glm-5.2 / qwen3.7-plus)
-    - refactor-human-code -> hephaestus -> <main> (fallback: qwen3.7-max)
-    - bug-hunt -> oracle -> qwen3.7-max (fallback: <main>)
-    - sisyphus -> <main> (fallback: <planner>, opencode/deepseek-v4-flash-free)
-    - sisyphus-junior -> <planner> (fallback: <worker>, opencode/deepseek-v4-flash-free)
-    - prometheus -> <planner> reasoning high (fallback: glm-5.2)
-    - metis, atlas -> <planner> reasoning low (fallback: qwen3.7-plus)
-    - explore -> <worker> (fallback: opencode/deepseek-v4-flash-free)
-    - multimodal-looker -> a vision-capable model (e.g. kimi-k3)
-   Categories (default reasoning tiers): visual-engineering, artistry ->
-   <planner> reasoning high; ultrabrain, deep -> <main> reasoning max;
-   quick -> <worker>; writing -> <planner> reasoning low.
+Routing (verified models; see template for the full JSONC):
+     - code-review, docs-reader -> momus, librarian -> <planner>
+       (fallback: qwen3.8-max / opencode/deepseek-v4-flash-free)
+     - refactor-human-code -> hephaestus -> <main> (fallback: <planner>)
+     - bug-hunt -> oracle -> qwen3.8-max (fallback: <main>)
+     - sisyphus -> <main> (fallback: <planner>, opencode/deepseek-v4-flash-free)
+     - sisyphus-junior -> <worker> (fallback: <planner>, opencode/deepseek-v4-flash-free)
+     - prometheus -> <planner> reasoning high (fallback: qwen3.8-max)
+     - metis, atlas -> <planner> reasoning low (fallback: qwen3.6-plus)
+     - explore -> <worker> (fallback: <planner>, opencode/deepseek-v4-flash-free)
+     - multimodal-looker -> a vision-capable model (e.g. qwen3.8-max)
+    Categories (default reasoning tiers): visual-engineering, artistry ->
+    <planner> reasoning high; ultrabrain, deep -> <main> reasoning max;
+    quick -> <worker>; writing -> <planner> reasoning low.
    "opencode/deepseek-v4-flash-free" is a FREE model on the opencode provider (Zen);
    it works as last-resort fallback without a subscription.
    Note: OMO routes by agent/category, NOT by skill; the matching skills must

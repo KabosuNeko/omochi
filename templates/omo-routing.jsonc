@@ -1,11 +1,18 @@
 // OMO routing template — merge into ~/.omo/omo.jsonc under "[opencode]"
 // Placeholders to resolve from setup step 4 discovery:
-//   <main>    = strongest stable reasoning model on Go
-//              (2026: opencode-go/deepseek-v4-pro)
-//   <worker>  = free/cheap fast model for light tasks
+//   <main>    = cheap strong reasoning model with long limits on Go
+//              (2026: opencode-go/deepseek-v4-pro — 1M ctx / 384K out)
+//   <worker>  = cheapest fast model with long limits on Go
+//              (2026: opencode-go/deepseek-v4-flash — 1M ctx / 384K out)
+//   <planner> = cheap code-capable model for review/planning
+//              (2026: opencode-go/qwen3.7-plus — 1M ctx, vision)
+//   <free>    = last-resort free fallback (OpenCode Zen, no subscription)
 //              (2026: opencode/deepseek-v4-flash-free)
-//   <planner> = cheap code-specialized "Claude-like" model for review/planning
-//              (2026: opencode-go/kimi-k2.7-code)
+// Pricing policy: prefer cheap opencode-go models with long context/output
+// (deepseek flash/pro, qwen). AVOID kimi, glm, and pricey tiers for routine
+// work — they only earn their cost at specialized niches. Every fallback
+// chain MUST end with a free model so the setup keeps working on zero
+// balance.
 // Verified key format (oh-my-openagent 4.19.4): agents use "model" +
 // "fallback_models" (array of strings; entries may be {"model", "reasoning"}
 // objects) + optional "reasoning" (enum off|minimal|low|medium|high|xhigh|
@@ -29,75 +36,80 @@
     "agents": {
       "sisyphus": {
         "model": "<main>",
-        "fallback_models": ["<planner>", "opencode/deepseek-v4-flash-free"]
+        "fallback_models": ["<planner>", "<free>"]
       },
       "sisyphus-junior": {
-        "model": "<planner>",
-        "fallback_models": ["<worker>", "opencode/deepseek-v4-flash-free"]
+        "model": "<worker>",
+        "fallback_models": ["<planner>", "<free>"]
       },
       "hephaestus": {
         "model": "<main>",
-        "fallback_models": ["opencode-go/qwen3.7-max"]
+        "fallback_models": ["<planner>", "<free>"]
       },
       "oracle": {
-        "model": "opencode-go/qwen3.7-max",
-        "fallback_models": ["<main>"]
+        "model": "opencode-go/qwen3.8-max",
+        "fallback_models": ["<main>", "<free>"]
       },
       "momus": {
         "model": "<planner>",
-        "fallback_models": ["opencode-go/glm-5.2"]
+        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
       },
       "librarian": {
         "model": "<planner>",
-        "fallback_models": ["opencode-go/qwen3.7-plus"]
+        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
       },
       "prometheus": {
         "model": "<planner>",
         "reasoning": "high",
-        "fallback_models": ["opencode-go/glm-5.2"]
+        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
       },
       "metis": {
         "model": "<planner>",
         "reasoning": "low",
-        "fallback_models": ["opencode-go/qwen3.7-plus"]
+        "fallback_models": ["opencode-go/qwen3.6-plus", "<free>"]
       },
       "explore": {
         "model": "<worker>",
-        "fallback_models": ["opencode/deepseek-v4-flash-free"]
+        "fallback_models": ["<planner>", "<free>"]
       },
       "atlas": {
         "model": "<planner>",
-        "fallback_models": ["opencode-go/qwen3.7-plus"]
+        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
       },
       "multimodal-looker": {
-        "model": "opencode-go/kimi-k3"
+        "model": "opencode-go/qwen3.8-max",
+        "fallback_models": ["opencode-go/qwen3.7-plus", "<free>"]
       }
     },
     "categories": {
       "visual-engineering": {
         "model": "<planner>",
         "reasoning": "high",
-        "fallback_models": ["opencode-go/glm-5.2"]
+        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
       },
       "ultrabrain": {
         "model": "<main>",
-        "reasoning": "max"
+        "reasoning": "max",
+        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
       },
       "deep": {
         "model": "<main>",
-        "reasoning": "max"
+        "reasoning": "max",
+        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
       },
       "artistry": {
         "model": "<planner>",
-        "reasoning": "high"
+        "reasoning": "high",
+        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
       },
       "quick": {
         "model": "<worker>",
-        "fallback_models": ["opencode/deepseek-v4-flash-free"]
+        "fallback_models": ["<free>"]
       },
       "writing": {
         "model": "<planner>",
-        "reasoning": "low"
+        "reasoning": "low",
+        "fallback_models": ["opencode-go/qwen3.8-max", "<free>"]
       }
     }
   },
