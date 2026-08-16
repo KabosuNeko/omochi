@@ -1,6 +1,7 @@
 ---
 name: linux-sysadmin
 description: Diagnose and operate Linux systems (Arch/CachyOS, systemd, SSH, permissions, firewalls, packages, processes, logs). Use when asked to troubleshoot hosts, prepare commands, write runbooks, fix service failures, or reason about Linux administration.
+compatibility: opencode
 ---
 
 # linux-sysadmin

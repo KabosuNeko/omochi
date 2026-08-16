@@ -17,6 +17,7 @@ node_modules/
 opencode.db
 opencode.db-*
 snapshot/
+.omo/
 
 # OS / editor
 .DS_Store

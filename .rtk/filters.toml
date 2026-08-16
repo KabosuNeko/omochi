@@ -3,11 +3,25 @@
 # Docs: https://github.com/rtk-ai/rtk#custom-filters
 schema_version = 1
 
-# Example: suppress build noise from a custom tool
-# [filters.my-tool]
-# description = "Compact my-tool output"
-# match_command = "^my-tool\\s+build"
-# strip_ansi = true
-# strip_lines_matching = ["^\\s*$", "^Downloading", "^Installing"]
-# max_lines = 30
-# on_empty = "my-tool: ok"
+[filters.git-status]
+description = "Compact git status output"
+match_command = "^git\\s+status"
+max_lines = 25
+
+[filters.pytest]
+description = "Compact pytest output and remove path noise"
+match_command = "^(pytest|uv\\s+run\\s+pytest|python[0-9.]*\\s+-m\\s+pytest)"
+strip_lines_matching = ["^rootdir:", "^configfile:", "^testpaths:", "^plugins:"]
+max_lines = 40
+
+[filters.cargo-test]
+description = "Compact cargo test output"
+match_command = "^cargo\\s+test"
+strip_lines_matching = ["^\\s*Compiling", "^\\s*Finished"]
+max_lines = 40
+
+[filters.tree-find]
+description = "Cap long file listings"
+match_command = "^(tree|find\\s)"
+max_lines = 35
+

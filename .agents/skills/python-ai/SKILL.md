@@ -1,6 +1,7 @@
 ---
 name: python-ai
 description: Build and troubleshoot Python AI applications with uv, local LLMs, OpenAI APIs, OpenRouter, agent frameworks, retrieval, tool calling, evaluation, and AI developer tooling. Use for implementing Python AI features, managing AI dependencies, designing prompts or agents, debugging model calls, or preparing AI app validation.
+compatibility: opencode
 ---
 
 # python-ai
