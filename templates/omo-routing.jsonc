@@ -1,7 +1,7 @@
 // OMO routing template — merge into ~/.omo/omo.jsonc under "[opencode]"
 // Placeholders to resolve from setup step 4 discovery:
-//   <main>    = cheap strong reasoning model with long limits on Go
-//              (2026: opencode-go/deepseek-v4-pro — 1M ctx / 384K out)
+//   <main>    = cheapest fast reasoning model with long limits on Go
+//              (2026: opencode-go/deepseek-v4-flash — 1M ctx / 384K out, fallback: deepseek-v4-pro)
 //   <worker>  = cheapest fast model with long limits on Go
 //              (2026: opencode-go/deepseek-v4-flash — 1M ctx / 384K out)
 //   <planner> = cheap code-capable model for review/planning

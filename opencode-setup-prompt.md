@@ -76,9 +76,9 @@
     deepseek-v4-flash-free) so the setup keeps working on zero balance.
     | Role | Selection criteria (priority order) | 2026 reference |
     |---|---|---|
-    | Main coding (complex logic, architecture, heavy generation) | Strongest cheap reasoning on Go with long limits (prefer 1M ctx models; $60 tier over $15 if equal price) | deepseek-v4-pro (fallback: qwen3.8-max) |
+    | Main coding (complex logic, architecture, heavy generation) | Cheapest fast reasoning on Go with long limits (prioritize deepseek-v4-flash for lowest cost & latency; fallback: deepseek-v4-pro) | deepseek-v4-flash (fallback: deepseek-v4-pro, qwen3.8-max) |
     | Worker (small_model: autocomplete, boilerplate, light tasks) | Cheapest with the longest limits (1M ctx / 384K out). If the opencode provider (Zen) is authenticated, the FREE worker opencode/deepseek-v4-flash-free is preferred — costs nothing | deepseek-v4-flash-free (fallback: opencode-go/deepseek-v4-flash, qwen3.7-plus) |
-    | Planner/Reviewer (deep reading, planning, code review) | Cheap code-capable on Go, long context (1M), vision is a plus | qwen3.7-plus (fallback: qwen3.8-max) |
+    | Planner/Reviewer (deep reading, planning, code review) | Cheap code-capable on Go, long context (1M), vision is a plus | qwen3.7-plus (fallback: deepseek-v4-flash, deepseek-v4-pro) |
    For EACH role: run `opencode models opencode-go` to verify the ID exists;
    if missing, pick the closest per criteria and log the substitution.
 5. Install oh-my-openagent (repo: code-yeongyu/oh-my-openagent, npm:
