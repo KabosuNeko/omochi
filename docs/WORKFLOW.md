@@ -47,7 +47,7 @@
 
 ## When a setup breaks
 
-- Free fallbacks (`opencode/deepseek-v4-flash-free`) continue to work after a
+- Free fallbacks (`opencode/muse-spark-1.3-contributor-free`) continue to work after a
   provider balance or subscription error; `opencode auth login` restores the
   opencode provider.
 - Plugin breakage after an upgrade: remove
