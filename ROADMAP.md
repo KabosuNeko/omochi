@@ -28,7 +28,7 @@ setup prompt, skills, templates, and a maintenance gate.
 ### Validation
 
 - Manual smoke tests per the prompt; free fallback verified with
-  `opencode/deepseek-v4-flash-free`.
+  `opencode/muse-spark-1.3-contributor-free`.
 
 ## Phase 2: Maintenance gate
 

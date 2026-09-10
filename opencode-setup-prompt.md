@@ -70,14 +70,16 @@
 4. Assign models by role (pick from the live list; names in brackets are
     current-model references only). PRICING POLICY: prefer cheap opencode-go
     models with long context/output limits (deepseek flash 1M/384K, deepseek
-    pro 1M/384K, qwen3.7-plus 1M). AVOID kimi, glm, and pricey tiers for
-    routine work — they only earn their cost at specialized niches. Every
+    pro 1M/384K, qwen3.7-plus 1M). AVOID pricey tiers for
+    routine work (kimi, full-size glm at ~$1+/$4+, and similar — they
+    only earn their cost at specialized niches); cheap flash variants
+    with long limits (e.g. glm-5.3-flash) are fair game. Every
     agent/category fallback chain MUST end with a free model (opencode/
-    deepseek-v4-flash-free) so the setup keeps working on zero balance.
+    muse-spark-1.3-contributor-free) so the setup keeps working on zero balance.
     | Role | Selection criteria (priority order) | 2026 reference |
     |---|---|---|
     | Main coding (complex logic, architecture, heavy generation) | Cheapest fast reasoning on Go with long limits (prioritize deepseek-v4-flash for lowest cost & latency; fallback: deepseek-v4-pro) | deepseek-v4-flash (fallback: deepseek-v4-pro, qwen3.8-max) |
-    | Worker (small_model: autocomplete, boilerplate, light tasks) | Cheapest with the longest limits (1M ctx / 384K out). If the opencode provider (Zen) is authenticated, the FREE worker opencode/deepseek-v4-flash-free is preferred — costs nothing | deepseek-v4-flash-free (fallback: opencode-go/deepseek-v4-flash, qwen3.7-plus) |
+    | Worker (small_model: autocomplete, boilerplate, light tasks) | Cheapest free with the longest limits (1M ctx / 131K out). If the opencode provider (Zen) is authenticated, the FREE worker opencode/muse-spark-1.3-contributor-free is preferred — costs nothing | muse-spark-1.3-contributor-free (fallback: opencode-go/deepseek-v4-flash, qwen3.7-plus) |
     | Planner/Reviewer (deep reading, planning, code review) | Cheap code-capable on Go, long context (1M), vision is a plus | qwen3.7-plus (fallback: deepseek-v4-flash, deepseek-v4-pro) |
    For EACH role: run `opencode models opencode-go` to verify the ID exists;
    if missing, pick the closest per criteria and log the substitution.
@@ -128,13 +130,13 @@ Routing (verified models; see template for the full JSONC):
      Categories (default reasoning tiers): visual-engineering, artistry ->
      <planner> reasoning high; ultrabrain -> <main> reasoning max;
      deep -> <main> reasoning high; quick -> <worker>; writing -> <planner> reasoning low.
-   "opencode/deepseek-v4-flash-free" is a FREE model on the opencode provider (Zen);
+   "opencode/muse-spark-1.3-contributor-free" is a FREE model on the opencode provider (Zen);
    it works as last-resort fallback without a subscription.
    Note: OMO routes by agent/category, NOT by skill; the matching skills must
    state "delegate to agent X" inside their SKILL.md.
 7. Optional free-tier fallback: run `opencode auth login` and select
    "OpenCode Zen" (free models; no payment needed). Required only if you
-   want deepseek-v4-flash-free / other opencode provider free models to work.
+   want muse-spark-1.3-contributor-free / other opencode provider free models to work.
 8. Personal skills (7, at ~/.config/opencode/skills/<name>/SKILL.md):
    frontend-design (ui-ux-pro merged in), code-review, refactor-human-code,
    bug-hunt, docs-reader, test-writer, grill-me.
@@ -194,7 +196,7 @@ Routing (verified models; see template for the full JSONC):
     - grep -q 'opencode-shell-strategy' ~/.config/opencode/opencode.jsonc
       (instructions URL present)
     - bunx oh-my-openagent doctor -> exit 0, agent models = discovered IDs
-    - opencode run -m opencode/deepseek-v4-flash-free "Reply with exactly: OK"
+    - opencode run -m opencode/muse-spark-1.3-contributor-free "Reply with exactly: OK"
       (verifies free fallback works end-to-end)
     - opencode run "List the files in this repo and read one file"
       (verifies repo reading)
@@ -203,7 +205,7 @@ Routing (verified models; see template for the full JSONC):
     - rtk --version && rtk rewrite "git status" (expect: "rtk git status")
     - test -f ~/.config/opencode/plugins/rtk.ts && grep -q
       'exclude_commands' ~/.config/rtk/config.toml
-    - opencode run -m opencode/deepseek-v4-flash-free "Run: ls -la" && rtk
+    - opencode run -m opencode/muse-spark-1.3-contributor-free "Run: ls -la" && rtk
       gain (expect: "rtk ls -la" counted — proves the plugin rewrote)
 
 ## Required Output
@@ -220,7 +222,7 @@ Routing (verified models; see template for the full JSONC):
   after an update: rm -rf ~/.cache/opencode/node_modules/<plugin> and restart
   opencode.
 - If opencode-go reports "Insufficient balance", top up at the workspace
-  billing page; free fallbacks (deepseek-v4-flash-free) keep working meanwhile.
+  billing page; free fallbacks (muse-spark-1.3-contributor-free) keep working meanwhile.
 ```
 
 ### Known traps (from a real setup, 2026-08-01)
