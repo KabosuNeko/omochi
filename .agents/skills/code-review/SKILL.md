@@ -24,6 +24,8 @@ Review with fresh context — the author must not grade their own work.
 - Tests cover the new behavior and the changed edge cases.
 - Docs/changelog match the actual behavior.
 - Dependencies: no new transitive risk, versions pinned per SPEC.md.
+- Minimalism & Over-engineering: no speculative abstractions, single-implementer interfaces, or unnecessary dependencies when standard library suffices.
+- Hygiene & Dead code: no decorative banner comments, narrative workflow comments, unused variables, or dead exports.
 
 ## Output
 

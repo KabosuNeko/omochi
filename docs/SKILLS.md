@@ -70,6 +70,7 @@ into `~/.agents/skills/` (guardrails) and `~/.config/opencode/skills/`
 - `grill-me`
 - `linux-sysadmin`
 - `python-ai`
+- `quickshell`
 - `refactor-human-code`
 - `test-writer`
 
