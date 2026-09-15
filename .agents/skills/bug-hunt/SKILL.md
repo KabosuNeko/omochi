@@ -23,7 +23,9 @@ and debugging consultant. Use the local flow below for quick bugs.
 3. Instrument: add temporary logging or a debugger breakpoint at the fault
    line; read the actual values.
 4. Root cause: state the mechanism in one sentence before proposing a fix.
-   If you cannot, keep investigating — symptom-patching is forbidden.
+   Before editing, grep every caller of the shared function you intend to touch.
+   Fix the root cause once at the shared seam rather than adding local defensive
+   guards at single symptom sites. Symptom-patching is forbidden.
 5. Fix: smallest change that removes the cause. Add a regression test that
    fails on the old code and passes on the fix.
 6. Verify: run the focused test, then the broader suite, then the original
@@ -33,4 +35,5 @@ and debugging consultant. Use the local flow below for quick bugs.
 
 - No shotgun changes ("maybe this fixes it").
 - No suppressing errors without handling them.
+- No local symptom-patching that leaves sibling callers broken.
 - No deleting tests to make CI pass.

@@ -69,8 +69,15 @@ if ! has_cmd opencode; then
 fi
 
 if ! has_cmd bun; then
-  echo ">> Installing bun (pacman)..."
-  run sudo pacman -S --noconfirm bun
+  echo ">> Installing bun..."
+  if has_cmd pacman && has_cmd sudo; then
+    if ! run sudo pacman -S --noconfirm bun; then
+      echo ">> pacman failed, trying official installer..."
+      pipe_install bash curl -fsSL https://bun.sh/install
+    fi
+  else
+    pipe_install bash curl -fsSL https://bun.sh/install
+  fi
 fi
 
 # rtk (token saver): no pacman package — official installer, idempotent.

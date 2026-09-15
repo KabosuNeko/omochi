@@ -1,7 +1,7 @@
 # OpenCode Setup Prompt — Self-Updating Edition
 
-> Created: 2026-08-01 · Updated: 2026-08-01 (verified against a real setup) ·
-> OpenCode: 1.18.8 · OS: CachyOS (Arch) · Shell: Fish
+> Created: 2026-08-01 · Updated: 2026-09-15 (verified against a real setup) ·
+> OpenCode: 1.18.29 · OS: CachyOS (Arch) · Shell: Fish
 > Note: Every model ID in this prompt is a REFERENCE ONLY, valid at the time of
 > writing. When running, the agent MUST discover live models (step 0) and
 > substitute any ID that no longer exists.
@@ -39,7 +39,7 @@
    - model: <main> · small_model: <worker> · agent.plan.model: <planner>
    - plugin: ["oh-my-openagent@latest", "octto",
      "opencode-worktree", "@franlol/opencode-md-table-formatter@latest",
-     "@tarquinen/opencode-dcp@latest",
+     "@tarquinen/opencode-dcp@latest", "@dietrichgebert/ponytail@latest",
      ["@plannotator/opencode@latest", {"workflow": "plan-agent",
      "planningAgents": ["plan", "sisyphus"]}]]
      (plannotator has NO model of its own: it runs on the agent.plan model;
@@ -78,9 +78,9 @@
     muse-spark-1.3-contributor-free) so the setup keeps working on zero balance.
     | Role | Selection criteria (priority order) | 2026 reference |
     |---|---|---|
-    | Main coding (complex logic, architecture, heavy generation) | Cheapest fast reasoning on Go with long limits (prioritize deepseek-v4-flash for lowest cost & latency; fallback: deepseek-v4-pro) | deepseek-v4-flash (fallback: deepseek-v4-pro, qwen3.8-max) |
-    | Worker (small_model: autocomplete, boilerplate, light tasks) | Cheapest free with the longest limits (1M ctx / 131K out). If the opencode provider (Zen) is authenticated, the FREE worker opencode/muse-spark-1.3-contributor-free is preferred — costs nothing | muse-spark-1.3-contributor-free (fallback: opencode-go/deepseek-v4-flash, qwen3.7-plus) |
-    | Planner/Reviewer (deep reading, planning, code review) | Cheap code-capable on Go, long context (1M), vision is a plus | qwen3.7-plus (fallback: deepseek-v4-flash, deepseek-v4-pro) |
+    | Main coding (complex logic, architecture, heavy generation) | Cheapest fast reasoning on Go with long limits (prioritize deepseek-v4-flash for lowest cost & latency; fallback: deepseek-v4.1-flash, deepseek-v4-pro) | deepseek-v4-flash (fallback: deepseek-v4.1-flash, deepseek-v4-pro, qwen3.8-max) |
+    | Worker (small_model: autocomplete, boilerplate, light tasks) | Cheapest free with the longest limits (1M ctx / 131K out). If the opencode provider (Zen) is authenticated, the FREE worker opencode/muse-spark-1.3-contributor-free is preferred — costs nothing | muse-spark-1.3-contributor-free (fallback: opencode-go/deepseek-v4-flash, qwen3.8-flash, glm-5.3-flash) |
+    | Planner/Reviewer (deep reading, planning, code review) | Cheap code-capable on Go, long context (1M), vision is a plus | qwen3.7-plus (fallback: qwen3.8-max, deepseek-v4-flash, deepseek-v4-pro) |
    For EACH role: run `opencode models opencode-go` to verify the ID exists;
    if missing, pick the closest per criteria and log the substitution.
 5. Install oh-my-openagent (repo: code-yeongyu/oh-my-openagent, npm:
@@ -137,14 +137,14 @@ Routing (verified models; see template for the full JSONC):
 7. Optional free-tier fallback: run `opencode auth login` and select
    "OpenCode Zen" (free models; no payment needed). Required only if you
    want muse-spark-1.3-contributor-free / other opencode provider free models to work.
-8. Personal skills (7, at ~/.config/opencode/skills/<name>/SKILL.md):
+ 8. Personal skills (8, at ~/.config/opencode/skills/<name>/SKILL.md):
    frontend-design (ui-ux-pro merged in), code-review, refactor-human-code,
-   bug-hunt, docs-reader, test-writer, grill-me.
+   bug-hunt, docs-reader, test-writer, grill-me, quickshell.
    Provisioning order (first source that works):
    a. cp -r ~/omochi/.agents/skills/* ~/.config/opencode/skills/
    b. git clone --depth 1 https://github.com/KabosuNeko/omochi <tmp>
       && copy .agents/skills/* from it (then delete <tmp>)
-   c. write the 7 SKILL.md yourself from the descriptions in this prompt
+   c. write the 8 SKILL.md yourself from the descriptions in this prompt
    Do not create skills that duplicate OMO built-ins (git-master, playwright,
    frontend-ui-ux, review-work, remove-ai-slops).
  9. Guardrail skills (3, opencode-native, shipped in this repo):
