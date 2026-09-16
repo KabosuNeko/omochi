@@ -44,7 +44,7 @@ that installs and re-runs itself.
 
 - `setup.sh` -> bootstrap binaries + repo clone.
 - `opencode-setup-prompt.md` -> executed by opencode -> writes
-  `~/.config/opencode/opencode.jsonc`, `octto.json`, `~/.omo/omo.jsonc` via
+  `~/.config/opencode/opencode.jsonc`, `~/.omo/omo.jsonc` via
   `templates/omo-routing.jsonc`, provisions skills from `.agents/skills/` and
   `templates/`, installs OMO, configures rtk, runs smoke tests.
 - `templates/global-AGENTS.md` -> `~/.config/opencode/AGENTS.md`.
