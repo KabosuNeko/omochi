@@ -31,14 +31,13 @@
 
 ## Steps
 1. Inspect ~/.config/opencode; back up every file you will touch
-   (opencode.jsonc, package.json, octto.json, ~/.local/share/opencode/auth.json,
+   (opencode.jsonc, package.json, ~/.local/share/opencode/auth.json,
    ~/.omo/omo.jsonc if present, ~/.agents/skills if present) -> .bak-<date>.
 2. Install bun if missing: sudo pacman -S bun
 3. Write ~/.config/opencode/opencode.jsonc (fixed structure; models come from
    the step 4 discovery):
    - model: <main> · small_model: <worker> · agent.plan.model: <planner>
-   - plugin: ["oh-my-openagent@latest", "octto",
-     "opencode-worktree", "@franlol/opencode-md-table-formatter@latest",
+   - plugin: ["oh-my-openagent@latest", "opencode-worktree",
      "@tarquinen/opencode-dcp@latest", "@dietrichgebert/ponytail@latest",
      ["@plannotator/opencode@latest", {"workflow": "plan-agent",
      "planningAgents": ["plan", "sisyphus"]}]]
@@ -49,9 +48,6 @@
      ["https://raw.githubusercontent.com/JRedeker/opencode-shell-strategy/trunk/shell_strategy.md"]
      (teaches non-interactive command forms: -y/-n flags, sudo -n, ssh
      accept-new; no TTY/PTY in opencode so interactive commands hang)
-   - Write ~/.config/opencode/octto.json: {"port": 0, "agents":
-     {"probe": {"model": "<worker>"}, "bootstrapper": {"model": "<worker>"},
-     "octto": {"model": "<main>"}}}
    - mcp (exact commands are verified; do not substitute):
      - filesystem: npx -y @modelcontextprotocol/server-filesystem
        <your Projects dir> <your Documents dir>

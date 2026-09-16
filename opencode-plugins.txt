@@ -3,9 +3,7 @@
 # `plugin` array of ~/.config/opencode/opencode.jsonc and configures their
 # options. Validate with ./scripts/validate.sh.
 oh-my-openagent
-octto
 opencode-worktree
-@franlol/opencode-md-table-formatter
 @plannotator/opencode
 @tarquinen/opencode-dcp
 @dietrichgebert/ponytail
