@@ -26,6 +26,10 @@
 - [x] Add typesafe-ai skill (17 skills total) for TypeSafe and Jev System One programming model.
   - Acceptance criteria: official typesafe-ai skill added, documented, and passing validate.sh.
   - Automated validation: `validate.sh`.
+- [x] Unify skill provisioning into ~/.config/opencode/skills/ (single canonical directory).
+  - Acceptance criteria: eliminate artificial guardrail/personal skill split; all 17 skills provisioned to ~/.config/opencode/skills/; docs and setup prompt aligned.
+  - Automated validation: `validate.sh` and `test-install.sh`.
+
 
 ## Completed
 
