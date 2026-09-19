@@ -13,20 +13,19 @@ curl -fsSL https://raw.githubusercontent.com/KabosuNeko/omochi/main/setup.sh | b
 opencode auth login                        # opencode-go + OpenCode Zen
 set -Ux OPENCODE_API_KEY "sk-..."          # fish; go token from your workspace
 
-# AI-driven setup: discovers models, writes configs, installs OMO,
+# AI-driven setup: discovers models, writes configs,
 # provisions skills/templates, runs smoke tests. Safe to re-run = auto-update.
 opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"
 ```
 
 ## Layout
 
-- `opencode-setup-prompt.md` — self-updating setup prompt + verified "known traps" (npm git deps, fetch-MCP honeypot, OMO array-plugin crash, context7 collision, rtk rewrite)
+- `opencode-setup-prompt.md` — self-updating setup prompt + verified "known traps" (npm git deps, fetch-MCP honeypot, rtk rewrite)
 - `setup.sh` — bootstrap installer (opencode, bun, rtk; `--dry-run`/`--repo`)
 - `AGENTS.md` + `SPEC.md`/`ROADMAP.md`/`TASKS.md` — repo maintenance and project docs
-- `.agents/skills/` — 11 skills (8 personal + 3 guardrails: bash-scripting, python-ai, linux-sysadmin)
+- `.agents/skills/` — 16 skills (13 personal + 3 guardrails: bash-scripting, python-ai, linux-sysadmin)
 - `templates/project-docs/` — SPEC/ROADMAP/TASKS/AGENTS
 - `templates/global-AGENTS.md` — global `~/.config/opencode/AGENTS.md`
-- `templates/omo-routing.jsonc` — OMO model routing, `<main>/<worker>/<planner>` placeholders
 - `opencode-plugins.txt` — maintained npm plugin manifest
 - `.rtk/filters.toml` — project-local rtk filter example
 - `docs/` — SKILLS, LAYOUT, WORKFLOW reference docs

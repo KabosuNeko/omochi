@@ -52,8 +52,7 @@ automatically.
 - Put portable templates in `templates/`.
 - Put reference documentation in `docs/`; load it only when needed.
 - Do not add speculative features, abstractions, configurability, or hooks.
-- Do not create skills that duplicate OMO built-ins (git-master, playwright,
-  frontend-ui-ux, review-work, remove-ai-slops).
+- Keep skills lean, single-purpose, and free of redundant boilerplate.
 - Clean up orphans created by your own change.
 
 ## Documentation routing

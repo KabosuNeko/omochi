@@ -32,7 +32,7 @@
 ## Steps
 1. Inspect ~/.config/opencode; back up every file you will touch
    (opencode.jsonc, package.json, ~/.local/share/opencode/auth.json,
-   ~/.omo/omo.jsonc if present, ~/.agents/skills if present) -> .bak-<date>.
+   ~/.agents/skills if present) -> .bak-<date>.
 2. Install bun if missing: sudo pacman -S bun
 3. Write ~/.config/opencode/opencode.jsonc (fixed structure; models come from
    the step 4 discovery):
@@ -136,7 +136,7 @@
     the model configuration section.
 13. Smoke tests:
     - opencode --version (expected: 2.0+) · opencode mcp list (expected:
-      filesystem, git, fetch, context7-remote connected; github/memory/sequential-thinking disabled)
+      context7-remote, fetch connected)
     - grep -q 'opencode-shell-strategy' ~/.config/opencode/opencode.jsonc
       (instructions URL present)
     - opencode run -m opencode/muse-spark-1.3-contributor-free "Reply with exactly: OK"
@@ -177,37 +177,19 @@
    exists on npm; `mcp-server-fetch` (0.0.2) is a SECURITY RESEARCH CANARY /
    honeypot (its bin is a garbage shell script). Use `mcp-fetch-server`
    (github.com/zcaceres/fetch-mcp).
-3. **OMO installer + array plugin entries** — crashes with
-   `TypeError: plugin.startsWith is not a function` when the plugin array
-   contains an array-form entry (plannotator options). Install with a flat
-   array, then re-add the options entry.
-4. **Context7 collision** — OMO injects its own `context7` MCP at runtime.
-   Keep your remote one under a different name (`context7-remote`) and set
-   `"disabled_mcps": ["context7"]` in omo.jsonc.
-5. **opencode-go account state** — deepseek-v4-flash may require a manual
+3. **opencode-go account state** — deepseek-v4-flash may require a manual
    opt-in (China-hosted), and prepaid balance is separate from subscriptions.
    Check the workspace page if a model errors out.
-6. **rtk is pre-1.0 and rewrites every bash command** — covers only the
+4. **rtk is pre-1.0 and rewrites every bash command** — covers only the
    bash tool (Read/Grep/Glob/LSP bypass it), so opencode savings < Claude
    Code. Always exclude `opencode` in ~/.config/rtk/config.toml so model
    discovery keeps raw output. When a rewritten command fails, rtk saves
    full output to ~/.local/share/rtk/tee/ — read it there instead of
    re-running. Check `rtk gain` after a week; if savings are negligible:
    rtk init -g --uninstall.
-7. **DCP × OMO compaction overlap** — both manage context. DCP adds a
-   `compress` tool plus dedup/purge-error pruning and nudges; OMO has its
-   own auto-compact hook (`anthropic-context-window-limit-recovery`). Keep
-   everything on defaults first; if sessions compact redundantly (double
-   summaries), disable OMO's auto-compact hook in
-   ~/.config/opencode/oh-my-opencode.json ("disabled_hooks":
-   ["anthropic-context-window-limit-recovery"]) or set DCP "enabled": false
-   in ~/.config/opencode/dcp.jsonc. DCP trades ~5% cache-hit rate for
-   smaller contexts; it is AGPL-licensed and its upstream development has
-   slowed (new features move to Sleev) — it still works on current
-   opencode.
-8. **Sequential Thinking with Native Reasoning Models** — when using models
+5. **Sequential Thinking with Native Reasoning Models** — when using models
    with built-in CoT reasoning (DeepSeek Pro/R1, Qwen Reasoning), having the
    `@modelcontextprotocol/server-sequential-thinking` MCP active can trigger
    double-reasoning loops (model reasons in thought tokens, then calls the
    sequential thinking tool, doubling latency and token consumption).
-   Keep sequential-thinking disabled or enable only for non-thinking models.
+   Avoid sequential-thinking in OpenCode 2.0; rely on model native thinking.
