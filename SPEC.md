@@ -48,8 +48,7 @@ that installs and re-runs itself.
   `templates/`, configures rtk, runs smoke tests.
 - `templates/global-AGENTS.md` -> `~/.config/opencode/AGENTS.md`.
 - `templates/project-docs/` -> `~/.config/opencode/templates/project-docs/`.
-- `.agents/skills/` -> `~/.agents/skills/` and
-  `~/.config/opencode/skills/`.
+- `.agents/skills/` -> `~/.config/opencode/skills/`.
 - `opencode-plugins.txt` -> the `plugins` array in opencode.jsonc.
 - OpenCode 2.0 native features handle multi-agent routing, git worktrees, and
   context compaction without brittle third-party framework layers.
