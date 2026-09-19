@@ -118,7 +118,7 @@ if ! bash -n "$repo_root/setup.sh" "$repo_root/scripts/validate.sh"; then
   fail "Bash syntax validation failed"
 fi
 
-if command -v shellcheck >/dev/null 2>&1; then
+if command -v shellcheck >/dev/null 2>&1 && shellcheck --version >/dev/null 2>&1; then
   shellcheck "$repo_root/setup.sh" "$repo_root/scripts/validate.sh" ||
     fail "ShellCheck failed"
 fi

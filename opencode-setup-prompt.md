@@ -1,7 +1,7 @@
 # OpenCode Setup Prompt — Self-Updating Edition
 
-> Created: 2026-08-01 · Updated: 2026-09-15 (verified against a real setup) ·
-> OpenCode: 1.18.29 · OS: CachyOS (Arch) · Shell: Fish
+> Created: 2026-08-01 · Updated: 2026-09-19 (verified on OpenCode 2.0 Native) ·
+> OpenCode: 2.0+ · OS: CachyOS (Arch) · Shell: Fish
 > Note: Every model ID in this prompt is a REFERENCE ONLY, valid at the time of
 > writing. When running, the agent MUST discover live models (step 0) and
 > substitute any ID that no longer exists.
@@ -36,14 +36,12 @@
 2. Install bun if missing: sudo pacman -S bun
 3. Write ~/.config/opencode/opencode.jsonc (fixed structure; models come from
    the step 4 discovery):
-   - model: <main> · small_model: <worker> · agent.plan.model: <planner>
-   - plugin: ["oh-my-openagent@latest", "opencode-worktree",
-     "@tarquinen/opencode-dcp@latest", "@dietrichgebert/ponytail@latest",
-     ["@plannotator/opencode@latest", {"workflow": "plan-agent",
-     "planningAgents": ["plan", "sisyphus"]}]]
-     (plannotator has NO model of its own: it runs on the agent.plan model;
-     DCP auto-creates ~/.config/opencode/dcp.jsonc with defaults on first
-     run — keep the defaults, disable anytime via "enabled": false)
+   - model: <main> · small_model: <worker>
+   - agents: {"plan": {"model": "<planner>"}}
+   - plugins: [["@plannotator/opencode@latest", {"workflow": "plan-agent", "planningAgents": ["plan"]}]]
+     (plannotator runs on the plan agent. OpenCode 2.0 handles multi-agent,
+     worktrees, and context compaction natively; no external OMO, worktree,
+     or dcp plugins are required)
    - instructions (non-plugin shell rules, remote):
      ["https://raw.githubusercontent.com/JRedeker/opencode-shell-strategy/trunk/shell_strategy.md"]
      (teaches non-interactive command forms: -y/-n flags, sudo -n, ssh
@@ -58,8 +56,6 @@
        SECURITY CANARY (honeypot) — never use it]
      - sequential-thinking: npx -y @modelcontextprotocol/server-sequential-thinking
      - context7-remote: remote https://mcp.context7.com/mcp
-       (named context7-remote on purpose: OMO injects its own "context7"
-       at runtime; ours must not collide -> see step 6 disabled_mcps)
      - memory (local, npx -y @modelcontextprotocol/server-memory),
        github (remote https://api.githubcopilot.com/mcp/, OAuth) -> disabled
    - NEVER hardcode API keys: use {env:VAR} or auth.json only
@@ -79,57 +75,18 @@
     | Planner/Reviewer (deep reading, planning, code review) | Cheap code-capable on Go, long context (1M), vision is a plus | qwen3.7-plus (fallback: qwen3.8-max, deepseek-v4-flash, deepseek-v4-pro) |
    For EACH role: run `opencode models opencode-go` to verify the ID exists;
    if missing, pick the closest per criteria and log the substitution.
-5. Install oh-my-openagent (repo: code-yeongyu/oh-my-openagent, npm:
-   oh-my-openagent; the legacy oh-my-opencode name only loads with a warning).
-   [TRAP: the installer crashes with "plugin.startsWith is not a function" if
-   the plugin array contains an array-form entry (the plannotator options
-   entry). Fix: write the plugin array FLAT first (plain strings only), run
-   the installer, then re-add the plannotator options entry.]
-   bunx oh-my-openagent install --no-tui --platform=opencode
-   --claude=no --openai=no --gemini=no --copilot=no --opencode-zen=no
-   --zai-coding-plan=no --kimi-for-coding=no --vercel-ai-gateway=no
-   --opencode-go=yes --skip-auth
-   (idempotent — safe to re-run when models change; OMO resolves per-agent
-   fallback chains from the enabled providers)
- 6. OMO Agent Skill Routing — write the agent + category model routing in
-    ~/.omo/omo.jsonc ("[opencode]" -> "agents" / "categories" blocks) with
-    step 4 discovered IDs, using the template at
-    ~/omochi/templates/omo-routing.jsonc (or from omochi
-    clone; fallback: write it from the routing lines below).
-    Modern key format (verified on oh-my-openagent 4.19.4):
-    - Each agent/category: "model" = primary; "fallback_models" = array of
-      strings (fallbacks in order), entries may be {"model": ..., "reasoning":
-      ...} objects; "reasoning" (enum off|minimal|low|medium|high|xhigh|max|
-      auto) sets the reasoning level. Do NOT use a "models" array for agents —
-      some versions flag it as an unknown key (categories may accept it).
-      Some OMO versions auto-migrate keys; if doctor reports "Unknown config
-      key: agents.X.models", the migration rewrote the file. Keep the
-      root-level "_migrations" marker from the template so the migration
-      never re-runs and this format persists.
-    - "model_fallback": true, "runtime_fallback": {"enabled": true,
-      "retry_on_errors": [429, 500, 502, 503, 504], "max_fallback_attempts": 3,
-      "cooldown_seconds": 30, "timeout_seconds": 120, "notify_on_fallback":
-      true, "restore_primary_after_cooldown": true}
-    - "disabled_mcps": ["context7"]  (keep OUR context7-remote; drop OMO's
-      auto-injected one to avoid tool-name collision)
-Routing (verified models; see template for the full JSONC):
-      - code-review, docs-reader -> momus, librarian -> <planner>
-        (fallback: <main> / <free>)
-      - refactor-human-code -> hephaestus -> <main> reasoning medium (fallback: <planner>)
-      - bug-hunt -> oracle -> <main> reasoning high (fallback: <planner>)
-      - sisyphus -> <main> reasoning medium (fallback: <planner>, <free>)
-      - sisyphus-junior -> <worker> (fallback: <planner>, <free>)
-      - prometheus -> <planner> reasoning high (fallback: <main>)
-      - metis, atlas -> <planner> reasoning low (fallback: <worker> / <main>)
-      - explore -> <worker> (fallback: <planner>, <free>)
-      - multimodal-looker -> <planner> (fallback: <main>, <free>)
-     Categories (default reasoning tiers): visual-engineering, artistry ->
-     <planner> reasoning high; ultrabrain -> <main> reasoning max;
-     deep -> <main> reasoning high; quick -> <worker>; writing -> <planner> reasoning low.
-   "opencode/muse-spark-1.3-contributor-free" is a FREE model on the opencode provider (Zen);
-   it works as last-resort fallback without a subscription.
-   Note: OMO routes by agent/category, NOT by skill; the matching skills must
-   state "delegate to agent X" inside their SKILL.md.
+5. Native Multi-Agent Architecture (OpenCode 2.0 Native):
+   OpenCode 2.0 includes native multi-agent support, native worktrees, and
+   native context compaction. We do NOT install oh-my-openagent (OMO),
+   opencode-worktree, or opencode-dcp — avoiding 40MB of bloat, brittle
+   experimental hooks, and version breakages on OS updates.
+6. Multi-Agent & Skill Specialization:
+   - Primary coding agent uses <main> (cheapest fast reasoning on Go).
+   - Background worker & title generator use <worker> (free muse-spark).
+   - Plan agent uses <planner> (code-capable Qwen on Go).
+   - All persona roles (code review, bug hunting, docs reading, frontend design,
+     quickshell, test writing, refactoring) are cleanly fulfilled by omochi's
+     11 specialized skills under ~/.config/opencode/skills/ and ~/.agents/skills/.
 7. Optional free-tier fallback: run `opencode auth login` and select
    "OpenCode Zen" (free models; no payment needed). Required only if you
    want muse-spark-1.3-contributor-free / other opencode provider free models to work.
@@ -165,9 +122,9 @@ Routing (verified models; see template for the full JSONC):
     - Binary: installed by setup.sh to ~/.local/bin/rtk (NO pacman package —
       official installer; reinstall with: curl -fsSL
       https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh)
-    - Plugin: rtk init -g --opencode (writes
-      ~/.config/opencode/plugins/rtk.ts; hook tool.execute.before). Only the
-      bash tool is rewritten — built-in Read/Grep/Glob/LSP bypass it, so
+    - Plugin: write ~/.config/opencode/plugins/rtk.ts using OpenCode 2.0 V2 Plugin API:
+      `export default { id: "rtk", async setup(ctx) { await ctx.tool.hook("execute.before", ...) } }`.
+      Only the bash/shell tool is rewritten — built-in Read/Grep/Glob/LSP bypass it, so
       savings are smaller than on Claude Code.
     - Config: write ~/.config/rtk/config.toml:
         [hooks]
@@ -180,18 +137,14 @@ Routing (verified models; see template for the full JSONC):
     - Degrades safely: plugin disables itself if rtk is missing from PATH;
       rewrite errors pass the command through unchanged. On command failure
       rtk saves full output to ~/.local/share/rtk/tee/*.log (tee mode).
-    - Uninstall: rtk init -g --uninstall && rm ~/.local/bin/rtk
+    - Uninstall: rm -f ~/.config/opencode/plugins/rtk.ts && rm -f ~/.local/bin/rtk
 12. Review the diff of EVERY changed file against its backup, highlighting
     the model configuration section.
 13. Smoke tests:
-    - opencode --version · opencode mcp list (expected: websearch, grep_app,
-      lsp, filesystem, git, fetch, sequential-thinking, context7-remote
-      connected; codegraph/memory/github disabled; NO plain "context7")
-    - grep -q '"@tarquinen/opencode-dcp"' ~/.config/opencode/opencode.jsonc
-      && test -f ~/.config/opencode/dcp.jsonc (auto-created on first run)
+    - opencode --version (expected: 2.0+) · opencode mcp list (expected:
+      filesystem, git, fetch, context7-remote connected; github/memory/sequential-thinking disabled)
     - grep -q 'opencode-shell-strategy' ~/.config/opencode/opencode.jsonc
       (instructions URL present)
-    - bunx oh-my-openagent doctor -> exit 0, agent models = discovered IDs
     - opencode run -m opencode/muse-spark-1.3-contributor-free "Reply with exactly: OK"
       (verifies free fallback works end-to-end)
     - opencode run "List the files in this repo and read one file"
