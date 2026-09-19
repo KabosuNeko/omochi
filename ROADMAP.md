@@ -89,3 +89,23 @@ The repository is self-documenting and safe to share publicly.
 
 - Run all checks from a fresh checkout; walk through the README bootstrap path
   in a sandbox.
+
+## Phase 4: OpenCode 2.0 Native ("Super Lean")
+
+### Outcome
+
+A modern, future-proof OpenCode 2.0 configuration that removes fragile third-party
+framework layers while preserving multi-agent specializations, token savings, and visual planning.
+
+### Included work
+
+- Migrate to OpenCode 2.0 native agents, native worktrees, and context compaction.
+- Deprecate oh-my-openagent, opencode-worktree, and opencode-dcp.
+- Standardize external plugin manifest on `@plannotator/opencode` (V2-compatible).
+- Re-implement RTK bash rewrite as an OpenCode 2.0 V2 Plugin (`Plugin.define`).
+- Retain Ponytail craftsmanship rules and 11 specialized skills.
+
+### Exit criteria
+
+- Zero plugin load failures on OpenCode 2.0.
+- `./scripts/validate.sh` and `./scripts/test-install.sh` exit 0.

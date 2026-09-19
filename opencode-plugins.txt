@@ -1,9 +1,4 @@
-# Maintained opencode npm plugin selection (one package per line, no versions:
-# plugins always resolve to @latest). The setup prompt writes these into the
-# `plugin` array of ~/.config/opencode/opencode.jsonc and configures their
-# options. Validate with ./scripts/validate.sh.
-oh-my-openagent
-opencode-worktree
+# OpenCode 2.0 plugins: external packages loaded in ~/.config/opencode/opencode.jsonc.
+# Local plugins (e.g. plugins/rtk.ts) are discovered automatically.
+# Validate with ./scripts/validate.sh.
 @plannotator/opencode
-@tarquinen/opencode-dcp
-@dietrichgebert/ponytail

@@ -13,8 +13,7 @@
 3. Run the AI-driven setup:
    `opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"`. It refreshes the
    model list, assigns models by role, writes `~/.config/opencode/opencode.jsonc`,
-   and OMO routing, installs oh-my-openagent, provisions skills
-   and templates, configures rtk, and runs smoke tests.
+   provisions skills and templates, configures rtk, and runs smoke tests.
 4. Review the diff of every changed file against its backup before accepting.
 
 ## How the setup prompt stays current

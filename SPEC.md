@@ -18,8 +18,8 @@ that installs and re-runs itself.
   `~/omochi` — idempotent, with `--dry-run`, `--repo <url>`, and backup of any
   existing `~/omochi`.
 - `opencode-setup-prompt.md` is an AI-driven setup prompt that discovers live
-  models, writes configs, installs oh-my-openagent, provisions skills and
-  templates, and runs smoke tests. Re-running it is the auto-update path.
+  models, writes OpenCode 2.0 native configs, provisions skills and
+  templates, configures rtk, and runs smoke tests. Re-running it is the auto-update path.
 - Configs must not contain hardcoded model IDs; committed references are role
   placeholders (`<main>`, `<worker>`, `<planner>`) or documented fallback
   examples.
@@ -44,18 +44,18 @@ that installs and re-runs itself.
 
 - `setup.sh` -> bootstrap binaries + repo clone.
 - `opencode-setup-prompt.md` -> executed by opencode -> writes
-  `~/.config/opencode/opencode.jsonc`, `~/.omo/omo.jsonc` via
-  `templates/omo-routing.jsonc`, provisions skills from `.agents/skills/` and
-  `templates/`, installs OMO, configures rtk, runs smoke tests.
+  `~/.config/opencode/opencode.jsonc`, provisions skills from `.agents/skills/` and
+  `templates/`, configures rtk, runs smoke tests.
 - `templates/global-AGENTS.md` -> `~/.config/opencode/AGENTS.md`.
 - `templates/project-docs/` -> `~/.config/opencode/templates/project-docs/`.
 - `.agents/skills/` -> `~/.agents/skills/` and
   `~/.config/opencode/skills/`.
-- `opencode-plugins.txt` -> the `plugin` array in opencode.jsonc.
+- `opencode-plugins.txt` -> the `plugins` array in opencode.jsonc.
+- OpenCode 2.0 native features handle multi-agent routing, git worktrees, and
+  context compaction without brittle third-party framework layers.
 - The setup prompt adds remote `instructions`
-  (opencode-shell-strategy, non-interactive shell rules) and resolves DCP
-  (`@tarquinen/opencode-dcp`) with a self-created `dcp.jsonc` for context
-  pruning.
+  (opencode-shell-strategy, non-interactive shell rules) and configures
+  plannotator (`@plannotator/opencode`) for visual plan review.
 
 ## Security and privacy
 

@@ -109,5 +109,5 @@ Bootstrap done. Manual steps (interactive / secret, cannot be automated):
   3. set -Ux OPENCODE_API_KEY "sk-..."   # fish; opencode-go token from your workspace
   4. opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"
                                     # AI-driven setup: discovers models, writes configs,
-                                    # installs OMO, provisions skills/templates, smoke tests
+                                    # provisions skills/templates, configures rtk, smoke tests
 EOF
