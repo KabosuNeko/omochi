@@ -23,6 +23,9 @@
 - [x] Purge all legacy OMO references, remove dead omo-routing template, and align documentation.
   - Acceptance criteria: zero stale OMO/DCP mentions in active files; validate.sh and test-install.sh pass.
   - Automated validation: `validate.sh` and `test-install.sh`.
+- [x] Add typesafe-ai skill (17 skills total) for TypeSafe and Jev System One programming model.
+  - Acceptance criteria: official typesafe-ai skill added, documented, and passing validate.sh.
+  - Automated validation: `validate.sh`.
 
 ## Completed
 

@@ -76,6 +76,7 @@ into `~/.agents/skills/` (guardrails) and `~/.config/opencode/skills/`
 - `refactor-human-code`
 - `security-audit`
 - `test-writer`
+- `typesafe-ai`
 
 Run `./scripts/validate.sh` after adding or changing a skill. Validation fails
 when this list and the skill directories drift apart, when front matter is

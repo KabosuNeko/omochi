@@ -103,7 +103,7 @@ framework layers while preserving multi-agent specializations, token savings, an
 - Deprecate oh-my-openagent, opencode-worktree, and opencode-dcp.
 - Standardize external plugin manifest on `@plannotator/opencode` (V2-compatible).
 - Re-implement RTK bash rewrite as an OpenCode 2.0 V2 Plugin (`Plugin.define`).
-- Retain Ponytail craftsmanship rules and 16 specialized skills.
+- Retain Ponytail craftsmanship rules and 17 specialized skills (including typesafe-ai).
 
 ### Exit criteria
 
