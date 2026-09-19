@@ -1,6 +1,6 @@
 ---
 name: refactor-human-code
-description: Refactor existing (possibly human-written, idiosyncratic) code while preserving behavior and style. Use for "clean this up", "restructure", "remove duplication", or legacy code modernization. Delegates execution to the hephaestus agent.
+description: Refactor existing (possibly human-written, idiosyncratic) code while preserving behavior and style. Use for "clean this up", "restructure", "remove duplication", or legacy code modernization.
 compatibility: opencode
 ---
 
@@ -9,14 +9,13 @@ compatibility: opencode
 Preserve behavior. Preserve the author's intent. Do not rewrite for style's
 sake.
 
-## Delegation (mandatory)
+## Workflow
 
-1. Delegate the refactor to the `hephaestus` agent via `call_omo_agent`
-   (subagent_type: hephaestus). Hephaestus runs on the main coding model.
-2. It works autonomously: explore first, then execute end-to-end. Give it a
-   goal and constraints, not a recipe.
+1. Explore first: understand existing interfaces, caller patterns, and tests.
+2. Formulate a minimal refactoring plan with clear invariants.
+3. Execute end-to-end with tight feedback loops.
 
-## Constraints (pass to hephaestus)
+## Constraints
 
 - Behavioral preservation: before/after test suite must be green (add tests
   first if none exist).
@@ -29,5 +28,5 @@ sake.
 
 ## Verification
 
-After the refactor: run the full test suite + build, then hand the diff to
-`code-review` (momus) before considering it done.
+After the refactor: run the full test suite + build, then run an independent
+verification pass (via `code-review`) before considering it done.

@@ -56,22 +56,25 @@ into `~/.agents/skills/` (guardrails) and `~/.config/opencode/skills/`
 - Load references only when the task needs them.
 - Keep project requirements in project documentation, not reusable skills.
 - Provide, review, test, and debug workflows, not vague checklists.
-- Do not hardcode model IDs in skills; delegation targets are agent names.
-- Do not create skills that duplicate OMO built-ins (git-master, playwright,
-  frontend-ui-ux, review-work, remove-ai-slops).
+- Do not hardcode model IDs in skills; delegation targets are agent roles.
 
 ## Repository skills
 
+- `api-designer`
 - `bash-scripting`
 - `bug-hunt`
 - `code-review`
+- `database-architect`
+- `docker-expert`
 - `docs-reader`
 - `frontend-design`
+- `git-workflow`
 - `grill-me`
 - `linux-sysadmin`
 - `python-ai`
 - `quickshell`
 - `refactor-human-code`
+- `security-audit`
 - `test-writer`
 
 Run `./scripts/validate.sh` after adding or changing a skill. Validation fails

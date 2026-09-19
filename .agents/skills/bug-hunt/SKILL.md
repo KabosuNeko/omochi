@@ -1,6 +1,6 @@
 ---
 name: bug-hunt
-description: 'Systematic debugging of failing tests, crashes, or wrong behavior. Root-cause driven: reproduce, isolate, instrument, fix, verify. Use for "why is this broken", stack traces, flaky tests, or regression hunting. Delegates deep investigation to the oracle agent.'
+description: 'Systematic debugging of failing tests, crashes, or wrong behavior. Root-cause driven: reproduce, isolate, instrument, fix, verify. Use for "why is this broken", stack traces, flaky tests, or regression hunting.'
 compatibility: opencode
 ---
 
@@ -10,9 +10,7 @@ Debug like a scientist: reproduce first, hypothesize, prove, then fix.
 
 ## Delegation
 
-For hard bugs (multi-file, intermittent, unfamiliar stack), delegate to the
-`oracle` agent via `call_omo_agent` (subagent_type: oracle) — architecture
-and debugging consultant. Use the local flow below for quick bugs.
+For hard bugs (multi-file, intermittent, unfamiliar stack), invoke an independent debugging subagent with clean context. Use the local flow below for quick bugs.
 
 ## Local flow
 

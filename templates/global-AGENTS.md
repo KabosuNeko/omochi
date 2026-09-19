@@ -10,6 +10,21 @@
 - Never expose credentials, tokens, private keys, or secret files.
 - Skip filler: no flattery, ceremonial openings, or emoji. Keep communication direct.
 
+## Minimalist Code Ladder (Ponytail Craftsmanship)
+The best code is the code you never wrote. Before adding new code or dependencies, climb this ladder in order:
+1. **YAGNI (You Ain't Gonna Need It)**: Does this task or feature actually need to exist? If not, skip it.
+2. **Reuse**: Does identical or similar logic already exist in the codebase? Reuse it.
+3. **Standard Library**: Can the language standard library solve this? Never install a package when stdlib suffices.
+4. **Platform Native**: Can native platform/browser features handle it? (e.g., native HTML elements, CSS layout, native fetch, subshell pipes).
+5. **Existing Dependencies**: If a package is unavoidable, use only what is already in project manifests.
+6. **One-Liner**: Can this be expressed cleanly in a simple, readable line or small block?
+7. **Minimum Code**: Write only the minimum necessary code. Zero speculative abstractions, zero single-implementer interfaces, zero premature wrappers.
+
+## Anti-Slop & Hygiene Gates
+- **No commentary slop**: No decorative banner comments, narrative workflow comments (`// step 1: do this`), or obvious restatements.
+- **Root-cause seams**: Fix bugs at their structural seam rather than wrapping symptoms with defensive null checks.
+- **Dead code**: Delete dead branches and unused variables immediately.
+
 ## Documentation Routing
 - Read only the documents needed for the specific task; do not load `docs/` speculatively:
   - `SPEC.md` for product requirements and scope boundaries.

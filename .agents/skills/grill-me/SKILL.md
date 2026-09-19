@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Adversarial questioning before starting non-trivial work. Asks tough questions about requirements, assumptions, failure modes, and acceptance criteria to expose plan gaps. Use for "grill me", "challenge my plan", or before any feature with ambiguous scope. Lightweight alternative to OMO hyperplan.
+description: Adversarial questioning before starting non-trivial work. Asks tough questions about requirements, assumptions, failure modes, and acceptance criteria to expose plan gaps. Use for "grill me", "challenge my plan", or before any feature with ambiguous scope.
 compatibility: opencode
 ---
 
@@ -29,6 +29,4 @@ Scrutinize the plan before a single line of code is written.
 
 ## Delegation
 
-For large plans, run this via the `metis` (gap analyzer) or `momus`
-(reviewer) agent for an independent pass. For small plans, run locally —
-this skill's value is the questions, not the model.
+For large plans, invoke an independent reviewer or planner subagent for a rigorous adversarial pass. For small plans, run directly in current turn — this skill's value is the sharp questions, not the persona.

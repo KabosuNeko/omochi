@@ -46,18 +46,12 @@
      ["https://raw.githubusercontent.com/JRedeker/opencode-shell-strategy/trunk/shell_strategy.md"]
      (teaches non-interactive command forms: -y/-n flags, sudo -n, ssh
      accept-new; no TTY/PTY in opencode so interactive commands hang)
-   - mcp (exact commands are verified; do not substitute):
-     - filesystem: npx -y @modelcontextprotocol/server-filesystem
-       <your Projects dir> <your Documents dir>
-     - git: npx -y git-mcp   [TRAP: github:github/git-mcp fails — npm v11
-       blocks git deps (EALLOWGIT) and bunx resolves it to a 404 tarball]
+   - mcp (minimal footprint; rely on native file/git/search tools):
+     - context7-remote: remote https://mcp.context7.com/mcp (live SDK & library docs, zero local CPU/RAM overhead)
      - fetch: npx -y mcp-fetch-server   [TRAP: @modelcontextprotocol/
        server-fetch no longer exists on npm, and mcp-server-fetch is a
        SECURITY CANARY (honeypot) — never use it]
-     - sequential-thinking: npx -y @modelcontextprotocol/server-sequential-thinking
-     - context7-remote: remote https://mcp.context7.com/mcp
-     - memory (local, npx -y @modelcontextprotocol/server-memory),
-       github (remote https://api.githubcopilot.com/mcp/, OAuth) -> disabled
+     (Avoid redundant local MCPs like filesystem, git-mcp, memory, or sequential-thinking — OpenCode 2.0 native tools and model thinking are strictly superior and consume fewer tokens)
    - NEVER hardcode API keys: use {env:VAR} or auth.json only
 4. Assign models by role (pick from the live list; names in brackets are
     current-model references only). PRICING POLICY: prefer cheap opencode-go
@@ -84,29 +78,29 @@
    - Primary coding agent uses <main> (cheapest fast reasoning on Go).
    - Background worker & title generator use <worker> (free muse-spark).
    - Plan agent uses <planner> (code-capable Qwen on Go).
-   - All persona roles (code review, bug hunting, docs reading, frontend design,
-     quickshell, test writing, refactoring) are cleanly fulfilled by omochi's
-     11 specialized skills under ~/.config/opencode/skills/ and ~/.agents/skills/.
-7. Optional free-tier fallback: run `opencode auth login` and select
-   "OpenCode Zen" (free models; no payment needed). Required only if you
-   want muse-spark-1.3-contributor-free / other opencode provider free models to work.
- 8. Personal skills (8, at ~/.config/opencode/skills/<name>/SKILL.md):
-   frontend-design (ui-ux-pro merged in), code-review, refactor-human-code,
-   bug-hunt, docs-reader, test-writer, grill-me, quickshell.
-   Provisioning order (first source that works):
-   a. cp -r ~/omochi/.agents/skills/* ~/.config/opencode/skills/
-   b. git clone --depth 1 https://github.com/KabosuNeko/omochi <tmp>
-      && copy .agents/skills/* from it (then delete <tmp>)
-   c. write the 8 SKILL.md yourself from the descriptions in this prompt
-   Do not create skills that duplicate OMO built-ins (git-master, playwright,
-   frontend-ui-ux, review-work, remove-ai-slops).
- 9. Guardrail skills (3, opencode-native, shipped in this repo):
-    bash-scripting, python-ai, linux-sysadmin -> ~/.agents/skills/
+    - All persona roles (code review, bug hunting, docs reading, frontend design,
+      quickshell, test writing, refactoring, containerization, db architecture,
+      api design, git workflow, security audit) are cleanly fulfilled by omochi's
+      16 specialized skills under ~/.config/opencode/skills/ and ~/.agents/skills/.
+ 7. Optional free-tier fallback: run `opencode auth login` and select
+    "OpenCode Zen" (free models; no payment needed). Required only if you
+    want muse-spark-1.3-contributor-free / other opencode provider free models to work.
+  8. Personal skills (13, at ~/.config/opencode/skills/<name>/SKILL.md):
+    api-designer, bug-hunt, code-review, database-architect, docker-expert,
+    docs-reader, frontend-design, git-workflow, grill-me, quickshell,
+    refactor-human-code, security-audit, test-writer.
     Provisioning order (first source that works):
-    a. cp -r ~/omochi/.agents/skills/{bash-scripting,python-ai,
-       linux-sysadmin} ~/.agents/skills/
-    b. copy from the omochi clone (8b)
-    c. write the 3 SKILL.md yourself from the descriptions in this prompt
+    a. cp -r ~/omochi/.agents/skills/* ~/.config/opencode/skills/
+    b. git clone --depth 1 https://github.com/KabosuNeko/omochi <tmp>
+       && copy .agents/skills/* from it (then delete <tmp>)
+    c. write the 13 SKILL.md yourself from the descriptions in this repo
+  9. Guardrail skills (3, opencode-native, shipped in this repo):
+     bash-scripting, python-ai, linux-sysadmin -> ~/.agents/skills/
+     Provisioning order (first source that works):
+     a. cp -r ~/omochi/.agents/skills/{bash-scripting,python-ai,
+        linux-sysadmin} ~/.agents/skills/
+     b. copy from the omochi clone (8b)
+     c. write the 3 SKILL.md yourself from the descriptions in this repo
     - Copy 4 templates (AGENTS, SPEC, ROADMAP, TASKS).md from
       ~/omochi/templates/project-docs/ (or the omochi clone 8b)
       -> ~/.config/opencode/templates/project-docs/

@@ -14,6 +14,12 @@
 - [x] Integrate Ponytail minimalist rules and anti-slop gates directly into AGENTS and skills.
   - Acceptance criteria: no external npm plugin needed for craftsmanship rules; portable across OpenCode versions.
   - Automated validation: `validate.sh`.
+- [x] Expand Ponytail craftsmanship skill suite to 16 specialized skills.
+  - Acceptance criteria: add docker-expert, database-architect, api-designer, git-workflow, and security-audit.
+  - Automated validation: `validate.sh`.
+- [x] Streamline MCP configuration to minimal footprint (context7-remote + fetch).
+  - Acceptance criteria: remove dead/bloated MCPs (git-mcp, sequential-thinking, memory, github, filesystem) in favor of native tools.
+  - Automated validation: `opencode mcp list`.
 
 ## Completed
 

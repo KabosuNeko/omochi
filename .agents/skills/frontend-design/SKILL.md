@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Design-first frontend work — establish visual direction (typography, color palette, spacing, layout) before implementation, with strict anti-slop craftsmanship filters. Use for UI tasks, styling, components, landing pages, or "make it look good" requests. Load OMO's frontend-ui-ux skill for the designer-turned-developer persona.
+description: Design-first frontend work — establish visual direction (typography, color palette, spacing, layout) before implementation, with strict anti-slop craftsmanship filters. Use for UI tasks, styling, components, landing pages, or "make it look good" requests.
 compatibility: opencode
 ---
 
@@ -14,9 +14,8 @@ visual direction is explicit.
 1. If the repo has no design tokens, define them first in a small section of
    the task output: typography scale, color palette (with accessible
    contrast ratios), spacing scale, radius, shadows.
-2. Load the OMO `frontend-ui-ux` skill (`skill` tool) for the designer
-   persona: bold aesthetic direction, distinctive typography, cohesive
-   palettes.
+2. Establish a bold, intentional aesthetic direction: distinctive typography,
+   cohesive palettes, purposeful hierarchy.
 3. Sketch the layout (wireframe in text/ASCII or in code comments) before
    touching styles.
 4. Implement with the existing stack only — check the project's package.json
@@ -50,5 +49,5 @@ need does it serve? Reject generic AI defaults:
 
 ## Delegation
 
-For visual-heavy requests, delegate to the `visual-engineering` category or
-let the main agent run this skill directly.
+For visual-heavy requests or complex UI reviews, invoke an independent subagent or
+execute locally with strict visual verification.
