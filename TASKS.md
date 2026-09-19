@@ -20,6 +20,9 @@
 - [x] Streamline MCP configuration to minimal footprint (context7-remote + fetch).
   - Acceptance criteria: remove dead/bloated MCPs (git-mcp, sequential-thinking, memory, github, filesystem) in favor of native tools.
   - Automated validation: `opencode mcp list`.
+- [x] Purge all legacy OMO references, remove dead omo-routing template, and align documentation.
+  - Acceptance criteria: zero stale OMO/DCP mentions in active files; validate.sh and test-install.sh pass.
+  - Automated validation: `validate.sh` and `test-install.sh`.
 
 ## Completed
 
@@ -34,11 +37,11 @@
 - Phase 1 (Foundation):
   - Bootstrap `setup.sh` (bun, opencode, rtk, repo clone).
   - `opencode-setup-prompt.md` with role-based model discovery and known traps.
-  - 10 opencode-format skills under `.agents/skills/`.
-  - `templates/` (global AGENTS, OMO routing, project docs); guardrail and personal skill split.
+  - 10 opencode-format skills under `.agents/skills/` (initial foundation).
+  - `templates/` (global AGENTS, project docs); guardrail and personal skill split.
   - Root `AGENTS.md` maintenance instructions.
 - Phase 2 (Maintenance gate):
   - `scripts/validate.sh` full gate (manifest, skills, templates, shellcheck, secrets).
   - `scripts/test-install.sh` isolated installer tests.
   - `.github/workflows/validate.yml` CI gate.
-  - `opencode-plugins.txt`, `.rtk/filters.toml`, DCP + non-interactive shell rules.
+  - `opencode-plugins.txt`, `.rtk/filters.toml`, non-interactive shell rules.

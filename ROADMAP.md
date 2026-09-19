@@ -11,7 +11,7 @@ setup prompt, skills, templates, and a maintenance gate.
 
 - `setup.sh` bootstrap with `--dry-run`, `--repo`, backup, and idempotency.
 - `opencode-setup-prompt.md` with runtime model discovery and known traps.
-- `.agents/skills/` (10 opencode-format skills) and `templates/`.
+- `.agents/skills/` (initial 10 skills, expanded to 16 in Phase 4) and `templates/`.
 - Root `AGENTS.md`, `SPEC.md`, `ROADMAP.md`, `TASKS.md`.
 
 ### Dependencies and risks

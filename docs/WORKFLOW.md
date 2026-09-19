@@ -34,8 +34,8 @@
   phases and exit criteria; `TASKS.md` records validated work.
 - `.agents/skills/` holds reusable skills; follow the authoring rules in
   `docs/SKILLS.md`.
-- `templates/` holds portable templates (project docs, global AGENTS, OMO
-  routing); update them when the setup prompt's provisioning changes.
+- `templates/` holds portable templates (project docs, global AGENTS);
+  update them when the setup prompt's provisioning changes.
 - `docs/` is reference material; point to it from `AGENTS.md` or skills rather
   than expecting automatic discovery.
 - After changing configuration, skills, install scripts, templates, docs, or

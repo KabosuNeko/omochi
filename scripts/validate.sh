@@ -12,6 +12,9 @@ fail() {
 required_files=(
   "AGENTS.md"
   "README.md"
+  "SPEC.md"
+  "ROADMAP.md"
+  "TASKS.md"
   "opencode-setup-prompt.md"
   "setup.sh"
   ".gitignore"
@@ -21,7 +24,6 @@ required_files=(
   "docs/SKILLS.md"
   "docs/WORKFLOW.md"
   "templates/global-AGENTS.md"
-  "templates/omo-routing.jsonc"
   "templates/project-docs/AGENTS.md"
   "templates/project-docs/ROADMAP.md"
   "templates/project-docs/SPEC.md"
@@ -102,24 +104,18 @@ actual_skills="$(printf '%s' "$actual_skills" | sort)"
 # ---- templates --------------------------------------------------------------
 
 [[ -s "$repo_root/templates/global-AGENTS.md" ]] || fail "templates/global-AGENTS.md is empty"
-[[ -s "$repo_root/templates/omo-routing.jsonc" ]] || fail "templates/omo-routing.jsonc is empty"
-grep -q '"\[opencode\]"' "$repo_root/templates/omo-routing.jsonc" ||
-  fail "templates/omo-routing.jsonc has no [opencode] block"
-grep -q '"<main>"' "$repo_root/templates/omo-routing.jsonc" ||
-  fail "templates/omo-routing.jsonc lacks the <main> placeholder"
-grep -q '"<worker>"' "$repo_root/templates/omo-routing.jsonc" ||
-  fail "templates/omo-routing.jsonc lacks the <worker> placeholder"
-grep -q '"<planner>"' "$repo_root/templates/omo-routing.jsonc" ||
-  fail "templates/omo-routing.jsonc lacks the <planner> placeholder"
+for doc in AGENTS.md ROADMAP.md SPEC.md TASKS.md; do
+  [[ -s "$repo_root/templates/project-docs/$doc" ]] || fail "templates/project-docs/$doc is empty"
+done
 
 # ---- bash scripts -----------------------------------------------------------
 
-if ! bash -n "$repo_root/setup.sh" "$repo_root/scripts/validate.sh"; then
+if ! bash -n "$repo_root/setup.sh" "$repo_root/scripts/validate.sh" "$repo_root/scripts/test-install.sh"; then
   fail "Bash syntax validation failed"
 fi
 
 if command -v shellcheck >/dev/null 2>&1 && shellcheck --version >/dev/null 2>&1; then
-  shellcheck "$repo_root/setup.sh" "$repo_root/scripts/validate.sh" ||
+  shellcheck "$repo_root/setup.sh" "$repo_root/scripts/validate.sh" "$repo_root/scripts/test-install.sh" ||
     fail "ShellCheck failed"
 fi
 

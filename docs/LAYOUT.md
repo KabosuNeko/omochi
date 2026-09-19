@@ -24,7 +24,6 @@ configuration with private and ephemeral runtime state:
 - `opencode.db` and its snapshots
 - opencode/themes under `~/.local/share/opencode/`
 - `~/.cache/opencode/node_modules/` (npm plugin cache)
-- `~/.omo/omo.jsonc` (OMO routing with live model IDs)
 - `~/.config/rtk/config.toml` (machine-specific exclusions)
 
 Tracking or replacing those files would expose credentials and make the setup
@@ -47,7 +46,7 @@ what is committed stays role-based and machine-neutral.
 2. Manual, cannot be automated: `opencode auth login` and the
    `OPENCODE_API_KEY` env var.
 3. `opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"` discovers live
-   models, writes configs, installs OMO, provisions skills and templates, and
+   models, writes configs, provisions skills and templates, and
    runs smoke tests. Re-running this prompt is the auto-update path.
 
 ## Plugins and MCP servers
@@ -57,10 +56,10 @@ packages, installed by Bun on startup) and from local plugin directories.
 `opencode-plugins.txt` lists the maintained npm selection; validate it with
 `./scripts/validate.sh`.
 
-Standalone MCP servers such as filesystem, git-mcp, mcp-fetch-server, and the
-sequential-thinking server are configured by the setup prompt and run via
-`npx -y`. Disabled providers and colliding tools are handled through the OMO
-`disabled_mcps` setting.
+Essential MCP servers (context7-remote for live docs, fetch for web retrieval)
+are configured by the setup prompt. Heavy or redundant local MCPs (filesystem,
+git-mcp, memory, sequential-thinking) are avoided in favor of OpenCode 2.0 native
+file, git, and search tools.
 
 ## Skills
 

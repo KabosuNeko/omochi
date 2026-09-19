@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 # omochi bootstrap: install opencode + bun + rtk, fetch this repo.
-# Everything else (configs, OMO, skills, model discovery) is done by the
+# Everything else (configs, skills, model discovery) is done by the
 # AI-driven setup prompt — run it AFTER the manual steps below.
 
 REPO_URL="${AI_SETUP_REPO_URL:-https://github.com/KabosuNeko/omochi}"

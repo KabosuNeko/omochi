@@ -69,7 +69,7 @@ that installs and re-runs itself.
 ## Performance and compatibility
 
 - Supported: Linux (primary target CachyOS/Arch, fish shell; bash for
-  scripts), opencode 1.x.
+  scripts), opencode 2.0.
 - Scripts are POSIX-bash with `bash -n`/ShellCheck clean.
 - No network calls during validation except CI checkout.
 
@@ -77,7 +77,7 @@ that installs and re-runs itself.
 
 - Managing other editors or agents (Codex, Claude Code).
 - Hardcoding or pinning model IDs in committed configs.
-- Duplicating OMO built-in skills.
+- Bloating the setup with heavy third-party agent framework layers.
 - Windows support.
 
 ## Acceptance criteria
