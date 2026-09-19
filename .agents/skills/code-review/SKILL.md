@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Independent code review of a diff, PR, or working tree. Checks correctness, edge cases, security, docs/changelog accuracy, and test coverage. Use for "review this", "check my PR", or pre-merge review. Always delegates to the momus agent for the actual critique.
+description: Independent code review of a diff, PR, or working tree. Checks correctness, edge cases, security, docs/changelog accuracy, and test coverage. Use for "review this", "check my PR", or pre-merge review.
 compatibility: opencode
 ---
 
@@ -8,13 +8,10 @@ compatibility: opencode
 
 Review with fresh context — the author must not grade their own work.
 
-## Delegation (mandatory)
+## Delegation
 
-1. Call the `momus` agent via `call_omo_agent` (subagent_type: momus) or the
-   `task` tool with category targeting the reviewer agent. Momus runs on the
-   assigned reviewer model.
-2. If momus is unavailable, fall back to OMO's `review-work` skill
-   (5 parallel reviewers) and report which path was used.
+1. Perform an independent, rigorous critique of the diff or staged changes.
+2. When subagents are enabled, invoke an independent reviewer subagent using the configured reviewer/plan model to ensure unbiased inspection.
 
 ## Review checklist (pass to the reviewer)
 
