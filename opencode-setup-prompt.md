@@ -37,8 +37,8 @@
 3. Write ~/.config/opencode/opencode.jsonc (fixed structure; models come from
    the step 4 discovery):
    - model: <main> · small_model: <worker>
-   - agents: {"plan": {"model": "<planner>"}}
-   - plugins: [["@plannotator/opencode@latest", {"workflow": "plan-agent", "planningAgents": ["plan"]}]]
+   - agent: {"plan": {"model": "<planner>", "mode": "primary"}}
+   - plugin: [["@plannotator/opencode@latest", {"workflow": "plan-agent", "planningAgents": ["plan"]}]]
      (plannotator runs on the plan agent. OpenCode 2.0 handles multi-agent,
      worktrees, and context compaction natively; no external OMO, worktree,
      or dcp plugins are required)
