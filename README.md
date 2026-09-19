@@ -23,7 +23,7 @@ opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"
 - `opencode-setup-prompt.md` — self-updating setup prompt + verified "known traps" (npm git deps, fetch-MCP honeypot, rtk rewrite)
 - `setup.sh` — bootstrap installer (opencode, bun, rtk; `--dry-run`/`--repo`)
 - `AGENTS.md` + `SPEC.md`/`ROADMAP.md`/`TASKS.md` — repo maintenance and project docs
-- `.agents/skills/` — 16 skills (13 personal + 3 guardrails: bash-scripting, python-ai, linux-sysadmin)
+- `.agents/skills/` — 17 skills (14 personal + 3 guardrails: bash-scripting, python-ai, linux-sysadmin)
 - `templates/project-docs/` — SPEC/ROADMAP/TASKS/AGENTS
 - `templates/global-AGENTS.md` — global `~/.config/opencode/AGENTS.md`
 - `opencode-plugins.txt` — maintained npm plugin manifest

@@ -80,15 +80,15 @@
    - Plan agent uses <planner> (code-capable Qwen on Go).
     - All persona roles (code review, bug hunting, docs reading, frontend design,
       quickshell, test writing, refactoring, containerization, db architecture,
-      api design, git workflow, security audit) are cleanly fulfilled by omochi's
-      16 specialized skills under ~/.config/opencode/skills/ and ~/.agents/skills/.
+      api design, git workflow, security audit, typesafe AI) are cleanly fulfilled by omochi's
+      17 specialized skills under ~/.config/opencode/skills/ and ~/.agents/skills/.
  7. Optional free-tier fallback: run `opencode auth login` and select
     "OpenCode Zen" (free models; no payment needed). Required only if you
     want muse-spark-1.3-contributor-free / other opencode provider free models to work.
-  8. Personal skills (13, at ~/.config/opencode/skills/<name>/SKILL.md):
+ 8. Personal skills (14, at ~/.config/opencode/skills/<name>/SKILL.md):
     api-designer, bug-hunt, code-review, database-architect, docker-expert,
     docs-reader, frontend-design, git-workflow, grill-me, quickshell,
-    refactor-human-code, security-audit, test-writer.
+    refactor-human-code, security-audit, test-writer, typesafe-ai.
     Provisioning order (first source that works):
     a. cp -r ~/omochi/.agents/skills/* ~/.config/opencode/skills/
     b. git clone --depth 1 https://github.com/KabosuNeko/omochi <tmp>
