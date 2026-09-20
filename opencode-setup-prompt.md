@@ -48,7 +48,7 @@
      accept-new; no TTY/PTY in opencode so interactive commands hang)
    - mcp (minimal footprint; rely on native file/git/search tools):
      - context7-remote: remote https://mcp.context7.com/mcp (live SDK & library docs, zero local CPU/RAM overhead)
-     - fetch: npx -y mcp-fetch-server   [TRAP: @modelcontextprotocol/
+     - fetch: bunx mcp-fetch-server   [TRAP: @modelcontextprotocol/
        server-fetch no longer exists on npm, and mcp-server-fetch is a
        SECURITY CANARY (honeypot) — never use it]
      (Avoid redundant local MCPs like filesystem, git-mcp, memory, or sequential-thinking — OpenCode 2.0 native tools and model thinking are strictly superior and consume fewer tokens)
@@ -117,7 +117,7 @@
       savings are smaller than on Claude Code.
     - Config: write ~/.config/rtk/config.toml:
         [hooks]
-        exclude_commands = ["opencode"]
+        exclude_commands = ["opencode", "code", "cursor", "zed", "nvim", "vim", "nano", "git-credential", "pinentry"]
       (TRAP: never let rtk compress `opencode models --verbose` — model
       discovery needs raw output; excluded commands make `rtk rewrite`
       return "", and the plugin treats empty output as pass-through)
