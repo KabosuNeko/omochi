@@ -80,6 +80,31 @@ if ! has_cmd bun; then
   fi
 fi
 
+if [[ -x "$HOME/.bun/bin/bun" ]]; then
+  run mkdir -p "$HOME/.local/bin"
+  run ln -sf "$HOME/.bun/bin/bun" "$HOME/.local/bin/bun"
+  run ln -sf "$HOME/.bun/bin/bunx" "$HOME/.local/bin/bunx"
+  run ln -sf "$HOME/.bun/bin/bun" "$HOME/.local/bin/node"
+  if [[ ! -e "$HOME/.local/bin/npx" || -L "$HOME/.local/bin/npx" ]]; then
+    run rm -f "$HOME/.local/bin/npx"
+    if ! "$dry_run"; then
+      cat << 'EOF' > "$HOME/.local/bin/npx"
+#!/usr/bin/env bash
+args=()
+for arg in "$@"; do
+  if [[ "$arg" != "-y" && "$arg" != "--yes" ]]; then
+    args+=("$arg")
+  fi
+done
+exec "$HOME/.bun/bin/bunx" "${args[@]}"
+EOF
+      chmod +x "$HOME/.local/bin/npx"
+    else
+      printf '+ write %s/npx\n' "$HOME/.local/bin"
+    fi
+  fi
+fi
+
 # rtk (token saver): no pacman package — official installer, idempotent.
 # Config + opencode plugin are provisioned by the AI-driven setup prompt.
 if ! has_cmd rtk && [[ ! -x "$HOME/.local/bin/rtk" ]]; then
