@@ -45,7 +45,7 @@ repo/.opencode/skills/<name>/SKILL.md    project config
 
 opencode walks from the working directory up to the git worktree root and also
 loads global locations. The setup prompt provisions this repository's skills
-into `~/.config/opencode/skills/`.
+into `~/.agents/skills/`.
 
 ## Authoring rules
 

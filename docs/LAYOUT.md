@@ -64,7 +64,7 @@ file, git, and search tools.
 ## Skills
 
 Skills live in `sources`: `.agents/skills/` as a source of truth. The setup
-prompt provisions them into `~/.config/opencode/skills/`. See `docs/SKILLS.md`.
+prompt provisions them into `~/.agents/skills/`. See `docs/SKILLS.md`.
 
 ## Direct config use
 

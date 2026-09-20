@@ -32,7 +32,7 @@
 ## Steps
 1. Inspect ~/.config/opencode; back up every file you will touch
    (opencode.jsonc, package.json, ~/.local/share/opencode/auth.json,
-   ~/.config/opencode/skills if present) -> .bak-<date>.
+   ~/.agents/skills if present) -> .bak-<date>.
 2. Install bun if missing: sudo pacman -S bun
 3. Write ~/.config/opencode/opencode.jsonc (fixed structure; models come from
    the step 4 discovery):
@@ -81,17 +81,17 @@
     - All persona roles (code review, bug hunting, docs reading, frontend design,
      quickshell, test writing, refactoring, containerization, db architecture,
      api design, git workflow, security audit, typesafe AI) are cleanly fulfilled by omochi's
-     17 specialized skills under ~/.config/opencode/skills/.
+     17 specialized skills under ~/.agents/skills/.
  7. Optional free-tier fallback: run `opencode auth login` and select
     "OpenCode Zen" (free models; no payment needed). Required only if you
     want muse-spark-1.3-contributor-free / other opencode provider free models to work.
- 8. Specialized skills (17, at ~/.config/opencode/skills/<name>/SKILL.md):
+ 8. Specialized skills (17, at ~/.agents/skills/<name>/SKILL.md):
     api-designer, bash-scripting, bug-hunt, code-review, database-architect,
     docker-expert, docs-reader, frontend-design, git-workflow, grill-me,
     linux-sysadmin, python-ai, quickshell, refactor-human-code, security-audit,
     test-writer, typesafe-ai.
     Provisioning order (first source that works):
-    a. cp -r ~/omochi/.agents/skills/* ~/.config/opencode/skills/
+    a. cp -r ~/omochi/.agents/skills/* ~/.agents/skills/
     b. git clone --depth 1 https://github.com/KabosuNeko/omochi <tmp>
        && copy .agents/skills/* from it (then delete <tmp>)
     c. write the 17 SKILL.md yourself from the descriptions in this repo
@@ -138,7 +138,7 @@
       (verifies free fallback works end-to-end)
     - opencode run "List the files in this repo and read one file"
       (verifies repo reading)
-    - confirm skills are discovered from ~/.config/opencode/skills
+    - confirm skills are discovered from ~/.agents/skills
     - rtk --version && rtk rewrite "git status" (expect: "rtk git status")
     - test -f ~/.config/opencode/plugins/rtk.ts && grep -q
       'exclude_commands' ~/.config/rtk/config.toml
