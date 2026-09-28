@@ -93,13 +93,12 @@
     - If a skill is missing or stale, run exactly one deterministic command:
       `cp -r ~/omochi/.agents/skills/. ~/.agents/skills/`
       If ~/omochi is absent, run setup.sh first.
- 9. Project & Global Templates:
-    - Copy 4 templates (AGENTS, SPEC, ROADMAP, TASKS).md from
-      ~/omochi/templates/project-docs/ (run setup.sh if ~/omochi is absent)
-      -> ~/.config/opencode/templates/project-docs/
-    - Write ~/.config/opencode/AGENTS.md: copy
-      ~/omochi/templates/global-AGENTS.md — global rules: change-focused, skip
-      filler, run checks, stop before destructive actions.
+ 9. Project & Global Templates: setup.sh already installed
+    ~/.config/opencode/templates/project-docs/{AGENTS,SPEC,ROADMAP,TASKS}.md and
+    ~/.config/opencode/AGENTS.md from ~/omochi/templates/. Verify with
+    `diff -r` against the repo; re-run setup.sh instead of writing them by
+    hand. setup.sh keeps a `.bak-<timestamp>` beside a locally edited file
+    before replacing it.
 10. Optional env var: OPENCODE_API_KEY. Skip it when `opencode auth login`
     already stored the opencode-go credentials (`opencode auth list` shows the
     stored key) - the setup runs without it. Set it only when the key must come
@@ -111,50 +110,12 @@
     - Binary: installed by setup.sh to ~/.local/bin/rtk (NO pacman package —
       official installer; reinstall with: curl -fsSL
       https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh)
-    - Plugin: write ~/.config/opencode/plugins/rtk.ts exactly as below (OpenCode
-      2.0 API: `ctx.tool.hook("execute.before", ...)`; only bash/shell commands
-      are rewritten — native Read/Grep/Glob/LSP bypass it, so savings are
-      smaller than on a hook that also covers file reads):
-
-        import { execSync, spawnSync } from "node:child_process"
-
-        /** Minimal shape of the hook API this plugin uses (`ctx.tool.hook`). */
-        type RtkPluginContext = {
-          tool: {
-            hook(name: string, handler: (event: unknown) => void | Promise<void>): Promise<void>
-          }
-        }
-
-        export default {
-          id: "rtk",
-          async setup(ctx: RtkPluginContext) {
-            try {
-              execSync("which rtk", { stdio: "ignore" })
-            } catch {
-              console.warn("[rtk] rtk binary not found in PATH — plugin disabled")
-              return
-            }
-
-            await ctx.tool.hook("execute.before", (event: unknown) => {
-              if (typeof event !== "object" || event === null) return
-              if (!("tool" in event) || !("input" in event)) return
-              if (typeof event.tool !== "string") return
-              const toolName = event.tool.toLowerCase()
-              if (toolName !== "bash" && toolName !== "shell") return
-              const input = event.input
-              if (typeof input !== "object" || input === null) return
-              if (!("command" in input) || typeof input.command !== "string" || !input.command) return
-              // spawnSync with an argv array: no shell, so the command text
-              // cannot be expanded or interpolated. `rtk rewrite` exits 3 after
-              // a successful rewrite and exits 1 with empty stdout when no
-              // filter matches, so stdout — not the exit status — is the signal.
-              const rewritten = spawnSync("rtk", ["rewrite", input.command], { encoding: "utf-8" }).stdout?.trim() ?? ""
-              if (rewritten && rewritten !== input.command) {
-                input.command = rewritten
-              }
-            })
-          },
-        }
+    - Plugin: setup.sh installs it from ~/omochi/plugins/rtk.ts to
+      ~/.config/opencode/plugins/rtk.ts — do not write the code from this
+      prompt. OpenCode 2.0 API: `ctx.tool.hook("execute.before", ...)`; only
+      bash/shell commands are rewritten, so native Read/Grep/Glob/LSP bypass
+      it. The file carries the exit-code and argv-array reasoning inline; see
+      Known traps 6.
     - Config: write ~/.config/rtk/config.toml:
         [hooks]
         exclude_commands = ["opencode", "code", "cursor", "zed", "nvim", "vim", "nano", "git-credential", "pinentry"]
@@ -182,11 +143,9 @@
     - rtk --version && rtk rewrite "git status" (expect: "rtk git status")
     - test -f ~/.config/opencode/plugins/rtk.ts && grep -q
       'exclude_commands' ~/.config/rtk/config.toml
-    - Plugin actually rewrites (a plain command here means the hook is dead):
-      opencode run --auto -m opencode/muse-spark-1.3-contributor-free \
-      "Call the bash tool with this command: git status" \
-      && grep 'spawning process' ~/.local/share/opencode/log/opencode.log | tail -1
-      (expect the newest bash line to read `rtk git status`)
+    - Plugin actually rewrites: `bash ~/omochi/scripts/smoke.sh` (it runs one
+      bash command through opencode and fails unless the server log shows the
+      `rtk ` prefix)
 
 ## Required Output
 1. The actual JSONC written (highlight the model section).

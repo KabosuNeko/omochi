@@ -3,9 +3,11 @@
 ## Setup lifecycle
 
 1. Bootstrap with `setup.sh`: installs opencode, bun, and rtk; clones this
-   repository into `~/omochi`; installs `.agents/skills/` into
-   `~/.agents/skills/`. Preview with `--dry-run`; existing `~/omochi`
-   directories are backed up before replacement.
+   repository into `~/omochi`; installs the managed files — `.agents/skills/`
+   to `~/.agents/skills/`, `templates/project-docs/` and
+   `templates/global-AGENTS.md` and `plugins/rtk.ts` into `~/.config/opencode/`.
+   Preview with `--dry-run`; `~/omochi` and any replaced config file are backed
+   up first (`~/omochi.bak-*`, `<file>.bak-*`).
 2. Manual and interactive, therefore not automatable:
    - `opencode auth login` — select the opencode-go provider (and OpenCode Zen
      for free fallback models).
@@ -15,7 +17,7 @@
 3. Run the AI-driven setup:
    `opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"`. It refreshes the
    model list, assigns models by role, writes `~/.config/opencode/opencode.jsonc`,
-   provisions templates, configures rtk, and runs smoke tests.
+   configures rtk, verifies the installed files, and runs smoke tests.
 4. Review the diff of every changed file against its backup before accepting.
 
 ## How the setup prompt stays current
@@ -38,6 +40,10 @@
   `docs/SKILLS.md`. Changes reach `~/.agents/skills/` by re-running `setup.sh`
   (`git -C ~/omochi pull && bash ~/omochi/setup.sh`), not by re-running the
   setup prompt.
+- `plugins/rtk.ts` is installed into `~/.config/opencode/plugins/`; after
+  changing it run `./scripts/smoke.sh`, which fails unless the opencode server
+  log shows a rewritten (`rtk `-prefixed) bash command. It needs a logged-in
+  provider, so it stays out of CI.
 - `templates/` holds portable templates (project docs, global AGENTS);
   update them when the setup prompt's provisioning changes.
 - `docs/` is reference material; point to it from `AGENTS.md` or skills rather
@@ -57,6 +63,9 @@
   `opencode plugin add <plugin>`; installed files live under
   `~/.cache/opencode/packages/<plugin>@<version>/node_modules/` (older trees
   also under `~/.cache/opencode/npm/<plugin>@<version>/`).
+- rtk stops rewriting commands: `./scripts/smoke.sh` prints the offending
+  server-log line. The plugin is installed from `plugins/rtk.ts` by
+  `setup.sh`; re-run it, then confirm `opencode plugin list` shows `rtk`.
 - Model discovery needs raw output: `opencode models <provider>` with
   `--verbose` must not be wrapped by rtk (excluded in
   `~/.config/rtk/config.toml`); when a wrapped command fails, read the saved

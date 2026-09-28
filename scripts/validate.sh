@@ -20,6 +20,8 @@ required_files=(
   ".gitignore"
   "opencode-plugins.txt"
   ".rtk/filters.toml"
+  "plugins/rtk.ts"
+  "scripts/smoke.sh"
   "docs/LAYOUT.md"
   "docs/SKILLS.md"
   "docs/WORKFLOW.md"
@@ -117,6 +119,18 @@ fi
 if command -v shellcheck >/dev/null 2>&1 && shellcheck --version >/dev/null 2>&1; then
   shellcheck "$repo_root/setup.sh" "$repo_root/scripts/validate.sh" "$repo_root/scripts/test-install.sh" ||
     fail "ShellCheck failed"
+fi
+
+# ---- plugin source ----------------------------------------------------------
+
+# OpenCode loads plugins/rtk.ts directly, so a syntax error ships as a broken
+# integration. Transpile it when bun is available; CI installs bun for this.
+if command -v bun >/dev/null 2>&1; then
+  plugin_check="$(mktemp)"
+  if ! bun build --no-bundle "$repo_root/plugins/rtk.ts" --outfile="$plugin_check" >/dev/null; then
+    fail "plugins/rtk.ts failed to transpile"
+  fi
+  rm -f "$plugin_check"
 fi
 
 # ---- secrets / runtime files ------------------------------------------------

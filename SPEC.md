@@ -15,12 +15,12 @@ that installs and re-runs itself.
 ## Required behavior
 
 - `setup.sh` bootstraps opencode, bun, and rtk, clones the repo into
-  `~/omochi`, and installs its skills into `~/.agents/skills/` — idempotent,
-  with `--dry-run`, `--repo <url>`, and backup of any existing `~/omochi`.
+  `~/omochi`, and installs the repo's skills, templates, global `AGENTS.md`,
+  and rtk plugin — idempotent, with `--dry-run`, `--repo <url>`, and backup of
+  any `~/omochi` or managed file it replaces.
 - `opencode-setup-prompt.md` is an AI-driven setup prompt that discovers live
-  models, writes OpenCode 2.0 native configs, provisions templates, configures
-  rtk, verifies the installed skills, and runs smoke tests. Re-running it is the
-  auto-update path.
+  models, writes OpenCode 2.0 native configs, configures rtk, verifies the
+  installed files, and runs smoke tests. Re-running it is the auto-update path.
 - Configs must not contain hardcoded model IDs; committed references are role
   placeholders (`<main>`, `<worker>`, `<planner>`) or documented fallback
   examples.
@@ -44,13 +44,14 @@ that installs and re-runs itself.
 
 ## Architecture and data flow
 
-- `setup.sh` -> bootstrap binaries + repo clone + `.agents/skills/` into
-  `~/.agents/skills/`.
+- `setup.sh` -> bootstrap binaries + repo clone + skills, templates, global
+  `AGENTS.md`, and `plugins/rtk.ts` installed into their opencode paths.
 - `opencode-setup-prompt.md` -> executed by opencode -> writes
-  `~/.config/opencode/opencode.jsonc`, provisions `templates/`, configures rtk,
-  verifies the installed skills, runs smoke tests.
+  `~/.config/opencode/opencode.jsonc`, configures rtk, verifies the installed
+  files, runs smoke tests.
 - `templates/global-AGENTS.md` -> `~/.config/opencode/AGENTS.md`.
 - `templates/project-docs/` -> `~/.config/opencode/templates/project-docs/`.
+- `plugins/rtk.ts` -> `~/.config/opencode/plugins/rtk.ts`.
 - `.agents/skills/` -> `~/.agents/skills/` (installed by `setup.sh`).
 - `opencode-plugins.txt` -> the `plugins` array in opencode.jsonc.
 - OpenCode 2.0 native features handle multi-agent routing, git worktrees, and
@@ -87,6 +88,8 @@ that installs and re-runs itself.
 - `./scripts/validate.sh` exits 0 on a clean tree.
 - `./scripts/test-install.sh` passes: install, backup, idempotency, and
   dry-run behaviors.
+- `./scripts/smoke.sh` exits 0 when the rtk plugin rewrites a bash command
+  (manual; needs a logged-in provider).
 - CI runs both on push and pull request.
 - A fresh bootstrap plus the setup prompt produces a working opencode with
   discovered model IDs and passing smoke tests.

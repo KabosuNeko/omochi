@@ -21,22 +21,24 @@ opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"
 ## Layout
 
 - `opencode-setup-prompt.md` — self-updating setup prompt + verified "known traps" (npm git deps, fetch-MCP honeypot, rtk rewrite)
-- `setup.sh` — bootstrap installer (opencode, bun, rtk, repo skills; `--dry-run`/`--repo`)
+- `setup.sh` — bootstrap installer (opencode, bun, rtk; installs skills, templates, global AGENTS.md, and the rtk plugin; `--dry-run`/`--repo`)
 - `AGENTS.md` + `SPEC.md`/`ROADMAP.md`/`TASKS.md` — repo maintenance and project docs
 - `.agents/skills/` — 17 specialized skills installed to `~/.agents/skills/` by `setup.sh`
+- `plugins/rtk.ts` — opencode plugin that rewrites bash commands through rtk
 - `templates/project-docs/` — SPEC/ROADMAP/TASKS/AGENTS
 - `templates/global-AGENTS.md` — global `~/.config/opencode/AGENTS.md`
 - `opencode-plugins.txt` — maintained npm plugin manifest
 - `.rtk/filters.toml` — project-local rtk filter example
 - `docs/` — SKILLS, LAYOUT, WORKFLOW reference docs
-- `scripts/` — validate.sh gate + test-install.sh integration test
+- `scripts/` — validate.sh gate, test-install.sh integration test, smoke.sh rtk check
 - `.github/workflows/validate.yml` — CI on push and pull request
 
 ## Validate
 
 ```bash
-./scripts/validate.sh        # repo gate: files, manifest, skills, Bash, secrets
+./scripts/validate.sh        # repo gate: files, manifest, skills, plugin transpile, Bash, secrets
 ./scripts/test-install.sh    # installer integration test (isolated HOME)
+./scripts/smoke.sh           # rtk plugin rewrite check (needs a logged-in provider)
 ```
 
 ## Rules

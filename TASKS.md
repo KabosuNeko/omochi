@@ -36,6 +36,12 @@
   - Acceptance criteria: the bash tool's spawned command carries the `rtk ` prefix in the server log, and the command reaches rtk as an argv array instead of an interpolated shell string.
   - Automated validation: `opencode run --auto` plus a server-log grep (manual smoke).
   - Note: supersedes the `rtk rewrite`-only smoke test of the plugin entry above, which passed while the plugin rewrote nothing.
+- [x] Ship `plugins/rtk.ts` in the repo, provision every managed file from `setup.sh`, and gate the plugin transpile.
+  - Acceptance criteria: `setup.sh` installs skills, templates, global `AGENTS.md`, and the plugin, backing up a differing file before replacing it; `validate.sh` transpiles the plugin when bun is present; CI installs bun.
+  - Automated validation: `validate.sh`, `test-install.sh`.
+- [x] Add `scripts/smoke.sh` proving the rtk rewrite through the opencode server log.
+  - Acceptance criteria: exits 0 only when the spawned bash command carries the `rtk ` prefix; needs a provider, so it stays out of CI.
+  - Automated validation: manual `./scripts/smoke.sh`.
 
 
 ## Completed
