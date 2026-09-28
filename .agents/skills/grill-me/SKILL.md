@@ -26,7 +26,13 @@ Scrutinize the plan before a single line of code is written.
    test, spike, remove the requirement) — never just criticize.
 3. If the plan survives without a changed decision, report the top-3 risks
    that remain and the cheapest experiment that would de-risk them.
+4. Hard stop during implementation: when something is genuinely unclear, name
+   the specific confusion and ask instead of silently picking an
+   interpretation. Several plausible readings → list them and let the user
+   choose. If a simpler approach exists than the chosen one, say so.
 
 ## Delegation
 
 For large plans, invoke an independent reviewer or planner subagent for a rigorous adversarial pass. For small plans, run directly in current turn — this skill's value is the sharp questions, not the persona.
+
+Adapted from the Karpathy-inspired guidelines (MIT): github.com/multica-ai/andrej-karpathy-skills

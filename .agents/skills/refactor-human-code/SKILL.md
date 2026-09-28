@@ -20,6 +20,10 @@ sake.
 - Behavioral preservation: before/after test suite must be green (add tests
   first if none exist).
 - Scope discipline: refactor only what the task names; no drive-by changes.
+  The test: every changed line traces directly to the stated goal — a line
+  that needs a second justification gets dropped.
+- Size check: if the refactored result is 200 lines where 50 would do,
+  collapse it; apply this only inside the named scope.
 - Keep the existing naming/style of human-authored code unless it conflicts
   with repo lint rules.
 - Split work into reviewable commits; run the project's formatter and
@@ -30,3 +34,5 @@ sake.
 
 After the refactor: run the full test suite + build, then run an independent
 verification pass (via `code-review`) before considering it done.
+
+Adapted from the Karpathy-inspired guidelines (MIT): github.com/multica-ai/andrej-karpathy-skills
