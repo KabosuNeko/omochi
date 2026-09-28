@@ -15,13 +15,17 @@ Review with fresh context — the author must not grade their own work.
 
 ## Review checklist (pass to the reviewer)
 
-- Only the intended change is present — no unrelated edits.
+- Only the intended change is present — no unrelated edits. The test: every
+  changed line traces directly to what was asked.
 - Edge cases: empty input, missing data, permissions, timeouts.
 - Security: no secrets logged, no unsafe deserialization, no path traversal.
 - Tests cover the new behavior and the changed edge cases.
 - Docs/changelog match the actual behavior.
 - Dependencies: no new transitive risk, versions pinned per SPEC.md.
-- Minimalism & Over-engineering: no speculative abstractions, single-implementer interfaces, or unnecessary dependencies when standard library suffices.
+- Minimalism & Over-engineering: no speculative abstractions, single-implementer
+  interfaces, or unnecessary dependencies when standard library suffices. Ask
+  whether a senior engineer would call it overcomplicated; if yes, it is a
+  blocker (200 lines where 50 would do is that case).
 - Hygiene & Dead code: no decorative banner comments, narrative workflow comments, unused variables, or dead exports.
 
 ## Output
@@ -30,3 +34,5 @@ Return each finding as: severity (blocker/major/minor/nit) + file:line + why
 it matters + concrete fix. For every comment, either fix the root cause or
 explain why the current behavior is intentional. Do not blindly accept or
 dismiss AI suggestions.
+
+Adapted from the Karpathy-inspired guidelines (MIT): github.com/multica-ai/andrej-karpathy-skills

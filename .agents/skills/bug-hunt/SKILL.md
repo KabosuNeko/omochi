@@ -25,7 +25,8 @@ For hard bugs (multi-file, intermittent, unfamiliar stack), invoke an independen
    Fix the root cause once at the shared seam rather than adding local defensive
    guards at single symptom sites. Symptom-patching is forbidden.
 5. Fix: smallest change that removes the cause. Add a regression test that
-   fails on the old code and passes on the fix.
+   fails on the old code and passes on the fix. Every changed line must trace
+   to the mechanism stated in step 4; incidental cleanup is out of scope.
 6. Verify: run the focused test, then the broader suite, then the original
    failing case.
 
@@ -35,3 +36,5 @@ For hard bugs (multi-file, intermittent, unfamiliar stack), invoke an independen
 - No suppressing errors without handling them.
 - No local symptom-patching that leaves sibling callers broken.
 - No deleting tests to make CI pass.
+
+Adapted from the Karpathy-inspired guidelines (MIT): github.com/multica-ai/andrej-karpathy-skills
