@@ -38,12 +38,21 @@ HOME="$fresh_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \
 [[ ! -s "$calls_log" ]] || fail "installer invoked tools that were already installed: $(cat "$calls_log")"
 printf 'ok: already-installed path skips installs and clones\n'
 
+repo_skill_count="$(find "$repo_root/.agents/skills" -name SKILL.md | wc -l | tr -d ' ')"
+installed_skill_count="$(find "$fresh_home/.agents/skills" -name SKILL.md 2>/dev/null | wc -l | tr -d ' ')"
+[[ "$installed_skill_count" -eq "$repo_skill_count" ]] ||
+  fail "installer installed $installed_skill_count skills, repository has $repo_skill_count"
+printf 'ok: skills installed into ~/.agents/skills\n'
+
 fresh_home="$task_test_root/idempotent home"
 mkdir -p "$fresh_home"
 HOME="$fresh_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \
   bash "$repo_root/setup.sh" >/dev/null
 HOME="$fresh_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \
   bash "$repo_root/setup.sh" >/dev/null
+[[ "$(find "$fresh_home/.agents/skills" -name SKILL.md | wc -l | tr -d ' ')" -eq "$repo_skill_count" ]] ||
+  fail "re-running the installer changed the installed skill count"
+printf 'ok: re-running the installer keeps the skill set\n'
 
 dirty_home="$task_test_root/dirty home"
 mkdir -p "$dirty_home/omochi"
@@ -67,6 +76,7 @@ HOME="$dry_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \
   bash "$repo_root/setup.sh" --dry-run >/dev/null
 [[ ! -e "$dry_home/omochi" && ! -L "$dry_home/omochi" ]] ||
   fail "dry run created ~/omochi"
+[[ ! -e "$dry_home/.agents" ]] || fail "dry run created ~/.agents"
 printf 'ok: dry run changes nothing\n'
 
 missing_home="$task_test_root/missing tools home"

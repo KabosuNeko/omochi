@@ -85,25 +85,25 @@
  7. Optional free-tier fallback: run `opencode auth login` and select
     "OpenCode Zen" (free models; no payment needed). Required only if you
     want muse-spark-1.3-contributor-free / other opencode provider free models to work.
- 8. Specialized skills (17, at ~/.agents/skills/<name>/SKILL.md):
-    api-designer, bash-scripting, bug-hunt, code-review, database-architect,
-    docker-expert, docs-reader, frontend-design, git-workflow, grill-me,
-    linux-sysadmin, python-ai, quickshell, refactor-human-code, security-audit,
-    test-writer, typesafe-ai.
-    Provisioning order (first source that works):
-    a. cp -r ~/omochi/.agents/skills/* ~/.agents/skills/
-    b. git clone --depth 1 https://github.com/KabosuNeko/omochi <tmp>
-       && copy .agents/skills/* from it (then delete <tmp>)
-    c. write the 17 SKILL.md yourself from the descriptions in this repo
+ 8. Specialized skills: setup.sh installed the repository's skill set into
+    ~/.agents/skills/<name>/SKILL.md. Verify; never re-author skill content.
+    - Source of truth: ~/omochi/.agents/skills/ (17 skills, listed in
+      docs/SKILLS.md). `ls ~/.agents/skills` must show the same names, and each
+      directory needs a SKILL.md with name + description front matter.
+    - If a skill is missing or stale, run exactly one deterministic command:
+      `cp -r ~/omochi/.agents/skills/. ~/.agents/skills/`
+      If ~/omochi is absent, run setup.sh first.
  9. Project & Global Templates:
     - Copy 4 templates (AGENTS, SPEC, ROADMAP, TASKS).md from
-      ~/omochi/templates/project-docs/ (or the omochi clone 8b)
+      ~/omochi/templates/project-docs/ (run setup.sh if ~/omochi is absent)
       -> ~/.config/opencode/templates/project-docs/
     - Write ~/.config/opencode/AGENTS.md: copy
-      ~/omochi/templates/global-AGENTS.md (or from omochi
-      clone) — global rules: change-focused, skip filler, run checks, stop
-      before destructive actions.
-10. Fish env var (if not set): set -gx OPENCODE_API_KEY "sk-..."
+      ~/omochi/templates/global-AGENTS.md — global rules: change-focused, skip
+      filler, run checks, stop before destructive actions.
+10. Optional env var: OPENCODE_API_KEY. Skip it when `opencode auth login`
+    already stored the opencode-go credentials (`opencode auth list` shows the
+    stored key) - the setup runs without it. Set it only when the key must come
+    from the environment: set -gx OPENCODE_API_KEY "sk-..."
     then set -Ux OPENCODE_API_KEY "sk-..." (persistent; never store keys in
     config files)
 11. rtk (token saver): single Rust binary that compresses bash tool output
@@ -111,10 +111,50 @@
     - Binary: installed by setup.sh to ~/.local/bin/rtk (NO pacman package —
       official installer; reinstall with: curl -fsSL
       https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh)
-    - Plugin: write ~/.config/opencode/plugins/rtk.ts using OpenCode 2.0 V2 Plugin API:
-      `export default { id: "rtk", async setup(ctx) { await ctx.tool.hook("execute.before", ...) } }`.
-      Only the bash/shell tool is rewritten — built-in Read/Grep/Glob/LSP bypass it, so
-      savings are smaller than on Claude Code.
+    - Plugin: write ~/.config/opencode/plugins/rtk.ts exactly as below (OpenCode
+      2.0 API: `ctx.tool.hook("execute.before", ...)`; only bash/shell commands
+      are rewritten — native Read/Grep/Glob/LSP bypass it, so savings are
+      smaller than on a hook that also covers file reads):
+
+        import { execSync, spawnSync } from "node:child_process"
+
+        /** Minimal shape of the hook API this plugin uses (`ctx.tool.hook`). */
+        type RtkPluginContext = {
+          tool: {
+            hook(name: string, handler: (event: unknown) => void | Promise<void>): Promise<void>
+          }
+        }
+
+        export default {
+          id: "rtk",
+          async setup(ctx: RtkPluginContext) {
+            try {
+              execSync("which rtk", { stdio: "ignore" })
+            } catch {
+              console.warn("[rtk] rtk binary not found in PATH — plugin disabled")
+              return
+            }
+
+            await ctx.tool.hook("execute.before", (event: unknown) => {
+              if (typeof event !== "object" || event === null) return
+              if (!("tool" in event) || !("input" in event)) return
+              if (typeof event.tool !== "string") return
+              const toolName = event.tool.toLowerCase()
+              if (toolName !== "bash" && toolName !== "shell") return
+              const input = event.input
+              if (typeof input !== "object" || input === null) return
+              if (!("command" in input) || typeof input.command !== "string" || !input.command) return
+              // spawnSync with an argv array: no shell, so the command text
+              // cannot be expanded or interpolated. `rtk rewrite` exits 3 after
+              // a successful rewrite and exits 1 with empty stdout when no
+              // filter matches, so stdout — not the exit status — is the signal.
+              const rewritten = spawnSync("rtk", ["rewrite", input.command], { encoding: "utf-8" }).stdout?.trim() ?? ""
+              if (rewritten && rewritten !== input.command) {
+                input.command = rewritten
+              }
+            })
+          },
+        }
     - Config: write ~/.config/rtk/config.toml:
         [hooks]
         exclude_commands = ["opencode", "code", "cursor", "zed", "nvim", "vim", "nano", "git-credential", "pinentry"]
@@ -142,12 +182,15 @@
     - rtk --version && rtk rewrite "git status" (expect: "rtk git status")
     - test -f ~/.config/opencode/plugins/rtk.ts && grep -q
       'exclude_commands' ~/.config/rtk/config.toml
-    - opencode run -m opencode/muse-spark-1.3-contributor-free "Run: ls -la" && rtk
-      gain (expect: "rtk ls -la" counted — proves the plugin rewrote)
+    - Plugin actually rewrites (a plain command here means the hook is dead):
+      opencode run --auto -m opencode/muse-spark-1.3-contributor-free \
+      "Call the bash tool with this command: git status" \
+      && grep 'spawning process' ~/.local/share/opencode/log/opencode.log | tail -1
+      (expect the newest bash line to read `rtk git status`)
 
 ## Required Output
 1. The actual JSONC written (highlight the model section).
-2. The Fish commands used (set -gx / set -Ux OPENCODE_API_KEY).
+2. The Fish commands used, when the optional OPENCODE_API_KEY was set.
 3. List of changed files + diffs (highlight model config).
 4. Smoke test results + MODEL SUBSTITUTION TABLE if any ID changed.
 
@@ -156,8 +199,9 @@
   refreshes, step 4 re-discovers, step 5 is idempotent, and the diff review
   surfaces exactly what changed.
 - Do not touch plugin entries; @latest updates itself. If a plugin breaks
-  after an update: rm -rf ~/.cache/opencode/node_modules/<plugin> and restart
-  opencode.
+  after an update: `opencode plugin remove <plugin>` and then
+  `opencode plugin add <plugin>` (installed files live under
+  `~/.cache/opencode/packages/<plugin>@<version>/node_modules/`).
 - If opencode-go reports "Insufficient balance", top up at the workspace
   billing page; free fallbacks (muse-spark-1.3-contributor-free) keep working meanwhile.
 ```
@@ -187,3 +231,12 @@
    double-reasoning loops (model reasons in thought tokens, then calls the
    sequential thinking tool, doubling latency and token consumption).
    Avoid sequential-thinking in OpenCode 2.0; rely on model native thinking.
+6. **`rtk rewrite` exits non-zero on success (verified 2026-09-28)** — it exits
+   3 with the rewritten command on stdout, and 1 with empty stdout when no
+   filter matches. A plugin that treats a thrown `execSync` as failure drops
+   every rewrite: commands run unrewritten while `rtk rewrite` itself looks
+   correct in a smoke test. Gate on stdout, not the exit status, and pass the
+   command as an argv array (interpolating it into a shell string re-expands
+   `$()` inside the agent's own command). Proof: run one bash command through
+   opencode, then `grep "spawning process" ~/.local/share/opencode/log/opencode.log | tail -1`
+   must show the `rtk ` prefix.

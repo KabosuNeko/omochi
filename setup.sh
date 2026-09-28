@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# omochi bootstrap: install opencode + bun + rtk, fetch this repo.
-# Everything else (configs, skills, model discovery) is done by the
+# omochi bootstrap: install opencode + bun + rtk, fetch this repo, install
+# the repo's skills into ~/.agents/skills.
+# Everything else (configs, model discovery) is done by the
 # AI-driven setup prompt — run it AFTER the manual steps below.
 
 REPO_URL="${AI_SETUP_REPO_URL:-https://github.com/KabosuNeko/omochi}"
@@ -106,7 +107,7 @@ EOF
 fi
 
 # rtk (token saver): no pacman package — official installer, idempotent.
-# Config + opencode plugin are provisioned by the AI-driven setup prompt.
+# rtk config + opencode plugin are provisioned by the AI-driven setup prompt.
 if ! has_cmd rtk && [[ ! -x "$HOME/.local/bin/rtk" ]]; then
   echo ">> Installing rtk (official installer)..."
   pipe_install sh curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh
@@ -125,14 +126,27 @@ else
   run git clone --depth 1 "$REPO_URL" "$HOME/omochi"
 fi
 
+skills_src="$HOME/omochi/.agents/skills"
+skills_dst="$HOME/.agents/skills"
+
+if "$dry_run" || [[ -d "$skills_src" ]]; then
+  run mkdir -p "$skills_dst"
+  run cp -r "$skills_src/." "$skills_dst/"
+else
+  printf 'warning: %s is missing; skills were not installed\n' "$skills_src" >&2
+fi
+
 cat <<'EOF'
 
 Bootstrap done. Manual steps (interactive / secret, cannot be automated):
 
   1. fish_add_path ~/.local/bin     # fish; ensure rtk is in PATH if not already
   2. opencode auth login            # select opencode-go (and OpenCode Zen for free models)
-  3. set -Ux OPENCODE_API_KEY "sk-..."   # fish; opencode-go token from your workspace
+  3. (optional) set -Ux OPENCODE_API_KEY "sk-..."   # env-based auth only; step 2 already stores the key
   4. opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"
                                     # AI-driven setup: discovers models, writes configs,
-                                    # provisions skills/templates, configures rtk, smoke tests
+                                    # provisions templates, configures rtk, smoke tests
+
+Skills live in ~/.agents/skills. To update them:
+  git -C ~/omochi pull && bash ~/omochi/setup.sh
 EOF

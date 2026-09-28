@@ -41,12 +41,13 @@ what is committed stays role-based and machine-neutral.
 ## Setup flow
 
 1. `setup.sh` bootstraps: installs opencode, bun, and rtk; clones this repo
-   into `~/omochi`. Use `--dry-run` to preview, `--repo <url>` to override the
-   source. Existing `~/omochi` dirs are backed up to `~/omochi.bak-*`.
-2. Manual, cannot be automated: `opencode auth login` and the
-   `OPENCODE_API_KEY` env var.
+   into `~/omochi`; installs `.agents/skills/` into `~/.agents/skills/`. Use
+   `--dry-run` to preview, `--repo <url>` to override the source. Existing
+   `~/omochi` dirs are backed up to `~/omochi.bak-*`.
+2. Manual, cannot be automated: `opencode auth login` (and, optionally, the
+   `OPENCODE_API_KEY` env var).
 3. `opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"` discovers live
-   models, writes configs, provisions skills and templates, and
+   models, writes configs, provisions templates, and
    runs smoke tests. Re-running this prompt is the auto-update path.
 
 ## Plugins and MCP servers
@@ -63,8 +64,8 @@ file, git, and search tools.
 
 ## Skills
 
-Skills live in `sources`: `.agents/skills/` as a source of truth. The setup
-prompt provisions them into `~/.agents/skills/`. See `docs/SKILLS.md`.
+Skills live in `sources`: `.agents/skills/` as a source of truth. `setup.sh`
+installs them into `~/.agents/skills/`. See `docs/SKILLS.md`.
 
 ## Direct config use
 
