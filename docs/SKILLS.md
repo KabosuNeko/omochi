@@ -44,8 +44,8 @@ repo/.opencode/skills/<name>/SKILL.md    project config
 ```
 
 opencode walks from the working directory up to the git worktree root and also
-loads global locations. The setup prompt provisions this repository's skills
-into `~/.agents/skills/`.
+loads global locations. `setup.sh` installs this repository's skills into
+`~/.agents/skills/`; re-run it after `git -C ~/omochi pull` to refresh them.
 
 ## Authoring rules
 

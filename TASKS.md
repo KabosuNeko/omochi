@@ -8,7 +8,7 @@
 - [x] Streamline plugins manifest to verified OpenCode 2.0 packages (`@plannotator/opencode`).
   - Acceptance criteria: `opencode-plugins.txt` contains only active V2 plugins; zero load errors in OpenCode 2.0.
   - Automated validation: `validate.sh`.
-- [x] Rewrite RTK shell rewrite hook to OpenCode 2.0 V2 Plugin API (`Plugin.define`).
+- [x] Rewrite RTK shell rewrite hook to the OpenCode 2.0 V2 plugin API (`export default { id, setup(ctx) }`, `ctx.tool.hook("execute.before", ...)`).
   - Acceptance criteria: `~/.config/opencode/plugins/rtk.ts` uses domain hooks; token savings preserved.
   - Automated validation: smoke test `rtk rewrite`.
 - [x] Integrate Ponytail minimalist rules and anti-slop gates directly into AGENTS and skills.
@@ -29,6 +29,13 @@
 - [x] Unify skill provisioning into ~/.agents/skills/ (single canonical directory matching repo layout).
   - Acceptance criteria: eliminate artificial guardrail/personal skill split; all 17 skills provisioned 1:1 to ~/.agents/skills/; docs and setup prompt aligned.
   - Automated validation: `validate.sh` and `test-install.sh`.
+- [x] Move skill installation out of the AI prompt into `setup.sh`.
+  - Acceptance criteria: `setup.sh` installs the skills into `~/.agents/skills/` idempotently; `--dry-run` changes nothing; the prompt verifies, never re-authors.
+  - Automated validation: `test-install.sh`.
+- [x] Fix the rtk plugin: `execSync` discarded every rewrite (`rtk rewrite` exits 3 on success).
+  - Acceptance criteria: the bash tool's spawned command carries the `rtk ` prefix in the server log, and the command reaches rtk as an argv array instead of an interpolated shell string.
+  - Automated validation: `opencode run --auto` plus a server-log grep (manual smoke).
+  - Note: supersedes the `rtk rewrite`-only smoke test of the plugin entry above, which passed while the plugin rewrote nothing.
 
 
 ## Completed

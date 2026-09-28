@@ -10,20 +10,20 @@ an opencode setup that just works.
 curl -fsSL https://raw.githubusercontent.com/KabosuNeko/omochi/main/setup.sh | bash
 
 # then (manual, cannot be automated):
-opencode auth login                        # opencode-go + OpenCode Zen
-set -Ux OPENCODE_API_KEY "sk-..."          # fish; go token from your workspace
+opencode auth login                        # opencode-go + OpenCode Zen (stores the key)
+set -Ux OPENCODE_API_KEY "sk-..."          # optional: only for env-based auth
 
 # AI-driven setup: discovers models, writes configs,
-# provisions skills/templates, runs smoke tests. Safe to re-run = auto-update.
+# provisions templates, runs smoke tests. Safe to re-run = auto-update.
 opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"
 ```
 
 ## Layout
 
 - `opencode-setup-prompt.md` — self-updating setup prompt + verified "known traps" (npm git deps, fetch-MCP honeypot, rtk rewrite)
-- `setup.sh` — bootstrap installer (opencode, bun, rtk; `--dry-run`/`--repo`)
+- `setup.sh` — bootstrap installer (opencode, bun, rtk, repo skills; `--dry-run`/`--repo`)
 - `AGENTS.md` + `SPEC.md`/`ROADMAP.md`/`TASKS.md` — repo maintenance and project docs
-- `.agents/skills/` — 17 specialized skills provisioned to `~/.agents/skills/`
+- `.agents/skills/` — 17 specialized skills installed to `~/.agents/skills/` by `setup.sh`
 - `templates/project-docs/` — SPEC/ROADMAP/TASKS/AGENTS
 - `templates/global-AGENTS.md` — global `~/.config/opencode/AGENTS.md`
 - `opencode-plugins.txt` — maintained npm plugin manifest

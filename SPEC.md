@@ -14,12 +14,13 @@ that installs and re-runs itself.
 
 ## Required behavior
 
-- `setup.sh` bootstraps opencode, bun, and rtk, and clones the repo into
-  `~/omochi` — idempotent, with `--dry-run`, `--repo <url>`, and backup of any
-  existing `~/omochi`.
+- `setup.sh` bootstraps opencode, bun, and rtk, clones the repo into
+  `~/omochi`, and installs its skills into `~/.agents/skills/` — idempotent,
+  with `--dry-run`, `--repo <url>`, and backup of any existing `~/omochi`.
 - `opencode-setup-prompt.md` is an AI-driven setup prompt that discovers live
-  models, writes OpenCode 2.0 native configs, provisions skills and
-  templates, configures rtk, and runs smoke tests. Re-running it is the auto-update path.
+  models, writes OpenCode 2.0 native configs, provisions templates, configures
+  rtk, verifies the installed skills, and runs smoke tests. Re-running it is the
+  auto-update path.
 - Configs must not contain hardcoded model IDs; committed references are role
   placeholders (`<main>`, `<worker>`, `<planner>`) or documented fallback
   examples.
@@ -33,7 +34,8 @@ that installs and re-runs itself.
 
 ## User experience
 
-- Fresh machine: one bootstrap command, two manual secret steps, then one
+- Fresh machine: one bootstrap command, one manual auth step (`opencode auth
+  login`; the `OPENCODE_API_KEY` env var is optional), then one
   `opencode run` command to complete the setup.
 - Updates: re-run the setup prompt; the diff review shows exactly what
   changed.
@@ -42,13 +44,14 @@ that installs and re-runs itself.
 
 ## Architecture and data flow
 
-- `setup.sh` -> bootstrap binaries + repo clone.
+- `setup.sh` -> bootstrap binaries + repo clone + `.agents/skills/` into
+  `~/.agents/skills/`.
 - `opencode-setup-prompt.md` -> executed by opencode -> writes
-  `~/.config/opencode/opencode.jsonc`, provisions skills from `.agents/skills/` and
-  `templates/`, configures rtk, runs smoke tests.
+  `~/.config/opencode/opencode.jsonc`, provisions `templates/`, configures rtk,
+  verifies the installed skills, runs smoke tests.
 - `templates/global-AGENTS.md` -> `~/.config/opencode/AGENTS.md`.
 - `templates/project-docs/` -> `~/.config/opencode/templates/project-docs/`.
-- `.agents/skills/` -> `~/.agents/skills/`.
+- `.agents/skills/` -> `~/.agents/skills/` (installed by `setup.sh`).
 - `opencode-plugins.txt` -> the `plugins` array in opencode.jsonc.
 - OpenCode 2.0 native features handle multi-agent routing, git worktrees, and
   context compaction without brittle third-party framework layers.

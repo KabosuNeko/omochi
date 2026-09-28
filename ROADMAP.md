@@ -102,7 +102,7 @@ framework layers while preserving multi-agent specializations, token savings, an
 - Migrate to OpenCode 2.0 native agents, native worktrees, and context compaction.
 - Deprecate oh-my-openagent, opencode-worktree, and opencode-dcp.
 - Standardize external plugin manifest on `@plannotator/opencode` (V2-compatible).
-- Re-implement RTK bash rewrite as an OpenCode 2.0 V2 Plugin (`Plugin.define`).
+- Re-implement RTK bash rewrite as an OpenCode 2.0 V2 plugin.
 - Retain Ponytail craftsmanship rules and 17 specialized skills (including typesafe-ai).
 
 ### Exit criteria

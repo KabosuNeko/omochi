@@ -3,17 +3,19 @@
 ## Setup lifecycle
 
 1. Bootstrap with `setup.sh`: installs opencode, bun, and rtk; clones this
-   repository into `~/omochi`. Preview with `--dry-run`; existing `~/omochi`
+   repository into `~/omochi`; installs `.agents/skills/` into
+   `~/.agents/skills/`. Preview with `--dry-run`; existing `~/omochi`
    directories are backed up before replacement.
 2. Manual and interactive, therefore not automatable:
    - `opencode auth login` — select the opencode-go provider (and OpenCode Zen
      for free fallback models).
-   - set the `OPENCODE_API_KEY` env var persistently (`set -Ux` in fish).
-     Never store keys in config files.
+   - optionally export the `OPENCODE_API_KEY` env var persistently
+     (`set -Ux` in fish), for when the key must come from the environment
+     instead of the stored login. Never store keys in config files.
 3. Run the AI-driven setup:
    `opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"`. It refreshes the
    model list, assigns models by role, writes `~/.config/opencode/opencode.jsonc`,
-   provisions skills and templates, configures rtk, and runs smoke tests.
+   provisions templates, configures rtk, and runs smoke tests.
 4. Review the diff of every changed file against its backup before accepting.
 
 ## How the setup prompt stays current
@@ -33,7 +35,9 @@
 - `SPEC.md` defines requirements and acceptance criteria; `ROADMAP.md` orders
   phases and exit criteria; `TASKS.md` records validated work.
 - `.agents/skills/` holds reusable skills; follow the authoring rules in
-  `docs/SKILLS.md`.
+  `docs/SKILLS.md`. Changes reach `~/.agents/skills/` by re-running `setup.sh`
+  (`git -C ~/omochi pull && bash ~/omochi/setup.sh`), not by re-running the
+  setup prompt.
 - `templates/` holds portable templates (project docs, global AGENTS);
   update them when the setup prompt's provisioning changes.
 - `docs/` is reference material; point to it from `AGENTS.md` or skills rather
@@ -49,8 +53,10 @@
 - Free fallbacks (`opencode/muse-spark-1.3-contributor-free`) continue to work after a
   provider balance or subscription error; `opencode auth login` restores the
   opencode provider.
-- Plugin breakage after an upgrade: remove
-  `~/.cache/opencode/node_modules/<plugin>` and restart opencode.
+- Plugin breakage after an upgrade: `opencode plugin remove <plugin>` and then
+  `opencode plugin add <plugin>`; installed files live under
+  `~/.cache/opencode/packages/<plugin>@<version>/node_modules/` (older trees
+  also under `~/.cache/opencode/npm/<plugin>@<version>/`).
 - Model discovery needs raw output: `opencode models <provider>` with
   `--verbose` must not be wrapped by rtk (excluded in
   `~/.config/rtk/config.toml`); when a wrapped command fails, read the saved
