@@ -30,6 +30,11 @@ jobs:
           sudo apt-get install -y shellcheck
           shellcheck setup.sh scripts/*.sh
 
+      - name: Install bun (used by validate.sh for the plugin transpile check)
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
+
       - name: Validate repository and installer
         run: |
           ./scripts/validate.sh

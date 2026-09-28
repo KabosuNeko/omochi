@@ -29,7 +29,7 @@ configuration with private and ephemeral runtime state:
 Tracking or replacing those files would expose credentials and make the setup
 less portable. This repository manages only:
 
-- the setup workflow (`opencode-setup-prompt.md`, `setup.sh`)
+- the setup workflow (`opencode-setup-prompt.md`, `setup.sh`, `plugins/`)
 - reusable skills (`.agents/skills/`)
 - portable templates (`templates/`)
 - reference docs (`docs/`)
@@ -41,13 +41,16 @@ what is committed stays role-based and machine-neutral.
 ## Setup flow
 
 1. `setup.sh` bootstraps: installs opencode, bun, and rtk; clones this repo
-   into `~/omochi`; installs `.agents/skills/` into `~/.agents/skills/`. Use
-   `--dry-run` to preview, `--repo <url>` to override the source. Existing
-   `~/omochi` dirs are backed up to `~/omochi.bak-*`.
+   into `~/omochi`; installs `.agents/skills/`, `templates/`, and
+   `plugins/rtk.ts` into their opencode paths (`~/.agents/skills/`,
+   `~/.config/opencode/templates/`, `~/.config/opencode/AGENTS.md`,
+   `~/.config/opencode/plugins/`). Use `--dry-run` to preview, `--repo <url>`
+   to override the source. Existing `~/omochi` dirs and replaced config files
+   are backed up (`~/omochi.bak-*`, `<file>.bak-*`).
 2. Manual, cannot be automated: `opencode auth login` (and, optionally, the
    `OPENCODE_API_KEY` env var).
 3. `opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"` discovers live
-   models, writes configs, provisions templates, and
+   models, writes configs, configures rtk, verifies the installed files, and
    runs smoke tests. Re-running this prompt is the auto-update path.
 
 ## Plugins and MCP servers

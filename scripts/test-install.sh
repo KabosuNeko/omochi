@@ -27,7 +27,15 @@ EOF
   chmod +x "$fake_bin/$tool"
 done
 
-repourl="file://$repo_root"
+# Snapshot the working tree — not just HEAD — so setup.sh is exercised against
+# uncommitted changes too. CI checks out the tree, so this matches CI either way.
+snapshot="$task_test_root/repo"
+mkdir -p "$snapshot"
+tar -C "$repo_root" --exclude=./.git -cf - . | tar -C "$snapshot" -xf -
+git -C "$snapshot" init -q
+git -C "$snapshot" add -A
+git -C "$snapshot" -c user.email=test@example.com -c user.name=test commit -qm snapshot
+repourl="file://$snapshot"
 export OMOCHI_CALLS_LOG="$calls_log"
 
 fresh_home="$task_test_root/fresh home"
@@ -44,6 +52,16 @@ installed_skill_count="$(find "$fresh_home/.agents/skills" -name SKILL.md 2>/dev
   fail "installer installed $installed_skill_count skills, repository has $repo_skill_count"
 printf 'ok: skills installed into ~/.agents/skills\n'
 
+[[ -f "$fresh_home/.config/opencode/plugins/rtk.ts" ]] ||
+  fail "installer did not install the rtk plugin"
+cmp -s "$repo_root/plugins/rtk.ts" "$fresh_home/.config/opencode/plugins/rtk.ts" ||
+  fail "installed rtk plugin differs from the repository copy"
+cmp -s "$repo_root/templates/global-AGENTS.md" "$fresh_home/.config/opencode/AGENTS.md" ||
+  fail "installed global AGENTS.md differs from the template"
+[[ -f "$fresh_home/.config/opencode/templates/project-docs/SPEC.md" ]] ||
+  fail "installer did not install the project-docs templates"
+printf 'ok: plugin, global AGENTS.md, and templates installed\n'
+
 fresh_home="$task_test_root/idempotent home"
 mkdir -p "$fresh_home"
 HOME="$fresh_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \
@@ -52,11 +70,17 @@ HOME="$fresh_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \
   bash "$repo_root/setup.sh" >/dev/null
 [[ "$(find "$fresh_home/.agents/skills" -name SKILL.md | wc -l | tr -d ' ')" -eq "$repo_skill_count" ]] ||
   fail "re-running the installer changed the installed skill count"
+shopt -s nullglob
+agents_backups=("$fresh_home/.config/opencode/AGENTS.md.bak-"*)
+shopt -u nullglob
+[[ ${#agents_backups[@]} -eq 0 ]] ||
+  fail "re-running the installer backed up an unchanged AGENTS.md"
 printf 'ok: re-running the installer keeps the skill set\n'
 
 dirty_home="$task_test_root/dirty home"
-mkdir -p "$dirty_home/omochi"
+mkdir -p "$dirty_home/omochi" "$dirty_home/.config/opencode"
 printf 'user data' >"$dirty_home/omochi/marker.txt"
+printf 'local edit' >"$dirty_home/.config/opencode/AGENTS.md"
 HOME="$dirty_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \
   bash "$repo_root/setup.sh" >/dev/null
 
@@ -70,6 +94,16 @@ shopt -u nullglob
 [[ -d "$dirty_home/omochi/.git" ]] || fail "installer did not clone after backup"
 printf 'ok: dirty ~/omochi is backed up then replaced\n'
 
+shopt -s nullglob
+agents_backups=("$dirty_home/.config/opencode/AGENTS.md.bak-"*)
+shopt -u nullglob
+[[ ${#agents_backups[@]} -eq 1 ]] || fail "expected one backup of a locally edited AGENTS.md"
+[[ "$(cat "${agents_backups[0]}")" == "local edit" ]] ||
+  fail "AGENTS.md backup did not preserve the local edit"
+cmp -s "$repo_root/templates/global-AGENTS.md" "$dirty_home/.config/opencode/AGENTS.md" ||
+  fail "AGENTS.md was not replaced with the template"
+printf 'ok: a locally edited AGENTS.md is backed up then replaced\n'
+
 dry_home="$task_test_root/dry home"
 mkdir -p "$dry_home"
 HOME="$dry_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \
@@ -77,6 +111,7 @@ HOME="$dry_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \
 [[ ! -e "$dry_home/omochi" && ! -L "$dry_home/omochi" ]] ||
   fail "dry run created ~/omochi"
 [[ ! -e "$dry_home/.agents" ]] || fail "dry run created ~/.agents"
+[[ ! -e "$dry_home/.config/opencode" ]] || fail "dry run wrote to ~/.config/opencode"
 printf 'ok: dry run changes nothing\n'
 
 missing_home="$task_test_root/missing tools home"

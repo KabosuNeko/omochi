@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# omochi bootstrap: install opencode + bun + rtk, fetch this repo, install
-# the repo's skills into ~/.agents/skills.
-# Everything else (configs, model discovery) is done by the
+# omochi bootstrap: install opencode + bun + rtk, fetch this repo, and install
+# the repo's skills, templates, global AGENTS.md, and rtk plugin.
+# Model discovery, opencode.jsonc, and the rtk config are done by the
 # AI-driven setup prompt — run it AFTER the manual steps below.
 
 REPO_URL="${AI_SETUP_REPO_URL:-https://github.com/KabosuNeko/omochi}"
@@ -57,6 +57,40 @@ has_cmd() {
   command -v "$1" >/dev/null 2>&1 || [[ -x "/usr/bin/$1" ]]
 }
 
+# Copy a directory tree in place. Stale entries are not pruned; files the repo
+# no longer ships stay on the machine until removed by hand.
+provision_tree() {
+  local src="$1" dst="$2"
+  if "$dry_run" || [[ -d "$src" ]]; then
+    run mkdir -p "$dst"
+    run cp -r "$src/." "$dst/"
+  else
+    printf 'warning: %s is missing; nothing installed into %s\n' "$src" "$dst" >&2
+  fi
+}
+
+# Replace a single config file only when its contents differ, keeping a
+# timestamped backup so a local edit is never overwritten silently.
+provision_file() {
+  local src="$1" dst="$2" backup
+  if ! "$dry_run" && [[ ! -e "$src" ]]; then
+    printf 'warning: %s is missing; %s was not installed\n' "$src" "$dst" >&2
+    return
+  fi
+  if "$dry_run" || [[ ! -e "$dst" ]]; then
+    run mkdir -p "$(dirname "$dst")"
+    run cp "$src" "$dst"
+    return
+  fi
+  if cmp -s "$src" "$dst"; then
+    return 0
+  fi
+  backup="$dst.bak-$(date +%Y%m%d-%H%M%S)"
+  run cp "$dst" "$backup"
+  run cp "$src" "$dst"
+  printf '>> replaced %s (kept %s; review with: diff %s %s)\n' "$dst" "$backup" "$backup" "$dst"
+}
+
 if ! has_cmd opencode; then
   echo ">> Installing opencode..."
   if has_cmd pacman && has_cmd sudo; then
@@ -107,7 +141,8 @@ EOF
 fi
 
 # rtk (token saver): no pacman package — official installer, idempotent.
-# rtk config + opencode plugin are provisioned by the AI-driven setup prompt.
+# rtk config is provisioned by the AI-driven setup prompt; the plugin is
+# installed below with the other managed files.
 if ! has_cmd rtk && [[ ! -x "$HOME/.local/bin/rtk" ]]; then
   echo ">> Installing rtk (official installer)..."
   pipe_install sh curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh
@@ -126,15 +161,13 @@ else
   run git clone --depth 1 "$REPO_URL" "$HOME/omochi"
 fi
 
-skills_src="$HOME/omochi/.agents/skills"
-skills_dst="$HOME/.agents/skills"
+repo="$HOME/omochi"
+opencode_dir="$HOME/.config/opencode"
 
-if "$dry_run" || [[ -d "$skills_src" ]]; then
-  run mkdir -p "$skills_dst"
-  run cp -r "$skills_src/." "$skills_dst/"
-else
-  printf 'warning: %s is missing; skills were not installed\n' "$skills_src" >&2
-fi
+provision_tree "$repo/.agents/skills" "$HOME/.agents/skills"
+provision_tree "$repo/templates/project-docs" "$opencode_dir/templates/project-docs"
+provision_file "$repo/templates/global-AGENTS.md" "$opencode_dir/AGENTS.md"
+provision_file "$repo/plugins/rtk.ts" "$opencode_dir/plugins/rtk.ts"
 
 cat <<'EOF'
 
@@ -145,8 +178,10 @@ Bootstrap done. Manual steps (interactive / secret, cannot be automated):
   3. (optional) set -Ux OPENCODE_API_KEY "sk-..."   # env-based auth only; step 2 already stores the key
   4. opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"
                                     # AI-driven setup: discovers models, writes configs,
-                                    # provisions templates, configures rtk, smoke tests
+                                    # configures rtk, runs smoke tests
 
-Skills live in ~/.agents/skills. To update them:
+Installed from this repo: ~/.agents/skills, ~/.config/opencode/AGENTS.md,
+~/.config/opencode/templates/project-docs, ~/.config/opencode/plugins/rtk.ts.
+To update them:
   git -C ~/omochi pull && bash ~/omochi/setup.sh
 EOF
