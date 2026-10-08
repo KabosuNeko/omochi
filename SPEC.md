@@ -78,6 +78,8 @@ that installs and re-runs itself.
 
 ## Non-goals
 
+- Distribution: no npm package, plugin manifest, or marketplace catalog.
+  omochi is a personal setup repo — clone it and run `setup.sh`.
 - Managing other editors or agents (Codex, Claude Code).
 - Hardcoding or pinning model IDs in committed configs.
 - Bloating the setup with heavy third-party agent framework layers.
