@@ -81,13 +81,13 @@
     - All persona roles (code review, bug hunting, docs reading, frontend design,
      quickshell, test writing, refactoring, containerization, db architecture,
      api design, git workflow, security audit, typesafe AI) are cleanly fulfilled by omochi's
-     17 specialized skills under ~/.agents/skills/.
+     18 specialized skills under ~/.agents/skills/.
  7. Optional free-tier fallback: run `opencode auth login` and select
     "OpenCode Zen" (free models; no payment needed). Required only if you
     want muse-spark-1.3-contributor-free / other opencode provider free models to work.
  8. Specialized skills: setup.sh installed the repository's skill set into
     ~/.agents/skills/<name>/SKILL.md. Verify; never re-author skill content.
-    - Source of truth: ~/omochi/.agents/skills/ (17 skills, listed in
+    - Source of truth: ~/omochi/.agents/skills/ (18 skills, listed in
       docs/SKILLS.md). `ls ~/.agents/skills` must show the same names, and each
       directory needs a SKILL.md with name + description front matter.
     - If a skill is missing or stale, run exactly one deterministic command:

@@ -42,6 +42,9 @@
 - [x] Add `scripts/smoke.sh` proving the rtk rewrite through the opencode server log.
   - Acceptance criteria: exits 0 only when the spawned bash command carries the `rtk ` prefix; needs a provider, so it stays out of CI.
   - Automated validation: manual `./scripts/smoke.sh`.
+- [x] Sync upstream Ponytail v4.13.0 rules and add the `ponytail-audit` skill (18 skills).
+  - Acceptance criteria: `templates/global-AGENTS.md` records the ladder caveat, the `ponytail:` marker convention, the never-lazy-about list, the one-runnable-check rule, and the upstream version; `ponytail-audit` audits the whole tree and stays report-only.
+  - Automated validation: `validate.sh` (front matter, docs sync).
 
 
 ## Completed

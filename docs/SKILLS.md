@@ -70,6 +70,7 @@ loads global locations. `setup.sh` installs this repository's skills into
 - `git-workflow`
 - `grill-me`
 - `linux-sysadmin`
+- `ponytail-audit`
 - `python-ai`
 - `quickshell`
 - `refactor-human-code`
@@ -80,3 +81,22 @@ loads global locations. `setup.sh` installs this repository's skills into
 Run `./scripts/validate.sh` after adding or changing a skill. Validation fails
 when this list and the skill directories drift apart, when front matter is
 malformed, or when a skill hardcodes a model ID.
+
+## External skill sources
+
+Not vendored here: install one individually when a task needs it. Checked
+2026-09-29.
+
+- addyosmani/agent-skills (MIT) - production-grade skills whose coverage omochi
+  lacks: observability, performance, CI/CD, deprecation and migration, context
+  engineering, architecture decision records.
+- DietrichGebert/ponytail (MIT) - upstream of the minimalist ladder and of
+  ponytail-audit; also ships ponytail-review (diff-scoped) and ponytail-debt
+  (collects `ponytail:` markers into a ledger).
+- obra/superpowers (MIT) - methodology skills: brainstorming, systematic
+  debugging, TDD, subagent-driven development, worktrees.
+- pbakaus/impeccable (Apache-2.0), nextlevelbuilder/ui-ux-pro-max-skill (MIT) -
+  design languages and UI/UX references.
+- JuliusBrussee/caveman (Apache-2.0) - compresses prose and context; an
+  alternative to rtk on the wording layer rather than the command-output layer.
+- ComposioHQ/awesome-claude-skills - index for browsing further.
