@@ -8,6 +8,9 @@
 - [x] Sync Ponytail v5.2.0: vendor the full 6-skill family (+5), rewrite the ladder in `templates/global-AGENTS.md`, rename the code marker to `shortcut:`.
   - Acceptance criteria: skills and ladder match upstream v5.2.0; `validate.sh` green; `docs/SKILLS.md` lists all 23 skills and the refreshed external sources.
   - Automated validation: `validate.sh`, CI.
+- [x] Add the `aspnet-mvc-framework` skill (24 skills): .NET Framework MVC 5 conventions, csproj registration traps, ADO.NET data access, MSBuild + IIS Express build/run/verify.
+  - Acceptance criteria: the build and IIS Express commands in the skill reproduced against a real MVC 5 project; `validate.sh` and CI green.
+  - Automated validation: `validate.sh`, CI.
 
 ## Phase 4 (OpenCode 2.0 Native "Super Lean") — completed
 

@@ -60,6 +60,7 @@ loads global locations. The setup scripts install this repository's skills into
 ## Repository skills
 
 - `api-designer`
+- `aspnet-mvc-framework`
 - `bash-scripting`
 - `bug-hunt`
 - `code-review`
