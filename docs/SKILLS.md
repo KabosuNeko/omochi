@@ -44,8 +44,8 @@ repo/.opencode/skills/<name>/SKILL.md    project config
 ```
 
 opencode walks from the working directory up to the git worktree root and also
-loads global locations. `setup.sh` installs this repository's skills into
-`~/.agents/skills/`; re-run it after `git -C ~/omochi pull` to refresh them.
+loads global locations. The setup scripts install this repository's skills into
+`~/.agents/skills/`; re-run one after `git -C ~/omochi pull` to refresh them.
 
 ## Authoring rules
 
@@ -70,7 +70,12 @@ loads global locations. `setup.sh` installs this repository's skills into
 - `git-workflow`
 - `grill-me`
 - `linux-sysadmin`
+- `ponytail`
 - `ponytail-audit`
+- `ponytail-debt`
+- `ponytail-gain`
+- `ponytail-help`
+- `ponytail-review`
 - `python-ai`
 - `quickshell`
 - `refactor-human-code`
@@ -84,19 +89,28 @@ malformed, or when a skill hardcodes a model ID.
 
 ## External skill sources
 
-Not vendored here: install one individually when a task needs it. Checked
-2026-09-29.
+Not vendored here: install one individually when a task needs it. The ponytail
+family is the exception - its six skills are vendored. Checked 2026-10-14.
 
 - addyosmani/agent-skills (MIT) - production-grade skills whose coverage omochi
   lacks: observability, performance, CI/CD, deprecation and migration, context
   engineering, architecture decision records.
-- DietrichGebert/ponytail (MIT) - upstream of the minimalist ladder and of
-  ponytail-audit; also ships ponytail-review (diff-scoped) and ponytail-debt
-  (collects `ponytail:` markers into a ledger).
+- DietrichGebert/ponytail (MIT) - upstream of the six vendored ponytail skills
+  (v5.2.0) and of the ladder in `templates/global-AGENTS.md`; v5 renamed the
+  code marker to `shortcut:` (ponytail-debt still finds older `ponytail:`
+  ones). Its OpenCode plugin (codebase map, slash commands) is intentionally
+  not installed.
 - obra/superpowers (MIT) - methodology skills: brainstorming, systematic
   debugging, TDD, subagent-driven development, worktrees.
+- Graphify-Labs/graphify (Apache-2.0) - builds a local knowledge graph from a
+  codebase; ships OpenCode and Windows skill variants; needs Python.
+- tt-a1i/archify (MIT) - interactive diagrams from an idea, plan, or codebase;
+  its skills live under `.agents/skills/`.
+- Egonex-AI/Understand-Anything (MIT) - interactive knowledge graphs; npm app,
+  no OpenCode-specific install path yet.
 - pbakaus/impeccable (Apache-2.0), nextlevelbuilder/ui-ux-pro-max-skill (MIT) -
   design languages and UI/UX references.
 - JuliusBrussee/caveman (Apache-2.0) - compresses prose and context; an
   alternative to rtk on the wording layer rather than the command-output layer.
-- ComposioHQ/awesome-claude-skills - index for browsing further.
+- ComposioHQ/awesome-claude-skills - index for browsing further; it has no
+  license, so do not copy its contents into this repository.

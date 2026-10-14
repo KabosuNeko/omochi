@@ -11,29 +11,40 @@
 - Skip filler: no flattery, ceremonial openings, or emoji. Keep communication direct.
 
 ## Minimalist Code Ladder (Ponytail Craftsmanship)
-The best code is the code you never wrote. Climb this ladder in order, but only
-after you understand the problem: read the task and the code it touches, trace
-the real flow end to end, then climb. The smallest change in the wrong place is
-not lazy, it is a second bug.
-1. **YAGNI (You Ain't Gonna Need It)**: Does this task or feature actually need to exist? If not, skip it.
-2. **Reuse**: Does identical or similar logic already exist in the codebase? Reuse it.
-3. **Standard Library**: Can the language standard library solve this? Never install a package when stdlib suffices.
-4. **Platform Native**: Can native platform/browser features handle it? (e.g., native HTML elements, CSS layout, native fetch, subshell pipes).
-5. **Existing Dependencies**: If a package is unavoidable, use only what is already in project manifests.
-6. **One-Liner**: Can this be expressed cleanly in a simple, readable line or small block?
-7. **Minimum Code**: Write only the minimum necessary code. Zero speculative abstractions, zero single-implementer interfaces, zero premature wrappers.
+The best code is the code you never wrote. You solve the whole problem with the
+least new code. End your reply with one or two lines: what you skipped or did
+not check, and any risk the user must know.
 
-Deliberate shortcuts are allowed when they cut a real corner with a known ceiling
-(global lock, O(n^2) scan, naive heuristic): mark each one with a `ponytail:`
-comment naming the ceiling and the upgrade path, so a deferral cannot quietly
-become permanent.
+### Before you write
+Read the task and the code it touches. List every place your change must reach:
+callers, tests, fixtures, config, exports. Check what your change could break
+for users: data it would destroy or expose, callers that stop working. That is
+scope. Extra features are not.
 
-Lazy is not careless. Never lazy about: understanding the problem, input
-validation at trust boundaries, error handling that prevents data loss,
-security, accessibility, platform or hardware behaviour reality imposes, and
-anything explicitly requested.
+### The smallest complete change
+Take the first option that fully works:
+1. **Does it need to exist?** Skip features, options and flexibility nobody asked for, and name them in one line. A vague request ("build me X") gets the smallest version that does the core job.
+2. **Already in this codebase** (a helper, component, service, pattern)? Use it the way the surrounding code does.
+3. **Standard library or a platform feature?** Use it, unless the project has its own. A house component beats a native widget.
+4. **An installed dependency?** Use it. Never add a dependency for a few lines.
+5. **Can it be one line a reader gets at a glance?** One line.
+6. **Otherwise:** the minimum code that works.
 
-Source: Ponytail v4.13.0 (MIT, github.com/DietrichGebert/ponytail), synced 2026-09-29.
+- Be lazy about the solution, never about the change itself: finish every part the task needs, including the callers, tests and fixtures your change breaks.
+- No abstraction, wrapper, type conversion, option, config, boilerplate or "for later" code nobody asked for. Keep values in the form the platform already gives you. Deletion beats addition. Keep the structure the codebase already has: its layers, interfaces and conventions.
+- The shortest working diff wins, once you know everything it must touch. A one-liner that needs decoding is not short.
+- Comment only the why the code cannot show, in one line.
+- Bug fix: before you edit, grep every caller of the function you touch, then fix the root cause once in the shared code.
+- Code you move or merge keeps its error handling and validation.
+- Between options of equal size, take the one that is correct on edge cases.
+- Lazy code without its check is unfinished: new non-trivial logic (a branch, a loop, a parser, money or security, or a whole new script or app) leaves one small test or an assert-based self-check. Trivial changes need none.
+- A shortcut with a known limit gets a code comment in this form: `shortcut: <the limit>, <when to upgrade>`. Older code may say `ponytail:`; ponytail-debt still finds both.
+
+Never cut: validation at trust boundaries, error handling that prevents data
+loss, security, accessibility, the calibration real hardware needs, anything the
+user asked for.
+
+Source: Ponytail v5.2.0 (MIT, github.com/DietrichGebert/ponytail), synced 2026-10-14.
 
 ## Anti-Slop & Hygiene Gates
 - **No commentary slop**: No decorative banner comments, narrative workflow comments (`// step 1: do this`), or obvious restatements.
@@ -57,7 +68,7 @@ Source: Ponytail v4.13.0 (MIT, github.com/DietrichGebert/ponytail), synced 2026-
 - If a command output appears truncated, read the raw log from `~/.local/share/rtk/tee/` instead of re-running blindly.
 - Run the smallest meaningful check during iteration; run the full verification before reporting done.
 - Non-trivial logic leaves one runnable check behind: the smallest thing that fails if the logic breaks (assert-based demo or a single small test, no framework or fixtures). Trivial one-liners need no check.
-- Deliberate shortcuts stay visible: grep for `ponytail:` markers before treating code as finished or safe to delete.
+- Deliberate shortcuts stay visible: grep for `shortcut:` markers (older code may say `ponytail:`) before treating code as finished or safe to delete.
 - If verification fails, fix the root cause instead of weakening the test.
 - For UI changes, verify visually (screenshots or rendered output).
 

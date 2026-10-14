@@ -5,6 +5,9 @@
 - [x] Port the setup to Windows: `setup.ps1`, platform-aware prompt, portable rtk plugin probe, PowerShell installer tests, Windows CI job.
   - Acceptance criteria: `test-install.ps1` passes (install, backup, idempotency, dry-run); the prompt documents the Windows paths (npm opencode 2.0, winget rtk, `%APPDATA%\rtk\config.toml`); `validate.sh` parses the PowerShell scripts.
   - Automated validation: `validate.sh`, `test-install.ps1`, CI Windows job.
+- [x] Sync Ponytail v5.2.0: vendor the full 6-skill family (+5), rewrite the ladder in `templates/global-AGENTS.md`, rename the code marker to `shortcut:`.
+  - Acceptance criteria: skills and ladder match upstream v5.2.0; `validate.sh` green; `docs/SKILLS.md` lists all 23 skills and the refreshed external sources.
+  - Automated validation: `validate.sh`, CI.
 
 ## Phase 4 (OpenCode 2.0 Native "Super Lean") — completed
 

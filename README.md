@@ -39,7 +39,7 @@ opencode run "$(Get-Content $HOME\omochi\opencode-setup-prompt.md -Raw)"
 - `setup.sh` — Linux bootstrap installer (opencode, bun, rtk; installs skills, templates, global AGENTS.md, and the rtk plugin; `--dry-run`/`--repo`)
 - `setup.ps1` — Windows bootstrap installer (`-DryRun`/`-Repo`): npm or standalone opencode 2.0, bun via the official installer, rtk via winget or the prebuilt binary
 - `AGENTS.md` + `SPEC.md`/`ROADMAP.md`/`TASKS.md` — repo maintenance and project docs
-- `.agents/skills/` — 18 specialized skills installed to `~/.agents/skills/` by the setup scripts
+- `.agents/skills/` — 23 specialized skills installed to `~/.agents/skills/` by the setup scripts
 - `plugins/rtk.ts` — opencode plugin that rewrites bash/shell commands through rtk
 - `templates/project-docs/` — SPEC/ROADMAP/TASKS/AGENTS
 - `templates/global-AGENTS.md` — global `~/.config/opencode/AGENTS.md`
