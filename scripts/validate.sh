@@ -146,6 +146,9 @@ if [[ -n "$ps_bin" ]]; then
     fi
   done
   if [[ ${#ps_files[@]} -gt 0 ]]; then
+    # The PowerShell snippet is intentionally single-quoted: it expands on the
+    # PowerShell side, not in bash.
+    # shellcheck disable=SC2016
     OMOCHI_PS_FILES="$(printf '%s\n' "${ps_files[@]}")" "$ps_bin" -NoProfile -Command '
       $bad = 0
       foreach ($f in ($env:OMOCHI_PS_FILES -split ([char]10))) {
