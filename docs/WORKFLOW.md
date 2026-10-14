@@ -71,8 +71,8 @@
   `./scripts/smoke.ps1`) prints the offending server-log line. The plugin is
   installed from `plugins/rtk.ts` by the setup scripts; re-run them, then
   confirm `opencode plugin list` shows `rtk`.
-- Model discovery needs raw output: `opencode models <provider>` with
-  `--verbose` must not be wrapped by rtk (excluded in the rtk config:
+- Model discovery needs raw output: `opencode models` must not be wrapped by
+  rtk (excluded in the rtk config:
   `~/.config/rtk/config.toml`, Windows: `%APPDATA%\rtk\config.toml`); when a
   wrapped command fails, read the `rtk recall <hash>` hint instead of
   re-running (tee logs under `~/.local/share/rtk/tee/` are the Unix legacy

@@ -11,7 +11,7 @@
 
 ## Invariant Rules (never violate)
 1. NEVER hardcode model IDs. Every model must be discovered at runtime via:
-   opencode models opencode-go --verbose  (add --refresh if the cache is stale).
+   opencode models  (lists every provider/model pair; no provider argument).
 2. If a model named in this prompt no longer exists in the live list, pick the
    closest replacement using the ROLE CRITERIA table below, and log
    "replaced X -> Y (not on Go anymore)" in the file you wrote.
@@ -52,8 +52,8 @@
 ## Step 0 — Refresh before setup
 - opencode upgrade (Unix installs; Windows npm installs:
   `npm install -g @opencode/cli@latest`)
-- opencode models opencode-go --refresh --verbose  -> snapshot the current
-  model list + prices/quota; this is the source for step 4.
+- opencode models  -> snapshot the current model list; provider pricing
+  lives in the OpenCode console, not the CLI. This is the source for step 4.
 
 ## Steps
 1. Inspect ~/.config/opencode; back up every file you will touch
@@ -94,8 +94,8 @@
     | Main coding (complex logic, architecture, heavy generation) | Cheapest fast reasoning on Go with long limits (prioritize deepseek-v4-flash for lowest cost & latency; fallback: deepseek-v4.1-flash, deepseek-v4-pro) | deepseek-v4-flash (fallback: deepseek-v4.1-flash, deepseek-v4-pro, qwen3.8-max) |
     | Worker (small_model: autocomplete, boilerplate, light tasks) | Cheapest free with the longest limits (1M ctx / 131K out). If the opencode provider (Zen) is authenticated, the FREE worker opencode/muse-spark-1.3-contributor-free is preferred — costs nothing | muse-spark-1.3-contributor-free (fallback: opencode-go/deepseek-v4-flash, qwen3.8-flash, glm-5.3-flash) |
     | Planner/Reviewer (deep reading, planning, code review) | Cheap code-capable on Go, long context (1M), vision is a plus | qwen3.7-plus (fallback: qwen3.8-max, deepseek-v4-flash, deepseek-v4-pro) |
-   For EACH role: run `opencode models opencode-go` to verify the ID exists;
-   if missing, pick the closest per criteria and log the substitution.
+   For EACH role: run `opencode models` and confirm the provider/model line
+   exists; if missing, pick the closest per criteria and log the substitution.
 5. Native Multi-Agent Architecture (OpenCode 2.0 Native):
    OpenCode 2.0 includes native multi-agent support, native worktrees, and
    native context compaction. We do NOT install oh-my-openagent (OMO),
@@ -151,9 +151,9 @@
       %APPDATA%\rtk\config.toml — confirm the path with `rtk config`):
         [hooks]
         exclude_commands = ["opencode", "code", "cursor", "zed", "nvim", "vim", "nano", "git-credential", "pinentry"]
-      (TRAP: never let rtk compress `opencode models --verbose` — model
-      discovery needs raw output; excluded commands make `rtk rewrite`
-      return "", and the plugin treats empty output as pass-through)
+      (TRAP: never let rtk compress `opencode models` — model discovery
+      needs raw output; excluded commands make `rtk rewrite` return "", and
+      the plugin treats empty output as pass-through)
     - "No hook installed" from `rtk gain` refers to the Claude Code hook —
       ignore it, the opencode plugin is the integration here.
     - Degrades safely: plugin disables itself if rtk is missing from PATH;
