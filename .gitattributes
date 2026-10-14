@@ -1,0 +1,3 @@
+# One canonical line ending everywhere: LF in the repository and the working
+# tree, so the bash scripts still run under Git Bash on Windows.
+* text=auto eol=lf

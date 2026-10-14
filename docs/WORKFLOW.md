@@ -2,20 +2,24 @@
 
 ## Setup lifecycle
 
-1. Bootstrap with `setup.sh`: installs opencode, bun, and rtk; clones this
-   repository into `~/omochi`; installs the managed files — `.agents/skills/`
-   to `~/.agents/skills/`, `templates/project-docs/` and
-   `templates/global-AGENTS.md` and `plugins/rtk.ts` into `~/.config/opencode/`.
-   Preview with `--dry-run`; `~/omochi` and any replaced config file are backed
+1. Bootstrap with `setup.sh` (Linux) or `setup.ps1` (Windows): installs
+   opencode, bun, and rtk; clones this repository into `~/omochi`; installs
+   the managed files — `.agents/skills/` to `~/.agents/skills/`,
+   `templates/project-docs/` and `templates/global-AGENTS.md` and
+   `plugins/rtk.ts` into `~/.config/opencode/`. Preview with
+   `--dry-run`/`-DryRun`; `~/omochi` and any replaced config file are backed
    up first (`~/omochi.bak-*`, `<file>.bak-*`).
 2. Manual and interactive, therefore not automatable:
    - `opencode auth login` — select the opencode-go provider (and OpenCode Zen
      for free fallback models).
    - optionally export the `OPENCODE_API_KEY` env var persistently
-     (`set -Ux` in fish), for when the key must come from the environment
-     instead of the stored login. Never store keys in config files.
+     (`set -Ux` in fish; `setx` on Windows, then a new terminal), for when the
+     key must come from the environment instead of the stored login. Never
+     store keys in config files.
 3. Run the AI-driven setup:
-   `opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"`. It refreshes the
+   `opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"` (Windows:
+   `opencode run "$(Get-Content $HOME\omochi\opencode-setup-prompt.md -Raw)"`).
+   It refreshes the
    model list, assigns models by role, writes `~/.config/opencode/opencode.jsonc`,
    configures rtk, verifies the installed files, and runs smoke tests.
 4. Review the diff of every changed file against its backup before accepting.
@@ -37,20 +41,20 @@
 - `SPEC.md` defines requirements and acceptance criteria; `ROADMAP.md` orders
   phases and exit criteria; `TASKS.md` records validated work.
 - `.agents/skills/` holds reusable skills; follow the authoring rules in
-  `docs/SKILLS.md`. Changes reach `~/.agents/skills/` by re-running `setup.sh`
-  (`git -C ~/omochi pull && bash ~/omochi/setup.sh`), not by re-running the
-  setup prompt.
+  `docs/SKILLS.md`. Changes reach `~/.agents/skills/` by re-running the setup
+  script (`git -C ~/omochi pull && bash ~/omochi/setup.sh`; Windows:
+  `pwsh ~/omochi/setup.ps1`), not by re-running the setup prompt.
 - `plugins/rtk.ts` is installed into `~/.config/opencode/plugins/`; after
-  changing it run `./scripts/smoke.sh`, which fails unless the opencode server
-  log shows a rewritten (`rtk `-prefixed) bash command. It needs a logged-in
-  provider, so it stays out of CI.
+  changing it run `./scripts/smoke.sh` (Windows: `./scripts/smoke.ps1`), which
+  fails unless the opencode server log shows a rewritten (`rtk `-prefixed)
+  bash command. It needs a logged-in provider, so it stays out of CI.
 - `templates/` holds portable templates (project docs, global AGENTS);
   update them when the setup prompt's provisioning changes.
 - `docs/` is reference material; point to it from `AGENTS.md` or skills rather
   than expecting automatic discovery.
 - After changing configuration, skills, install scripts, templates, docs, or
-  layout, run `./scripts/validate.sh`. Diagnose `setup.sh` with
-  `./scripts/test-install.sh`.
+  layout, run `./scripts/validate.sh`. Diagnose the installers with
+  `./scripts/test-install.sh` (Windows: `./scripts/test-install.ps1`).
 - Do not hardcode model IDs in committed files; keep role placeholders and
   documented fallback examples only.
 
@@ -63,10 +67,13 @@
   `opencode plugin add <plugin>`; installed files live under
   `~/.cache/opencode/packages/<plugin>@<version>/node_modules/` (older trees
   also under `~/.cache/opencode/npm/<plugin>@<version>/`).
-- rtk stops rewriting commands: `./scripts/smoke.sh` prints the offending
-  server-log line. The plugin is installed from `plugins/rtk.ts` by
-  `setup.sh`; re-run it, then confirm `opencode plugin list` shows `rtk`.
+- rtk stops rewriting commands: `./scripts/smoke.sh` (Windows:
+  `./scripts/smoke.ps1`) prints the offending server-log line. The plugin is
+  installed from `plugins/rtk.ts` by the setup scripts; re-run them, then
+  confirm `opencode plugin list` shows `rtk`.
 - Model discovery needs raw output: `opencode models <provider>` with
-  `--verbose` must not be wrapped by rtk (excluded in
-  `~/.config/rtk/config.toml`); when a wrapped command fails, read the saved
-  output under `~/.local/share/rtk/tee/`.
+  `--verbose` must not be wrapped by rtk (excluded in the rtk config:
+  `~/.config/rtk/config.toml`, Windows: `%APPDATA%\rtk\config.toml`); when a
+  wrapped command fails, read the `rtk recall <hash>` hint instead of
+  re-running (tee logs under `~/.local/share/rtk/tee/` are the Unix legacy
+  mode).

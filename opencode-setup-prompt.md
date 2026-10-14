@@ -1,7 +1,7 @@
 # OpenCode Setup Prompt — Self-Updating Edition
 
-> Created: 2026-08-01 · Updated: 2026-09-19 (verified on OpenCode 2.0 Native) ·
-> OpenCode: 2.0+ · OS: CachyOS (Arch) · Shell: Fish
+> Created: 2026-08-01 · Updated: 2026-10-14 (platform notes for Windows) ·
+> OpenCode: 2.0+ · OS: CachyOS (Arch, fish) and Windows 11 (PowerShell)
 > Note: Every model ID in this prompt is a REFERENCE ONLY, valid at the time of
 > writing. When running, the agent MUST discover live models (step 0) and
 > substitute any ID that no longer exists.
@@ -21,11 +21,37 @@
 6. Never use temporary configs from /tmp as the final config.
 
 ## System
-- OS: CachyOS (Arch Linux); Shell: Fish (use `set -gx` / `set -Ux`)
-- Packages: pacman (yay/paru for AUR); preserve all existing configuration
+- Detect the platform at runtime (`$env:OS` / PowerShell on Windows).
+- Linux (primary): CachyOS (Arch); Fish shell (`set -gx` / `set -Ux`);
+  packages via pacman (yay/paru for AUR).
+- Windows: PowerShell; winget where a package exists, official installers
+  elsewhere; env vars via `setx` (persistent, new terminal needed).
+- Global paths keep the same layout on both platforms under `$HOME`:
+  `~/.config/opencode`, `~/.agents/skills`, `~/.local/share/opencode`.
+  Exception: the rtk config is `~/.config/rtk/config.toml` on Linux but
+  `%APPDATA%\rtk\config.toml` on Windows (`rtk config` prints the path).
+- Preserve all existing configuration.
+- The steps below are platform-neutral; commands are written in Unix form.
+  On Windows use the equivalents in "Platform notes".
+
+## Platform notes (Windows equivalents)
+- Install bun: `powershell -c "irm bun.sh/install.ps1 | iex"` (setup.ps1 does
+  this already; skip when `bun --version` works).
+- Install rtk: `winget install rtk-ai.rtk`; fallback is the prebuilt
+  rtk-x86_64-pc-windows-msvc.zip from the rtk-ai/rtk releases.
+- Copy a tree: `Copy-Item "$Source\*" $Destination -Recurse -Force`
+  (Unix: `cp -r SRC/. DST/`).
+- File compare / `diff -r`: re-run `setup.ps1` — it compares content hashes
+  and backs up a differing file before replacing it.
+- Persistent env var: `setx VAR "value"` then open a new terminal
+  (Unix: `set -Ux VAR "value"`).
+- Text search / file exists: `Select-String -SimpleMatch PATTERN FILE` /
+  `Test-Path FILE`.
+- Smoke test: `powershell -ExecutionPolicy Bypass -File ~/omochi/scripts/smoke.ps1`.
 
 ## Step 0 — Refresh before setup
-- opencode upgrade (if a new version exists)
+- opencode upgrade (Unix installs; Windows npm installs:
+  `npm install -g @opencode/cli@latest`)
 - opencode models opencode-go --refresh --verbose  -> snapshot the current
   model list + prices/quota; this is the source for step 4.
 
@@ -33,7 +59,8 @@
 1. Inspect ~/.config/opencode; back up every file you will touch
    (opencode.jsonc, package.json, ~/.local/share/opencode/auth.json,
    ~/.agents/skills if present) -> .bak-<date>.
-2. Install bun if missing: sudo pacman -S bun
+2. Install bun if missing (Linux: sudo pacman -S bun; Windows: see
+   "Platform notes"; the setup scripts normally did this already)
 3. Write ~/.config/opencode/opencode.jsonc (fixed structure; models come from
    the step 4 discovery):
    - model: <main> · small_model: <worker>
@@ -91,32 +118,37 @@
       docs/SKILLS.md). `ls ~/.agents/skills` must show the same names, and each
       directory needs a SKILL.md with name + description front matter.
     - If a skill is missing or stale, run exactly one deterministic command:
-      `cp -r ~/omochi/.agents/skills/. ~/.agents/skills/`
-      If ~/omochi is absent, run setup.sh first.
- 9. Project & Global Templates: setup.sh already installed
+      `cp -r ~/omochi/.agents/skills/. ~/.agents/skills/` (Windows: the copy
+      equivalent in "Platform notes"). If ~/omochi is absent, run setup.sh
+      (Windows: setup.ps1) first.
+ 9. Project & Global Templates: the setup script already installed
     ~/.config/opencode/templates/project-docs/{AGENTS,SPEC,ROADMAP,TASKS}.md and
     ~/.config/opencode/AGENTS.md from ~/omochi/templates/. Verify with
-    `diff -r` against the repo; re-run setup.sh instead of writing them by
-    hand. setup.sh keeps a `.bak-<timestamp>` beside a locally edited file
+    `diff -r` against the repo (Windows: re-run setup.ps1, which compares
+    content hashes); re-run the setup script instead of writing them by
+    hand. It keeps a `.bak-<timestamp>` beside a locally edited file
     before replacing it.
 10. Optional env var: OPENCODE_API_KEY. Skip it when `opencode auth login`
     already stored the opencode-go credentials (`opencode auth list` shows the
     stored key) - the setup runs without it. Set it only when the key must come
     from the environment: set -gx OPENCODE_API_KEY "sk-..."
     then set -Ux OPENCODE_API_KEY "sk-..." (persistent; never store keys in
-    config files)
-11. rtk (token saver): single Rust binary that compresses bash tool output
-    before the agent reads it.
-    - Binary: installed by setup.sh to ~/.local/bin/rtk (NO pacman package —
-      official installer; reinstall with: curl -fsSL
-      https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh)
-    - Plugin: setup.sh installs it from ~/omochi/plugins/rtk.ts to
+    config files). Windows: `setx OPENCODE_API_KEY "sk-..."` then open a
+    new terminal.
+11. rtk (token saver): single Rust binary that compresses bash/shell tool
+    output before the agent reads it.
+    - Binary: installed by the setup script — Linux: ~/.local/bin/rtk (NO
+      pacman package; official installer: curl -fsSL
+      https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh);
+      Windows: winget install rtk-ai.rtk
+    - Plugin: the setup script installs it from ~/omochi/plugins/rtk.ts to
       ~/.config/opencode/plugins/rtk.ts — do not write the code from this
       prompt. OpenCode 2.0 API: `ctx.tool.hook("execute.before", ...)`; only
       bash/shell commands are rewritten, so native Read/Grep/Glob/LSP bypass
       it. The file carries the exit-code and argv-array reasoning inline; see
       Known traps 6.
-    - Config: write ~/.config/rtk/config.toml:
+    - Config: write ~/.config/rtk/config.toml (Windows:
+      %APPDATA%\rtk\config.toml — confirm the path with `rtk config`):
         [hooks]
         exclude_commands = ["opencode", "code", "cursor", "zed", "nvim", "vim", "nano", "git-credential", "pinentry"]
       (TRAP: never let rtk compress `opencode models --verbose` — model
@@ -126,8 +158,11 @@
       ignore it, the opencode plugin is the integration here.
     - Degrades safely: plugin disables itself if rtk is missing from PATH;
       rewrite errors pass the command through unchanged. On command failure
-      rtk saves full output to ~/.local/share/rtk/tee/*.log (tee mode).
-    - Uninstall: rm -f ~/.config/opencode/plugins/rtk.ts && rm -f ~/.local/bin/rtk
+      rtk stores the full output and prints a `rtk recall <hash>` hint
+      (`rtk recall --list` lists entries; tee files under
+      ~/.local/share/rtk/tee/ are the Unix legacy mode).
+    - Uninstall: delete ~/.config/opencode/plugins/rtk.ts and the rtk binary
+      (Linux: rm -f ~/.local/bin/rtk; Windows: winget uninstall rtk-ai.rtk)
 12. Review the diff of EVERY changed file against its backup, highlighting
     the model configuration section.
 13. Smoke tests:
@@ -146,10 +181,15 @@
     - Plugin actually rewrites: `bash ~/omochi/scripts/smoke.sh` (it runs one
       bash command through opencode and fails unless the server log shows the
       `rtk ` prefix)
+    - Windows: run the same checks with the "Platform notes" equivalents
+      (Select-String instead of grep, Test-Path instead of test -f,
+      `powershell -ExecutionPolicy Bypass -File ~/omochi/scripts/smoke.ps1`
+      instead of smoke.sh, and %APPDATA%\rtk\config.toml for the rtk config)
 
 ## Required Output
 1. The actual JSONC written (highlight the model section).
-2. The Fish commands used, when the optional OPENCODE_API_KEY was set.
+2. The env-var commands used, when OPENCODE_API_KEY was set (Fish on Linux,
+   setx on Windows).
 3. List of changed files + diffs (highlight model config).
 4. Smoke test results + MODEL SUBSTITUTION TABLE if any ID changed.
 
@@ -165,7 +205,7 @@
   billing page; free fallbacks (muse-spark-1.3-contributor-free) keep working meanwhile.
 ```
 
-### Known traps (from a real setup, 2026-08-01)
+### Known traps (from a real setup, 2026-08-01; Windows notes 2026-10-14)
 
 1. **npm v11 blocks git deps** — `npx github:github/git-mcp` fails with
    EALLOWGIT; `bunx github:...` resolves to a 404 tarball. Use the npm
@@ -177,13 +217,14 @@
 3. **opencode-go account state** — deepseek-v4-flash may require a manual
    opt-in (China-hosted), and prepaid balance is separate from subscriptions.
    Check the workspace page if a model errors out.
-4. **rtk is pre-1.0 and rewrites every bash command** — covers only the
-   bash tool (Read/Grep/Glob/LSP bypass it), so opencode savings < Claude
-   Code. Always exclude `opencode` in ~/.config/rtk/config.toml so model
-   discovery keeps raw output. When a rewritten command fails, rtk saves
-   full output to ~/.local/share/rtk/tee/ — read it there instead of
-   re-running. Check `rtk gain` after a week; if savings are negligible:
-   rtk init -g --uninstall.
+4. **rtk is pre-1.0 and rewrites every bash/shell command** — covers only
+   the bash/shell tool (Read/Grep/Glob/LSP bypass it), so opencode savings <
+   Claude Code. Always exclude `opencode` in the rtk config (Linux:
+   ~/.config/rtk/config.toml; Windows: %APPDATA%\rtk\config.toml) so model
+   discovery keeps raw output. When a rewritten command fails, rtk prints a
+   `rtk recall <hash>` hint — read the stored output instead of re-running
+   (tee logs under ~/.local/share/rtk/tee/ are the Unix legacy mode). Check
+   `rtk gain` after a week; if savings are negligible: rtk init -g --uninstall.
 5. **Sequential Thinking with Native Reasoning Models** — when using models
    with built-in CoT reasoning (DeepSeek Pro/R1, Qwen Reasoning), having the
    `@modelcontextprotocol/server-sequential-thinking` MCP active can trigger
@@ -199,3 +240,16 @@
    `$()` inside the agent's own command). Proof: run one bash command through
    opencode, then `grep "spawning process" ~/.local/share/opencode/log/opencode.log | tail -1`
    must show the `rtk ` prefix.
+7. **opencode 2.0 is not on winget (verified 2026-10-14)** — the winget
+   package (SST.opencode) stops at 1.18.x, so OpenCode 2.0+ on Windows comes
+   from `npm install -g @opencode/cli` or the standalone
+   opencode-windows-x64.zip. When an older winget copy stays on PATH, remove
+   it (`winget uninstall SST.opencode`) so the 2.0 binary resolves.
+8. **rtk on Windows: winget id and config path (verified 2026-10-14)** —
+   `winget install rtk-ai.rtk` installs rtk.exe onto PATH; the config lives
+   at `%APPDATA%\rtk\config.toml`, not `~/.config/rtk/` (`rtk config` prints
+   the effective path).
+9. **The plugin probes rtk with `rtk --version`, not `which` (verified
+   2026-10-14)** — on Windows execSync runs through cmd.exe, which has no
+   `which`, so the old probe disabled the plugin silently. Keep the
+   spawnSync-based probe so the plugin works on both platforms.

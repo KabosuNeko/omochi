@@ -1,6 +1,12 @@
 # Project tasks
 
-## Current phase: Phase 4 (OpenCode 2.0 Native "Super Lean")
+## Current phase: Phase 5 (Windows support)
+
+- [x] Port the setup to Windows: `setup.ps1`, platform-aware prompt, portable rtk plugin probe, PowerShell installer tests, Windows CI job.
+  - Acceptance criteria: `test-install.ps1` passes (install, backup, idempotency, dry-run); the prompt documents the Windows paths (npm opencode 2.0, winget rtk, `%APPDATA%\rtk\config.toml`); `validate.sh` parses the PowerShell scripts.
+  - Automated validation: `validate.sh`, `test-install.ps1`, CI Windows job.
+
+## Phase 4 (OpenCode 2.0 Native "Super Lean") — completed
 
 - [x] Migrate to OpenCode 2.0 native multi-agent, worktrees, and context compaction.
   - Acceptance criteria: remove OMO, worktree, and dcp plugins from global manifest; rely on native 2.0 capabilities.

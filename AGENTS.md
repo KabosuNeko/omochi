@@ -74,7 +74,7 @@ Read only the documents needed for the task:
 - Run `./scripts/validate.sh` after changing configuration, skills, install
   scripts, templates, docs, or repository layout.
 - Run `./scripts/test-install.sh` directly when diagnosing `setup.sh`
-  behavior.
+  behavior; on Windows run `./scripts/test-install.ps1` for `setup.ps1`.
 
 ## Maintenance
 

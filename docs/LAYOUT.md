@@ -24,7 +24,7 @@ configuration with private and ephemeral runtime state:
 - `opencode.db` and its snapshots
 - opencode/themes under `~/.local/share/opencode/`
 - `~/.cache/opencode/node_modules/` (npm plugin cache)
-- `~/.config/rtk/config.toml` (machine-specific exclusions)
+- the rtk config (`~/.config/rtk/config.toml`; Windows: `%APPDATA%\rtk\config.toml`; machine-specific exclusions)
 
 Tracking or replacing those files would expose credentials and make the setup
 less portable. This repository manages only:
@@ -40,18 +40,21 @@ what is committed stays role-based and machine-neutral.
 
 ## Setup flow
 
-1. `setup.sh` bootstraps: installs opencode, bun, and rtk; clones this repo
-   into `~/omochi`; installs `.agents/skills/`, `templates/`, and
-   `plugins/rtk.ts` into their opencode paths (`~/.agents/skills/`,
-   `~/.config/opencode/templates/`, `~/.config/opencode/AGENTS.md`,
-   `~/.config/opencode/plugins/`). Use `--dry-run` to preview, `--repo <url>`
-   to override the source. Existing `~/omochi` dirs and replaced config files
-   are backed up (`~/omochi.bak-*`, `<file>.bak-*`).
+1. `setup.sh` (Linux) / `setup.ps1` (Windows) bootstraps: installs opencode,
+   bun, and rtk; clones this repo into `~/omochi`; installs `.agents/skills/`,
+   `templates/`, and `plugins/rtk.ts` into their opencode paths
+   (`~/.agents/skills/`, `~/.config/opencode/templates/`,
+   `~/.config/opencode/AGENTS.md`, `~/.config/opencode/plugins/`). Use
+   `--dry-run`/`-DryRun` to preview, `--repo`/`-Repo <url>` to override the
+   source. Existing `~/omochi` dirs and replaced config files are backed up
+   (`~/omochi.bak-*`, `<file>.bak-*`).
 2. Manual, cannot be automated: `opencode auth login` (and, optionally, the
    `OPENCODE_API_KEY` env var).
-3. `opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"` discovers live
-   models, writes configs, configures rtk, verifies the installed files, and
-   runs smoke tests. Re-running this prompt is the auto-update path.
+3. `opencode run "$(cat ~/omochi/opencode-setup-prompt.md)"` (Windows:
+   `opencode run "$(Get-Content $HOME\omochi\opencode-setup-prompt.md -Raw)"`)
+   discovers live models, writes configs, configures rtk, verifies the
+   installed files, and runs smoke tests. Re-running this prompt is the
+   auto-update path.
 
 ## Plugins and MCP servers
 
@@ -73,8 +76,8 @@ installs them into `~/.agents/skills/`. See `docs/SKILLS.md`.
 ## Direct config use
 
 Do not point `XDG_CONFIG_HOME` or plugin directories at this repository. Use
-`setup.sh` for bootstrap and the setup prompt for live configuration; this
-repository intentionally separates managed files from runtime data.
+the setup scripts for bootstrap and the setup prompt for live configuration;
+this repository intentionally separates managed files from runtime data.
 
 ## Verification
 
@@ -91,4 +94,5 @@ The expected instruction order is:
 3. any closer nested `AGENTS.md`
 
 Repository hygiene is checked by `./scripts/validate.sh`; installer behavior by
-`./scripts/test-install.sh`; both run in CI.
+`./scripts/test-install.sh` (Windows: `./scripts/test-install.ps1`); both run in
+CI.

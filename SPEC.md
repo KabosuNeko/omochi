@@ -9,7 +9,8 @@ that installs and re-runs itself.
 
 ## Users
 
-- One primary user: a CachyOS (Arch) workstation with the fish shell.
+- Primary users: a CachyOS (Arch) workstation with the fish shell, and a
+  Windows 11 workstation with PowerShell (via `setup.ps1`).
 - Secondary users: anyone cloning the repo who wants the same opencode setup.
 
 ## Required behavior
@@ -18,6 +19,10 @@ that installs and re-runs itself.
   `~/omochi`, and installs the repo's skills, templates, global `AGENTS.md`,
   and rtk plugin — idempotent, with `--dry-run`, `--repo <url>`, and backup of
   any `~/omochi` or managed file it replaces.
+- `setup.ps1` mirrors the bootstrap on Windows (PowerShell 5.1+): opencode 2.0
+  via npm (`@opencode/cli`) or the standalone zip, bun via the official
+  installer, rtk via winget or the prebuilt binary — same `-DryRun`/`-Repo`
+  options, backups, and idempotency as `setup.sh`.
 - `opencode-setup-prompt.md` is an AI-driven setup prompt that discovers live
   models, writes OpenCode 2.0 native configs, configures rtk, verifies the
   installed files, and runs smoke tests. Re-running it is the auto-update path.
@@ -28,15 +33,18 @@ that installs and re-runs itself.
   name matching its directory).
 - `./scripts/validate.sh` gates the repository: required files, plugin
   manifest, skill front matter and docs sync, template placeholders, Bash
-  syntax, ShellCheck, and no tracked credentials or runtime files.
-- `./scripts/test-install.sh` verifies `setup.sh` in an isolated environment.
-- CI runs validation on every push and pull request.
+  syntax, ShellCheck, PowerShell parse checks, and no tracked credentials or
+  runtime files.
+- `./scripts/test-install.sh` verifies `setup.sh` in an isolated environment;
+  `./scripts/test-install.ps1` verifies `setup.ps1` the same way on Windows.
+- CI runs validation on every push and pull request, on Linux and Windows.
 
 ## User experience
 
-- Fresh machine: one bootstrap command, one manual auth step (`opencode auth
-  login`; the `OPENCODE_API_KEY` env var is optional), then one
-  `opencode run` command to complete the setup.
+- Fresh machine: one bootstrap command (curl `setup.sh` on Linux, irm
+  `setup.ps1` on Windows), one manual auth step (`opencode auth login`; the
+  `OPENCODE_API_KEY` env var is optional), then one `opencode run` command to
+  complete the setup.
 - Updates: re-run the setup prompt; the diff review shows exactly what
   changed.
 - Failures degrade: free fallback models keep working while provider billing
@@ -46,9 +54,13 @@ that installs and re-runs itself.
 
 - `setup.sh` -> bootstrap binaries + repo clone + skills, templates, global
   `AGENTS.md`, and `plugins/rtk.ts` installed into their opencode paths.
+- `setup.ps1` -> the same bootstrap on Windows (opencode 2.0 via npm or the
+  standalone zip, rtk via winget or the prebuilt binary); `test-install.ps1`
+  and `smoke.ps1` cover it.
 - `opencode-setup-prompt.md` -> executed by opencode -> writes
-  `~/.config/opencode/opencode.jsonc`, configures rtk, verifies the installed
-  files, runs smoke tests.
+  `~/.config/opencode/opencode.jsonc`, configures rtk (Linux:
+  `~/.config/rtk/config.toml`; Windows: `%APPDATA%\rtk\config.toml`), verifies
+  the installed files, runs smoke tests.
 - `templates/global-AGENTS.md` -> `~/.config/opencode/AGENTS.md`.
 - `templates/project-docs/` -> `~/.config/opencode/templates/project-docs/`.
 - `plugins/rtk.ts` -> `~/.config/opencode/plugins/rtk.ts`.
@@ -72,27 +84,30 @@ that installs and re-runs itself.
 ## Performance and compatibility
 
 - Supported: Linux (primary target CachyOS/Arch, fish shell; bash for
-  scripts), opencode 2.0.
-- Scripts are POSIX-bash with `bash -n`/ShellCheck clean.
+  scripts) and Windows 10/11 (PowerShell 5.1+; `setup.ps1` and
+  `scripts/*.ps1`), opencode 2.0.
+- Scripts are POSIX-bash with `bash -n`/ShellCheck clean; PowerShell scripts
+  are parse-checked by `validate.sh` when a PowerShell host is available.
 - No network calls during validation except CI checkout.
 
 ## Non-goals
 
 - Distribution: no npm package, plugin manifest, or marketplace catalog.
-  omochi is a personal setup repo — clone it and run `setup.sh`.
+  omochi is a personal setup repo — clone it and run the setup script.
 - Managing other editors or agents (Codex, Claude Code).
 - Hardcoding or pinning model IDs in committed configs.
 - Bloating the setup with heavy third-party agent framework layers.
-- Windows support.
 
 ## Acceptance criteria
 
 - `./scripts/validate.sh` exits 0 on a clean tree.
 - `./scripts/test-install.sh` passes: install, backup, idempotency, and
   dry-run behaviors.
+- `./scripts/test-install.ps1` passes the same checks for `setup.ps1` on
+  Windows.
 - `./scripts/smoke.sh` exits 0 when the rtk plugin rewrites a bash command
-  (manual; needs a logged-in provider).
-- CI runs both on push and pull request.
+  (manual; needs a logged-in provider); `smoke.ps1` is the Windows variant.
+- CI runs the gate and the installer tests on push and pull request.
 - A fresh bootstrap plus the setup prompt produces a working opencode with
   discovered model IDs and passing smoke tests.
 

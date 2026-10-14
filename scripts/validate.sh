@@ -17,11 +17,14 @@ required_files=(
   "TASKS.md"
   "opencode-setup-prompt.md"
   "setup.sh"
+  "setup.ps1"
   ".gitignore"
   "opencode-plugins.txt"
   ".rtk/filters.toml"
   "plugins/rtk.ts"
   "scripts/smoke.sh"
+  "scripts/smoke.ps1"
+  "scripts/test-install.ps1"
   "docs/LAYOUT.md"
   "docs/SKILLS.md"
   "docs/WORKFLOW.md"
@@ -119,6 +122,45 @@ fi
 if command -v shellcheck >/dev/null 2>&1 && shellcheck --version >/dev/null 2>&1; then
   shellcheck "$repo_root/setup.sh" "$repo_root/scripts/validate.sh" "$repo_root/scripts/test-install.sh" ||
     fail "ShellCheck failed"
+fi
+
+# ---- PowerShell scripts -----------------------------------------------------
+
+ps_bin=""
+if command -v pwsh >/dev/null 2>&1; then
+  ps_bin="pwsh"
+elif command -v powershell >/dev/null 2>&1; then
+  ps_bin="powershell"
+elif command -v powershell.exe >/dev/null 2>&1; then
+  ps_bin="powershell.exe"
+fi
+
+if [[ -n "$ps_bin" ]]; then
+  ps_files=()
+  for ps in "$repo_root/setup.ps1" "$repo_root"/scripts/*.ps1; do
+    [[ -f "$ps" ]] || continue
+    if command -v cygpath >/dev/null 2>&1; then
+      ps_files+=("$(cygpath -w "$ps")")
+    else
+      ps_files+=("$ps")
+    fi
+  done
+  if [[ ${#ps_files[@]} -gt 0 ]]; then
+    OMOCHI_PS_FILES="$(printf '%s\n' "${ps_files[@]}")" "$ps_bin" -NoProfile -Command '
+      $bad = 0
+      foreach ($f in ($env:OMOCHI_PS_FILES -split ([char]10))) {
+        if (-not $f) { continue }
+        $tokens = $null
+        $errors = $null
+        [void][System.Management.Automation.Language.Parser]::ParseFile($f, [ref]$tokens, [ref]$errors)
+        if ($errors.Count -gt 0) {
+          $errors | ForEach-Object { [Console]::Error.WriteLine(("{0}: {1}" -f $f, $_.Message)) }
+          $bad = 1
+        }
+      }
+      exit $bad
+    ' || fail "PowerShell syntax validation failed"
+  fi
 fi
 
 # ---- plugin source ----------------------------------------------------------

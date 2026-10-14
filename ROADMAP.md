@@ -109,3 +109,35 @@ framework layers while preserving multi-agent specializations, token savings, an
 
 - Zero plugin load failures on OpenCode 2.0.
 - `./scripts/validate.sh` and `./scripts/test-install.sh` exit 0.
+
+## Phase 5: Windows support
+
+### Outcome
+
+The same setup runs natively on Windows 10/11 with PowerShell: `setup.ps1`
+bootstraps the toolchain, the setup prompt carries platform equivalents, and
+the rtk plugin works on both platforms.
+
+### Included work
+
+- `setup.ps1` mirror of `setup.sh` (`-DryRun`, `-Repo`, backup, idempotency).
+- Platform-aware `opencode-setup-prompt.md` (npm/standalone opencode 2.0,
+  winget rtk, `%APPDATA%\rtk\config.toml`, `setx`).
+- Portable rtk plugin probe (`rtk --version` instead of `which`).
+- `scripts/smoke.ps1`, `scripts/test-install.ps1`, and a Windows CI job.
+- `.gitattributes` so the working tree stays LF on Windows.
+
+### Dependencies and risks
+
+- winget ships opencode 1.x only, so the Windows bootstrap prefers npm
+  `@opencode/cli` or the standalone zip.
+- PowerShell scripts must stay 5.1-compatible (the default Windows host).
+
+### Exit criteria
+
+- `./scripts/validate.sh`, `./scripts/test-install.sh`, and
+  `./scripts/test-install.ps1` exit 0; CI is green on Linux and Windows.
+
+### Validation
+
+- Run the installer tests locally on Windows; confirm the workflow runs in CI.

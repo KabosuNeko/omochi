@@ -1,4 +1,4 @@
-import { execSync, spawnSync } from "node:child_process"
+import { spawnSync } from "node:child_process"
 
 /** Minimal shape of the hook API this plugin uses (`ctx.tool.hook`). */
 type RtkPluginContext = {
@@ -10,9 +10,11 @@ type RtkPluginContext = {
 export default {
   id: "rtk",
   async setup(ctx: RtkPluginContext) {
-    try {
-      execSync("which rtk", { stdio: "ignore" })
-    } catch {
+    // Probe with `rtk --version`: execSync runs through cmd.exe on Windows,
+    // which has no `which`, so the old check disabled the plugin there.
+    // spawnSync resolves rtk(.exe) from PATH on every platform.
+    const probe = spawnSync("rtk", ["--version"], { stdio: "ignore" })
+    if (probe.error || probe.status !== 0) {
       console.warn("[rtk] rtk binary not found in PATH — plugin disabled")
       return
     }
