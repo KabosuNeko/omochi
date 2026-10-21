@@ -80,3 +80,10 @@
   - `scripts/test-install.sh` isolated installer tests.
   - `.github/workflows/validate.yml` CI gate.
   - `opencode-plugins.txt`, `.rtk/filters.toml`, non-interactive shell rules.
+
+## Maintenance
+
+- [x] Add the `i-have-adhd` output-style skill (25 skills) and update the docs counts.
+  - Acceptance criteria: skill installed by `setup.sh`; `validate.sh` and `test-install.sh` green.
+- [x] Trim the MCP footprint to `context7-remote`; native webfetch/websearch handle web retrieval.
+  - Acceptance criteria: `opencode mcp list` shows no local fetch MCP; `docs-reader` points at native web tools; `validate.sh` green.

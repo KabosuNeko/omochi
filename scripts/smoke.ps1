@@ -10,7 +10,7 @@ $commandUnderTest = 'git status --short .'
 if ($env:OMOCHI_SMOKE_MODEL) {
   $model = $env:OMOCHI_SMOKE_MODEL
 } else {
-  $model = 'opencode/muse-spark-1.3-contributor-free'
+  $model = 'opencode/glm-5.3-flash-free'  # replaced muse-spark-1.3-contributor-free (not on Go anymore)
 }
 
 function Fail([string]$Message) {

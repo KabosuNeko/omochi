@@ -16,8 +16,9 @@ For deep multi-doc search or complex library analysis across the codebase, run w
 
 1. Map the docs: AGENTS.md, SPEC.md, ROADMAP.md, TASKS.md, README.md, then
    `docs/` and in-code comments.
-2. For dependency/framework questions, use the `context7-remote` or `fetch` MCP
-   tools to pull official docs instead of relying on training data.
+2. For dependency/framework questions, use the `context7-remote` MCP or the
+   native webfetch/websearch tools to pull official docs instead of relying on
+   training data.
 3. Cite sources: file:line for repo docs, URL + section for external docs.
 4. When writing: answers are grounded — no invented APIs, flags, or version
    numbers. Pin versions exactly as the docs say.

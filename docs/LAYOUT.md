@@ -63,14 +63,14 @@ packages, installed by Bun on startup) and from local plugin directories.
 `opencode-plugins.txt` lists the maintained npm selection; validate it with
 `./scripts/validate.sh`.
 
-Essential MCP servers (context7-remote for live docs, fetch for web retrieval)
-are configured by the setup prompt. Heavy or redundant local MCPs (filesystem,
-git-mcp, memory, sequential-thinking) are avoided in favor of OpenCode 2.0 native
-file, git, and search tools.
+The setup prompt configures one MCP server, context7-remote, for live library
+docs. Web retrieval uses OpenCode's native webfetch/websearch tools. Heavy or
+redundant local MCPs (filesystem, git-mcp, memory, fetch, sequential-thinking)
+are avoided in favor of native file, git, search, and web tools.
 
 ## Skills
 
-Skills live in `sources`: `.agents/skills/` as a source of truth. `setup.sh`
+Skills live under `.agents/skills/`, the source of truth. `setup.sh`
 installs them into `~/.agents/skills/`. See `docs/SKILLS.md`.
 
 ## Direct config use

@@ -70,6 +70,7 @@ loads global locations. The setup scripts install this repository's skills into
 - `frontend-design`
 - `git-workflow`
 - `grill-me`
+- `i-have-adhd`
 - `linux-sysadmin`
 - `ponytail`
 - `ponytail-audit`
@@ -91,7 +92,7 @@ malformed, or when a skill hardcodes a model ID.
 ## External skill sources
 
 Not vendored here: install one individually when a task needs it. The ponytail
-family is the exception - its six skills are vendored. Checked 2026-10-14.
+family and `i-have-adhd` are the exceptions - they are vendored. Checked 2026-10-21.
 
 - addyosmani/agent-skills (MIT) - production-grade skills whose coverage omochi
   lacks: observability, performance, CI/CD, deprecation and migration, context
@@ -115,3 +116,17 @@ family is the exception - its six skills are vendored. Checked 2026-10-14.
   alternative to rtk on the wording layer rather than the command-output layer.
 - ComposioHQ/awesome-claude-skills - index for browsing further; it has no
   license, so do not copy its contents into this repository.
+
+Evaluated 2026-10-21, not vendored:
+
+- zhaoxuya520/reverse-skill (MIT) - reverse-engineering/pentest skill router;
+  large and niche, install only for security work.
+- cloudflare/security-audit-skill (MIT) - deep multi-phase security audit;
+  overlaps the lighter `security-audit` skill, use for serious audits.
+- alibaba/open-code-review (Apache-2.0) - `ocr` CLI-backed review skills;
+  optional, needs the `ocr` binary and an LLM endpoint or delegate mode.
+- affaan-m/ECC (MIT) - full agent harness with 100+ skills; too large to
+  vendor, cherry-pick single skills only.
+- morluto/rea (MIT) - reverse-engineering platform/MCP; its skills depend on
+  REA tooling, so install REA separately instead of copying them here.
+- linshenkx/prompt-optimizer - web app, not an OpenCode skill.

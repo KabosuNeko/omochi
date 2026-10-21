@@ -5,7 +5,7 @@ set -euo pipefail
 # it is not part of the CI gate. Override the model with OMOCHI_SMOKE_MODEL.
 
 command_under_test="git status --short ."
-model="${OMOCHI_SMOKE_MODEL:-opencode/muse-spark-1.3-contributor-free}"
+model="${OMOCHI_SMOKE_MODEL:-opencode/glm-5.3-flash-free}"  # replaced muse-spark-1.3-contributor-free (not on Go anymore)
 
 for tool in opencode rtk; do
   if ! command -v "$tool" >/dev/null 2>&1; then

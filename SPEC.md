@@ -78,8 +78,8 @@ that installs and re-runs itself.
   or `.env` files; `.gitignore` and `validate.sh` enforce this.
 - API keys enter only through `{env:VAR}` references or interactive
   `opencode auth login`.
-- The fetch MCP selection avoids the known honeypot package
-  (`mcp-server-fetch`); traps are documented in the setup prompt.
+- Web retrieval uses OpenCode's native webfetch/websearch tools; no fetch
+  MCP is shipped (the known `mcp-server-fetch` honeypot is avoided).
 
 ## Performance and compatibility
 

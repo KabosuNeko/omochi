@@ -1,6 +1,6 @@
 # OpenCode Setup Prompt — Self-Updating Edition
 
-> Created: 2026-08-01 · Updated: 2026-10-14 (platform notes for Windows) ·
+> Created: 2026-08-01 · Updated: 2026-10-21 (model references and Windows notes) ·
 > OpenCode: 2.0+ · OS: CachyOS (Arch, fish) and Windows 11 (PowerShell)
 > Note: Every model ID in this prompt is a REFERENCE ONLY, valid at the time of
 > writing. When running, the agent MUST discover live models (step 0) and
@@ -73,12 +73,9 @@
      ["https://raw.githubusercontent.com/JRedeker/opencode-shell-strategy/trunk/shell_strategy.md"]
      (teaches non-interactive command forms: -y/-n flags, sudo -n, ssh
      accept-new; no TTY/PTY in opencode so interactive commands hang)
-   - mcp (minimal footprint; rely on native file/git/search tools):
+   - mcp (minimal footprint; rely on native file/git/search/web tools):
      - context7-remote: remote https://mcp.context7.com/mcp (live SDK & library docs, zero local CPU/RAM overhead)
-     - fetch: bunx mcp-fetch-server   [TRAP: @modelcontextprotocol/
-       server-fetch no longer exists on npm, and mcp-server-fetch is a
-       SECURITY CANARY (honeypot) — never use it]
-     (Avoid redundant local MCPs like filesystem, git-mcp, memory, or sequential-thinking — OpenCode 2.0 native tools and model thinking are strictly superior and consume fewer tokens)
+     (Avoid redundant local MCPs like filesystem, git-mcp, memory, fetch, or sequential-thinking — OpenCode 2.0 native tools and model thinking are strictly superior and consume fewer tokens)
    - NEVER hardcode API keys: use {env:VAR} or auth.json only
 4. Assign models by role (pick from the live list; names in brackets are
     current-model references only). PRICING POLICY: prefer cheap opencode-go
@@ -88,12 +85,12 @@
     only earn their cost at specialized niches); cheap flash variants
     with long limits (e.g. glm-5.3-flash) are fair game. Every
     agent/category fallback chain MUST end with a free model (opencode/
-    muse-spark-1.3-contributor-free) so the setup keeps working on zero balance.
+    glm-5.3-flash-free) so the setup keeps working on zero balance.
     | Role | Selection criteria (priority order) | 2026 reference |
     |---|---|---|
-    | Main coding (complex logic, architecture, heavy generation) | Cheapest fast reasoning on Go with long limits (prioritize deepseek-v4-flash for lowest cost & latency; fallback: deepseek-v4.1-flash, deepseek-v4-pro) | deepseek-v4-flash (fallback: deepseek-v4.1-flash, deepseek-v4-pro, qwen3.8-max) |
-    | Worker (small_model: autocomplete, boilerplate, light tasks) | Cheapest free with the longest limits (1M ctx / 131K out). If the opencode provider (Zen) is authenticated, the FREE worker opencode/muse-spark-1.3-contributor-free is preferred — costs nothing | muse-spark-1.3-contributor-free (fallback: opencode-go/deepseek-v4-flash, qwen3.8-flash, glm-5.3-flash) |
-    | Planner/Reviewer (deep reading, planning, code review) | Cheap code-capable on Go, long context (1M), vision is a plus | qwen3.7-plus (fallback: qwen3.8-max, deepseek-v4-flash, deepseek-v4-pro) |
+    | Main coding (complex logic, architecture, heavy generation) | Cheapest fast reasoning on Go with long limits (prioritize deepseek-v4.1-flash for lowest cost & latency; fallback: deepseek-v4-pro, qwen3.8-max) | deepseek-v4.1-flash (fallback: deepseek-v4-pro, qwen3.8-max) |
+    | Worker (small_model: autocomplete, boilerplate, light tasks) | Cheapest free with the longest limits (1M ctx / 131K out). If the opencode provider (Zen) is authenticated, the FREE worker opencode/glm-5.3-flash-free is preferred — costs nothing | glm-5.3-flash-free (fallback: opencode-go/deepseek-v4.1-flash, qwen3.8-flash, glm-5.3-flash) |
+    | Planner/Reviewer (deep reading, planning, code review) | Cheap code-capable on Go, long context (1M), vision is a plus | qwen3.7-plus (fallback: qwen3.8-max, deepseek-v4.1-flash, deepseek-v4-pro) |
    For EACH role: run `opencode models` and confirm the provider/model line
    exists; if missing, pick the closest per criteria and log the substitution.
 5. Native Multi-Agent Architecture (OpenCode 2.0 Native):
@@ -103,18 +100,18 @@
    experimental hooks, and version breakages on OS updates.
 6. Multi-Agent & Skill Specialization:
    - Primary coding agent uses <main> (cheapest fast reasoning on Go).
-   - Background worker & title generator use <worker> (free muse-spark).
+   - Background worker & title generator use <worker> (free glm-5.3-flash-free).
    - Plan agent uses <planner> (code-capable Qwen on Go).
     - All persona roles (code review, bug hunting, docs reading, frontend design,
      quickshell, test writing, refactoring, containerization, db architecture,
      api design, git workflow, security audit, typesafe AI) are cleanly fulfilled by omochi's
-     24 specialized skills under ~/.agents/skills/.
+     25 specialized skills under ~/.agents/skills/.
  7. Optional free-tier fallback: run `opencode auth login` and select
     "OpenCode Zen" (free models; no payment needed). Required only if you
-    want muse-spark-1.3-contributor-free / other opencode provider free models to work.
+    want glm-5.3-flash-free / other opencode provider free models to work.
  8. Specialized skills: setup.sh installed the repository's skill set into
     ~/.agents/skills/<name>/SKILL.md. Verify; never re-author skill content.
-    - Source of truth: ~/omochi/.agents/skills/ (24 skills, listed in
+    - Source of truth: ~/omochi/.agents/skills/ (25 skills, listed in
       docs/SKILLS.md). `ls ~/.agents/skills` must show the same names, and each
       directory needs a SKILL.md with name + description front matter.
     - If a skill is missing or stale, run exactly one deterministic command:
@@ -146,7 +143,7 @@
       prompt. OpenCode 2.0 API: `ctx.tool.hook("execute.before", ...)`; only
       bash/shell commands are rewritten, so native Read/Grep/Glob/LSP bypass
       it. The file carries the exit-code and argv-array reasoning inline; see
-      Known traps 6.
+      Known traps 5.
     - Config: write ~/.config/rtk/config.toml (Windows:
       %APPDATA%\rtk\config.toml — confirm the path with `rtk config`):
         [hooks]
@@ -167,10 +164,10 @@
     the model configuration section.
 13. Smoke tests:
     - opencode --version (expected: 2.0+) · opencode mcp list (expected:
-      context7-remote, fetch connected)
+      context7-remote connected)
     - grep -q 'opencode-shell-strategy' ~/.config/opencode/opencode.jsonc
       (instructions URL present)
-    - opencode run -m opencode/muse-spark-1.3-contributor-free "Reply with exactly: OK"
+    - opencode run -m opencode/glm-5.3-flash-free "Reply with exactly: OK"
       (verifies free fallback works end-to-end)
     - opencode run "List the files in this repo and read one file"
       (verifies repo reading)
@@ -202,22 +199,18 @@
   `opencode plugin add <plugin>` (installed files live under
   `~/.cache/opencode/packages/<plugin>@<version>/node_modules/`).
 - If opencode-go reports "Insufficient balance", top up at the workspace
-  billing page; free fallbacks (muse-spark-1.3-contributor-free) keep working meanwhile.
+  billing page; free fallbacks (glm-5.3-flash-free) keep working meanwhile.
 ```
 
-### Known traps (from a real setup, 2026-08-01; Windows notes 2026-10-14)
+### Known traps (from a real setup, 2026-08-01; updated 2026-10-21)
 
 1. **npm v11 blocks git deps** — `npx github:github/git-mcp` fails with
    EALLOWGIT; `bunx github:...` resolves to a 404 tarball. Use the npm
    package: `npx -y git-mcp`.
-2. **Fetch MCP naming** — `@modelcontextprotocol/server-fetch` no longer
-   exists on npm; `mcp-server-fetch` (0.0.2) is a SECURITY RESEARCH CANARY /
-   honeypot (its bin is a garbage shell script). Use `mcp-fetch-server`
-   (github.com/zcaceres/fetch-mcp).
-3. **opencode-go account state** — deepseek-v4-flash may require a manual
+2. **opencode-go account state** — deepseek-v4.1-flash may require a manual
    opt-in (China-hosted), and prepaid balance is separate from subscriptions.
    Check the workspace page if a model errors out.
-4. **rtk is pre-1.0 and rewrites every bash/shell command** — covers only
+3. **rtk is pre-1.0 and rewrites every bash/shell command** — covers only
    the bash/shell tool (Read/Grep/Glob/LSP bypass it), so opencode savings <
    Claude Code. Always exclude `opencode` in the rtk config (Linux:
    ~/.config/rtk/config.toml; Windows: %APPDATA%\rtk\config.toml) so model
@@ -225,13 +218,13 @@
    `rtk recall <hash>` hint — read the stored output instead of re-running
    (tee logs under ~/.local/share/rtk/tee/ are the Unix legacy mode). Check
    `rtk gain` after a week; if savings are negligible: rtk init -g --uninstall.
-5. **Sequential Thinking with Native Reasoning Models** — when using models
+4. **Sequential Thinking with Native Reasoning Models** — when using models
    with built-in CoT reasoning (DeepSeek Pro/R1, Qwen Reasoning), having the
    `@modelcontextprotocol/server-sequential-thinking` MCP active can trigger
    double-reasoning loops (model reasons in thought tokens, then calls the
    sequential thinking tool, doubling latency and token consumption).
    Avoid sequential-thinking in OpenCode 2.0; rely on model native thinking.
-6. **`rtk rewrite` exits non-zero on success (verified 2026-09-28)** — it exits
+5. **`rtk rewrite` exits non-zero on success (verified 2026-09-28)** — it exits
    3 with the rewritten command on stdout, and 1 with empty stdout when no
    filter matches. A plugin that treats a thrown `execSync` as failure drops
    every rewrite: commands run unrewritten while `rtk rewrite` itself looks
@@ -240,16 +233,16 @@
    `$()` inside the agent's own command). Proof: run one bash command through
    opencode, then `grep "spawning process" ~/.local/share/opencode/log/opencode.log | tail -1`
    must show the `rtk ` prefix.
-7. **opencode 2.0 is not on winget (verified 2026-10-14)** — the winget
+6. **opencode 2.0 is not on winget (verified 2026-10-14)** — the winget
    package (SST.opencode) stops at 1.18.x, so OpenCode 2.0+ on Windows comes
    from `npm install -g @opencode/cli` or the standalone
    opencode-windows-x64.zip. When an older winget copy stays on PATH, remove
    it (`winget uninstall SST.opencode`) so the 2.0 binary resolves.
-8. **rtk on Windows: winget id and config path (verified 2026-10-14)** —
+7. **rtk on Windows: winget id and config path (verified 2026-10-14)** —
    `winget install rtk-ai.rtk` installs rtk.exe onto PATH; the config lives
    at `%APPDATA%\rtk\config.toml`, not `~/.config/rtk/` (`rtk config` prints
    the effective path).
-9. **The plugin probes rtk with `rtk --version`, not `which` (verified
+8. **The plugin probes rtk with `rtk --version`, not `which` (verified
    2026-10-14)** — on Windows execSync runs through cmd.exe, which has no
    `which`, so the old probe disabled the plugin silently. Keep the
    spawnSync-based probe so the plugin works on both platforms.

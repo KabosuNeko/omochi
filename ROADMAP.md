@@ -11,7 +11,7 @@ setup prompt, skills, templates, and a maintenance gate.
 
 - `setup.sh` bootstrap with `--dry-run`, `--repo`, backup, and idempotency.
 - `opencode-setup-prompt.md` with runtime model discovery and known traps.
-- `.agents/skills/` (initial 10 skills, expanded to 17 in Phase 4) and `templates/`.
+- `.agents/skills/` (initial 10 skills, expanded to 25 across later phases) and `templates/`.
 - Root `AGENTS.md`, `SPEC.md`, `ROADMAP.md`, `TASKS.md`.
 
 ### Dependencies and risks
@@ -28,7 +28,7 @@ setup prompt, skills, templates, and a maintenance gate.
 ### Validation
 
 - Manual smoke tests per the prompt; free fallback verified with
-  `opencode/muse-spark-1.3-contributor-free`.
+  `opencode/glm-5.3-flash-free`.
 
 ## Phase 2: Maintenance gate
 
@@ -103,7 +103,7 @@ framework layers while preserving multi-agent specializations, token savings, an
 - Deprecate oh-my-openagent, opencode-worktree, and opencode-dcp.
 - Standardize external plugin manifest on `@plannotator/opencode` (V2-compatible).
 - Re-implement RTK bash rewrite as an OpenCode 2.0 V2 plugin.
-- Retain Ponytail craftsmanship rules and 18 specialized skills (including typesafe-ai and ponytail-audit).
+- Retain Ponytail craftsmanship rules and 25 specialized skills (including typesafe-ai and ponytail-audit).
 
 ### Exit criteria
 
