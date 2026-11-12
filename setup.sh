@@ -169,6 +169,13 @@ provision_tree "$repo/templates/project-docs" "$opencode_dir/templates/project-d
 provision_file "$repo/templates/global-AGENTS.md" "$opencode_dir/AGENTS.md"
 provision_file "$repo/plugins/rtk.ts" "$opencode_dir/plugins/rtk.ts"
 
+# Claude Code reads neither ~/.agents/skills nor ~/.config/opencode/AGENTS.md;
+# mirror both only where Claude Code is already set up.
+if [[ -d "$HOME/.claude" ]]; then
+  provision_tree "$repo/.agents/skills" "$HOME/.claude/skills"
+  provision_file "$repo/templates/global-AGENTS.md" "$HOME/.claude/CLAUDE.md"
+fi
+
 cat <<'EOF'
 
 Bootstrap done. Manual steps (interactive / secret, cannot be automated):
@@ -181,7 +188,8 @@ Bootstrap done. Manual steps (interactive / secret, cannot be automated):
                                     # configures rtk, runs smoke tests
 
 Installed from this repo: ~/.agents/skills, ~/.config/opencode/AGENTS.md,
-~/.config/opencode/templates/project-docs, ~/.config/opencode/plugins/rtk.ts.
+~/.config/opencode/templates/project-docs, ~/.config/opencode/plugins/rtk.ts,
+and, when ~/.claude exists, ~/.claude/skills and ~/.claude/CLAUDE.md.
 To update them:
   git -C ~/omochi pull && bash ~/omochi/setup.sh
 EOF

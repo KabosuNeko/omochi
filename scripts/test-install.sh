@@ -62,6 +62,17 @@ cmp -s "$repo_root/templates/global-AGENTS.md" "$fresh_home/.config/opencode/AGE
   fail "installer did not install the project-docs templates"
 printf 'ok: plugin, global AGENTS.md, and templates installed\n'
 
+[[ ! -e "$fresh_home/.claude" ]] || fail "installer created ~/.claude on a machine without Claude Code"
+claude_home="$task_test_root/claude home"
+mkdir -p "$claude_home/.claude"
+HOME="$claude_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \
+  bash "$repo_root/setup.sh" >/dev/null
+[[ "$(find "$claude_home/.claude/skills" -name SKILL.md 2>/dev/null | wc -l | tr -d ' ')" -eq "$repo_skill_count" ]] ||
+  fail "installer did not mirror the skills into ~/.claude/skills"
+cmp -s "$repo_root/templates/global-AGENTS.md" "$claude_home/.claude/CLAUDE.md" ||
+  fail "installed ~/.claude/CLAUDE.md differs from the template"
+printf 'ok: Claude Code gets skills and CLAUDE.md only when ~/.claude exists\n'
+
 fresh_home="$task_test_root/idempotent home"
 mkdir -p "$fresh_home"
 HOME="$fresh_home" PATH="$fake_bin:$PATH" AI_SETUP_REPO_URL="$repourl" \

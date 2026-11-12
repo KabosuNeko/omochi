@@ -183,6 +183,14 @@ Install-Tree (Join-Path $repoDir 'templates\project-docs') (Join-Path $opencodeD
 Install-File (Join-Path $repoDir 'templates\global-AGENTS.md') (Join-Path $opencodeDir 'AGENTS.md')
 Install-File (Join-Path $repoDir 'plugins\rtk.ts') (Join-Path $opencodeDir 'plugins\rtk.ts')
 
+# Claude Code reads neither ~/.agents/skills nor ~/.config/opencode/AGENTS.md;
+# mirror both only where Claude Code is already set up.
+$claudeDir = Join-Path $HOME '.claude'
+if (Test-Path -LiteralPath $claudeDir -PathType Container) {
+  Install-Tree (Join-Path $repoDir '.agents\skills') (Join-Path $claudeDir 'skills')
+  Install-File (Join-Path $repoDir 'templates\global-AGENTS.md') (Join-Path $claudeDir 'CLAUDE.md')
+}
+
 Write-Host @'
 
 Bootstrap done. Manual steps (interactive / secret, cannot be automated):
@@ -194,7 +202,8 @@ Bootstrap done. Manual steps (interactive / secret, cannot be automated):
                                     # configures rtk, runs smoke tests
 
 Installed from this repo: ~/.agents/skills, ~/.config/opencode/AGENTS.md,
-~/.config/opencode/templates/project-docs, ~/.config/opencode/plugins/rtk.ts.
+~/.config/opencode/templates/project-docs, ~/.config/opencode/plugins/rtk.ts,
+and, when ~/.claude exists, ~/.claude/skills and ~/.claude/CLAUDE.md.
 To update them:
   git -C $HOME\omochi pull; pwsh $HOME\omochi\setup.ps1
 '@

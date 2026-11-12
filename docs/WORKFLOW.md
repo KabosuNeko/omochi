@@ -70,7 +70,9 @@
 - rtk stops rewriting commands: `./scripts/smoke.sh` (Windows:
   `./scripts/smoke.ps1`) prints the offending server-log line. The plugin is
   installed from `plugins/rtk.ts` by the setup scripts; re-run them, then
-  confirm `opencode plugin list` shows `rtk`.
+  confirm the server log (`opencode.log` in the `log` dir from
+  `opencode debug paths`) shows `loading plugin` for `plugins/rtk.ts`
+  (`opencode plugin list` prints nothing in 2.2.x even when it is loaded).
 - Model discovery needs raw output: `opencode models` must not be wrapped by
   rtk (excluded in the rtk config:
   `~/.config/rtk/config.toml`, Windows: `%APPDATA%\rtk\config.toml`); when a

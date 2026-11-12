@@ -19,6 +19,11 @@ that installs and re-runs itself.
   `~/omochi`, and installs the repo's skills, templates, global `AGENTS.md`,
   and rtk plugin — idempotent, with `--dry-run`, `--repo <url>`, and backup of
   any `~/omochi` or managed file it replaces.
+- Claude Code and omp share the same skills, global rules, and rtk rewrite:
+  when `~/.claude` exists the setup scripts mirror the skills into
+  `~/.claude/skills/` and the global rules into `~/.claude/CLAUDE.md`; omp
+  discovers `~/.agents/skills/` and `~/.config/opencode/AGENTS.md` itself. The
+  setup prompt installs the rtk hook for each agent that is present.
 - `setup.ps1` mirrors the bootstrap on Windows (PowerShell 5.1+): opencode 2.0
   via npm (`@opencode/cli`) or the standalone zip, bun via the official
   installer, rtk via winget or the prebuilt binary — same `-DryRun`/`-Repo`
@@ -64,6 +69,8 @@ that installs and re-runs itself.
 - `templates/global-AGENTS.md` -> `~/.config/opencode/AGENTS.md`.
 - `templates/project-docs/` -> `~/.config/opencode/templates/project-docs/`.
 - `plugins/rtk.ts` -> `~/.config/opencode/plugins/rtk.ts`.
+- `.agents/skills/` -> `~/.claude/skills/` and `templates/global-AGENTS.md`
+  -> `~/.claude/CLAUDE.md`, only when `~/.claude` exists.
 - `.agents/skills/` -> `~/.agents/skills/` (installed by `setup.sh`).
 - `opencode-plugins.txt` -> the `plugins` array in opencode.jsonc.
 - OpenCode 2.0 native features handle multi-agent routing, git worktrees, and
@@ -94,7 +101,8 @@ that installs and re-runs itself.
 
 - Distribution: no npm package, plugin manifest, or marketplace catalog.
   omochi is a personal setup repo — clone it and run the setup script.
-- Managing other editors or agents (Codex, Claude Code).
+- Managing other editors or agents (Codex, Cursor), or Claude Code and omp
+  settings beyond the shared skills, global rules, and rtk hook.
 - Hardcoding or pinning model IDs in committed configs.
 - Bloating the setup with heavy third-party agent framework layers.
 

@@ -151,8 +151,13 @@
       (TRAP: never let rtk compress `opencode models` — model discovery
       needs raw output; excluded commands make `rtk rewrite` return "", and
       the plugin treats empty output as pass-through)
-    - "No hook installed" from `rtk gain` refers to the Claude Code hook —
-      ignore it, the opencode plugin is the integration here.
+    - Other agents (skip each one that is not installed):
+      Claude Code (`~/.claude` exists): `rtk init -g --hook-only --auto-patch`
+      patches ~/.claude/settings.json; `rtk init -g --show` then reports the
+      hook. omp (`~/.omp/agent` exists): `PI_CODING_AGENT_DIR=~/.omp/agent
+      rtk init -g --agent pi` writes ~/.omp/agent/extensions/rtk.ts (omp
+      cannot use the opencode plugin; it logs "does not export a valid
+      factory function" for it, which is harmless).
     - Degrades safely: plugin disables itself if rtk is missing from PATH;
       rewrite errors pass the command through unchanged. On command failure
       rtk stores the full output and prints a `rtk recall <hash>` hint
@@ -163,8 +168,11 @@
 12. Review the diff of EVERY changed file against its backup, highlighting
     the model configuration section.
 13. Smoke tests:
-    - opencode --version (expected: 2.0+) · opencode mcp list (expected:
-      context7-remote connected)
+    - opencode --version (expected: 2.0+)
+    - after the `opencode run` checks below, the server log (`opencode.log`
+      in the `log` dir from `opencode debug paths`) contains
+      `mcp connected server=context7-remote`; do not use `opencode mcp list`
+      or `opencode plugin list`, they print nothing in 2.2.x even when loaded
     - grep -q 'opencode-shell-strategy' ~/.config/opencode/opencode.jsonc
       (instructions URL present)
     - opencode run -m opencode/glm-5.3-flash-free "Reply with exactly: OK"

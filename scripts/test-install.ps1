@@ -128,6 +128,18 @@ try {
   Assert (Test-Path -LiteralPath (Join-Path $freshHome '.config\opencode\templates\project-docs\SPEC.md')) 'installer did not install the project-docs templates'
   'ok: plugin, global AGENTS.md, and templates installed'
 
+  Assert (-not (Test-Path -LiteralPath (Join-Path $freshHome '.claude'))) 'installer created ~/.claude on a machine without Claude Code'
+  $claudeHome = Join-Path $taskTestRoot 'claude home'
+  New-Item -ItemType Directory -Force -Path (Join-Path $claudeHome '.claude') | Out-Null
+  $result = Invoke-Setup -TestHome $claudeHome -PathPrefix $fakeBin -RepoUrl $repoUrl
+  Assert ($result.ExitCode -eq 0) "Claude Code install exited $($result.ExitCode): $($result.Output)"
+  $claudeSkillCount = @(Get-ChildItem (Join-Path $claudeHome '.claude\skills') -Recurse -Filter 'SKILL.md' -ErrorAction SilentlyContinue).Count
+  Assert ($claudeSkillCount -eq $repoSkillCount) "installer mirrored $claudeSkillCount skills into ~/.claude/skills, repository has $repoSkillCount"
+  $sourceHash = (Get-FileHash (Join-Path $repoRoot 'templates\global-AGENTS.md')).Hash
+  $installedHash = (Get-FileHash (Join-Path $claudeHome '.claude\CLAUDE.md')).Hash
+  Assert ($sourceHash -eq $installedHash) 'installed ~/.claude/CLAUDE.md differs from the template'
+  'ok: Claude Code gets skills and CLAUDE.md only when ~/.claude exists'
+
   $idemHome = Join-Path $taskTestRoot 'idempotent home'
   New-Item -ItemType Directory -Force -Path $idemHome | Out-Null
   $first = Invoke-Setup -TestHome $idemHome -PathPrefix $fakeBin -RepoUrl $repoUrl

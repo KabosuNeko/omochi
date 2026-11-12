@@ -12,6 +12,10 @@
   - Acceptance criteria: the build and IIS Express commands in the skill reproduced against a real MVC 5 project; `validate.sh` and CI green.
   - Automated validation: `validate.sh`, CI.
 
+- [x] Share the setup with Claude Code and omp: the setup scripts mirror skills and global rules into `~/.claude` when it exists; the setup prompt installs the rtk hook for Claude Code and the rtk extension for omp.
+  - Acceptance criteria: `test-install.sh` covers both the `~/.claude` and no-`~/.claude` paths; `rtk init -g --show` reports the Claude hook; omp discovers `~/.agents/skills`.
+  - Automated validation: `validate.sh`, `test-install.sh`, `test-install.ps1` (CI Windows job).
+
 ## Phase 4 (OpenCode 2.0 Native "Super Lean") — completed
 
 - [x] Migrate to OpenCode 2.0 native multi-agent, worktrees, and context compaction.

@@ -14,6 +14,17 @@ A loaded `AGENTS.md`, a selected skill, or the setup prompt must point opencode
 to any documents it needs. Files under `docs/` are references, not automatic
 instructions.
 
+## Other agents
+
+| Agent | Skills | Global rules | rtk rewrite |
+| --- | --- | --- | --- |
+| Claude Code | `~/.claude/skills/` (copied by the setup scripts when `~/.claude` exists) | `~/.claude/CLAUDE.md` (copy of `templates/global-AGENTS.md`) | hook in `~/.claude/settings.json` (`rtk init -g --hook-only --auto-patch`) |
+| omp | reads `~/.agents/skills/` directly | reads `~/.config/opencode/AGENTS.md` and `~/.omp/agent/AGENTS.md` | `~/.omp/agent/extensions/rtk.ts` (`PI_CODING_AGENT_DIR=~/.omp/agent rtk init -g --agent pi`) |
+
+omp also scans `~/.config/opencode/plugins/` and rejects `rtk.ts` there (wrong
+plugin API); that error is harmless. omp model roles live in
+`~/.omp/agent/config.yml` and are not managed by this repo.
+
 ## Why this repository is not a home-directory mirror
 
 The active `~/.config/opencode` and `~/.agents` directories mix portable
